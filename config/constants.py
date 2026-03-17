@@ -13,6 +13,12 @@ class InternetCSV:
     ACCESOS_LOCALIDAD   = "internet_accesos_localidad.csv"
     VELOCIDAD_PROVINCIA = "internet_velocidad_provincia.csv"
 
+    TECNOLOGIAS_PROVINCIA     = "internet_accesos_tecnologias_provincias.csv"
+    PENETRACION_PROVINCIA     = "internet_accesos_penetracion_provincias.csv"
+    VELOCIDAD_MEDIA_PROVINCIA = "internet_velocidad_media_descarga_provincias.csv"
+    VELOCIDAD_RANGOS_PROVINCIA= "internet_accesos_velocidad_rangos_provincias.csv"
+    BAF_PROVINCIA             = "internet_accesos_baf_provincias.csv"
+
 
 class MovilCSV:
     ACCESOS  = "comunicaciones_moviles_accesos.csv"
@@ -63,3 +69,19 @@ PROVINCIAS_ARG = [
     "San Luis", "Santa Cruz", "Santa Fe", "Santiago del Estero",
     "Tierra del Fuego", "Tucumán",
 ]
+
+# ── Rangos de velocidad ───────────────────────────────────────────────────────
+VELOCIDAD_RANGOS_COLS = [
+    "hasta_512kbps", "entre_512_1mbps", "entre_1mbps_6mbps",
+    "entre_6mbps_10mbps", "entre_10mbps_20mbps",
+    "entre_20mbps_30mbps", "mayor_30mbps",
+]
+VELOCIDAD_RANGOS_LABELS = {
+    "hasta_512kbps":      "Hasta 512 Kbps",
+    "entre_512_1mbps":    "512 Kbps–1 Mbps",
+    "entre_1mbps_6mbps":  "1–6 Mbps",
+    "entre_6mbps_10mbps": "6–10 Mbps",
+    "entre_10mbps_20mbps":"10–20 Mbps",
+    "entre_20mbps_30mbps":"20–30 Mbps",
+    "mayor_30mbps":       "+30 Mbps",
+}
