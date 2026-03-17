@@ -6,6 +6,8 @@ Vista de Internet Fijo.
 
 import streamlit as st
 import plotly.express as px
+import plotly.graph_objects as go
+
 
 from config.constants import InternetCSV, TECNOLOGIAS_COLS, TECNOLOGIAS_LABELS
 from config.theme import COLORS
@@ -177,32 +179,157 @@ elif categoria == "Velocidad media":
 
 
 # ── Penetración ───────────────────────────────────────────────────────────────
-
+ 
 elif categoria == "Penetración":
-    st.header("Penetración de Internet")
-
-    df = load(InternetCSV.PENETRACION_HOGARES)
-    DataValidator.validate(df, ["anio", "trimestre"])
+    st.header("Penetración de Internet fijo")
+ 
+    df = load(InternetCSV.PENETRACION)
+    DataValidator.validate(df, ["anio", "trimestre",
+                                "accesos_cada_100_hogares",
+                                "accesos_cada_100_habitantes"])
+ 
     df = sort_by_periodo(add_periodo_col(df))
-
-    value_col = next(
-        (c for c in df.columns if "accesos" in c or "penetracion" in c or "hogares" in c), None
-    )
-    if value_col is None:
-        st.warning("No se encontró columna de penetración. Columnas: " + str(list(df.columns)))
-        st.stop()
-
-    val, delta = last_period_delta(df, value_col)
-    show_kpis([{"label": "Accesos c/100 hogares", "value": val,
-                "delta": delta, "format": "{:.2f}"}])
-
+ 
+    anio_desde, anio_hasta = render_range_filter(df, key_prefix="pen")
+    df_range = df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)]
+ 
+    # ── KPIs ─────────────────────────────────────────────────────────────────
+    hog_actual, delta_hog = last_period_delta(df_range, "accesos_cada_100_hogares")
+    hab_actual, delta_hab = last_period_delta(df_range, "accesos_cada_100_habitantes")
+ 
+    hog_inicio = df_range["accesos_cada_100_hogares"].iloc[0]
+    hab_inicio = df_range["accesos_cada_100_habitantes"].iloc[0]
+    crec_hog = (hog_actual - hog_inicio) / hog_inicio * 100 if hog_inicio else None
+    crec_hab = (hab_actual - hab_inicio) / hab_inicio * 100 if hab_inicio else None
+ 
+    show_kpis([
+        {"label": "Accesos c/100 hogares",    "value": hog_actual,
+         "delta": delta_hog, "format": "{:.2f}",
+         "help": "Accesos a internet fijo cada 100 hogares"},
+        {"label": "Accesos c/100 habitantes", "value": hab_actual,
+         "delta": delta_hab, "format": "{:.2f}",
+         "help": "Accesos a internet fijo cada 100 habitantes"},
+        {"label": "Crecimiento hogares",      "value": crec_hog or 0,
+         "format": "{:+.1f}%",
+         "help": f"Variación acumulada en el rango {anio_desde}–{anio_hasta}"},
+        {"label": "Crecimiento hab.",         "value": crec_hab or 0,
+         "format": "{:+.1f}%",
+         "help": f"Variación acumulada en el rango {anio_desde}–{anio_hasta}"},
+    ])
+ 
     st.divider()
-    st.plotly_chart(
-        line_chart(df, x="periodo", y=value_col,
-                   title="Penetración de Internet fijo (accesos cada 100 hogares)"),
-        use_container_width=True,
+ 
+    # ── Gráfico doble eje Y ───────────────────────────────────────────────────
+    st.subheader("Evolución histórica")
+ 
+    fig = go.Figure()
+ 
+    fig.add_trace(go.Scatter(
+        x=df_range["periodo"],
+        y=df_range["accesos_cada_100_hogares"],
+        name="c/100 hogares",
+        mode="lines+markers",
+        marker={"size": 4},
+        line={"color": "#00B5E5", "width": 2},
+        fill="tozeroy",
+        fillcolor="rgba(0,181,229,0.06)",
+        yaxis="y1",
+    ))
+ 
+    fig.add_trace(go.Scatter(
+        x=df_range["periodo"],
+        y=df_range["accesos_cada_100_habitantes"],
+        name="c/100 habitantes",
+        mode="lines+markers",
+        marker={"size": 4},
+        line={"color": "#EEAE42", "width": 2},
+        fill="tozeroy",
+        fillcolor="rgba(238,174,66,0.06)",
+        yaxis="y2",
+    ))
+ 
+    fig.update_layout(
+        font={"family": "Inter, Arial, sans-serif", "size": 13},
+        plot_bgcolor="rgba(0,0,0,0)",
+        paper_bgcolor="rgba(0,0,0,0)",
+        margin={"t": 40, "b": 40, "l": 48, "r": 60},
+        hovermode="x unified",
+        legend={"orientation": "h", "yanchor": "bottom", "y": 1.02, "x": 0},
+        yaxis=dict(
+            title=dict(text="c/100 hogares", font={"color": "#00B5E5"}),
+            tickfont={"color": "#00B5E5"},
+            showgrid=True,
+            gridcolor="#E8E8E8",
+        ),
+        yaxis2=dict(
+            title=dict(text="c/100 habitantes", font={"color": "#EEAE42"}),
+            tickfont={"color": "#EEAE42"},
+            overlaying="y",
+            side="right",
+            showgrid=False,
+        ),
     )
-
+ 
+    st.plotly_chart(fig, use_container_width=True)
+ 
+    # ── Crecimiento interanual ────────────────────────────────────────────────
+    st.subheader("Variación interanual")
+ 
+    df_yoy = df_range.copy()
+    df_yoy["hog_yoy"] = df_yoy["accesos_cada_100_hogares"].pct_change(4) * 100
+    df_yoy["hab_yoy"] = df_yoy["accesos_cada_100_habitantes"].pct_change(4) * 100
+    df_yoy = df_yoy.dropna(subset=["hog_yoy"])
+ 
+    col1, col2 = st.columns(2)
+    with col1:
+        fig_yoy1 = go.Figure(go.Bar(
+            x=df_yoy["periodo"],
+            y=df_yoy["hog_yoy"].round(2),
+            marker_color=[
+                "#00B5E5" if v >= 0 else "#E74242"
+                for v in df_yoy["hog_yoy"]
+            ],
+            name="c/100 hogares",
+        ))
+        fig_yoy1.update_layout(
+            title="Var. interanual — hogares (%)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            font={"size": 12},
+            margin={"t": 40, "b": 40, "l": 40, "r": 20},
+            yaxis={"ticksuffix": "%", "gridcolor": "#E8E8E8"},
+            showlegend=False,
+        )
+        st.plotly_chart(fig_yoy1, use_container_width=True)
+ 
+    with col2:
+        fig_yoy2 = go.Figure(go.Bar(
+            x=df_yoy["periodo"],
+            y=df_yoy["hab_yoy"].round(2),
+            marker_color=[
+                "#EEAE42" if v >= 0 else "#E74242"
+                for v in df_yoy["hab_yoy"]
+            ],
+            name="c/100 habitantes",
+        ))
+        fig_yoy2.update_layout(
+            title="Var. interanual — habitantes (%)",
+            plot_bgcolor="rgba(0,0,0,0)",
+            paper_bgcolor="rgba(0,0,0,0)",
+            font={"size": 12},
+            margin={"t": 40, "b": 40, "l": 40, "r": 20},
+            yaxis={"ticksuffix": "%", "gridcolor": "#E8E8E8"},
+            showlegend=False,
+        )
+        st.plotly_chart(fig_yoy2, use_container_width=True)
+ 
+    with st.expander("Ver datos completos"):
+        st.dataframe(
+            df_range[["anio", "trimestre", "periodo",
+                       "accesos_cada_100_hogares",
+                       "accesos_cada_100_habitantes"]],
+            use_container_width=True,
+        )
 
 # ── Ingresos ──────────────────────────────────────────────────────────────────
 
