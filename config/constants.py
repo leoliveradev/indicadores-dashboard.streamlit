@@ -3,21 +3,20 @@
 # Si renombrás un archivo, lo cambiás en un solo lugar.
 
 class InternetCSV:
-    TECNOLOGIAS         = "internet_accesos_tecnologias.csv"
-    VELOCIDAD_RANGOS    = "internet_accesos_velocidad_rangos.csv"
-    VELOCIDAD_MEDIA     = "internet_velocidad_media_descarga.csv"
-    BANDA_ANCHA_DIALUP  = "internet_banda_ancha_dialup.csv"
-    PENETRACION         = "internet_accesos_penetracion.csv"
-    INGRESOS            = "internet_ingresos.csv"
-    ACCESOS_PROVINCIA   = "internet_accesos_provincia.csv"
-    ACCESOS_LOCALIDAD   = "internet_accesos_localidad.csv"
-    VELOCIDAD_PROVINCIA = "internet_velocidad_provincia.csv"
-
-    TECNOLOGIAS_PROVINCIA     = "internet_accesos_tecnologias_provincias.csv"
-    PENETRACION_PROVINCIA     = "internet_accesos_penetracion_provincias.csv"
-    VELOCIDAD_MEDIA_PROVINCIA = "internet_velocidad_media_descarga_provincias.csv"
-    VELOCIDAD_RANGOS_PROVINCIA= "internet_accesos_velocidad_rangos_provincias.csv"
-    BAF_PROVINCIA             = "internet_accesos_baf_provincias.csv"
+    ACCESOS_PROVINCIA           = "internet_accesos_provincia.csv"
+    ACCESOS_LOCALIDAD           = "internet_accesos_localidad.csv"
+    VELOCIDAD_PROVINCIA         = "internet_velocidad_provincia.csv"
+    TECNOLOGIAS                 = "internet_accesos_tecnologias.csv"
+    TECNOLOGIAS_PROVINCIA       = "internet_accesos_tecnologias_provincias.csv"
+    VELOCIDAD_RANGOS            = "internet_accesos_velocidad_rangos.csv"
+    VELOCIDAD_RANGOS_PROVINCIA  = "internet_accesos_velocidad_rangos_provincias.csv"
+    VELOCIDAD_MEDIA             = "internet_velocidad_media_descarga.csv"
+    VELOCIDAD_MEDIA_PROVINCIA   = "internet_velocidad_media_descarga_provincias.csv"
+    BANDA_ANCHA_DIALUP          = "internet_accesos_baf.csv"
+    BAF_PROVINCIA               = "internet_accesos_baf_provincias.csv"
+    PENETRACION                 = "internet_accesos_penetracion.csv"
+    PENETRACION_PROVINCIA       = "internet_accesos_penetracion_provincias.csv"
+    INGRESOS                    = "internet_ingresos.csv"
 
 
 class MovilCSV:
@@ -72,12 +71,12 @@ PROVINCIAS_ARG = [
 
 # ── Rangos de velocidad ───────────────────────────────────────────────────────
 VELOCIDAD_RANGOS_COLS = [
-    "hasta_512kbps", "entre_512_1mbps", "entre_1mbps_6mbps",
+    "hasta_512_kbps", "entre_512_1mbps", "entre_1mbps_6mbps",
     "entre_6mbps_10mbps", "entre_10mbps_20mbps",
     "entre_20mbps_30mbps", "mayor_30mbps",
 ]
 VELOCIDAD_RANGOS_LABELS = {
-    "hasta_512kbps":      "Hasta 512 Kbps",
+    "hasta_512_kbps":     "Hasta 512 Kbps",
     "entre_512_1mbps":    "512 Kbps–1 Mbps",
     "entre_1mbps_6mbps":  "1–6 Mbps",
     "entre_6mbps_10mbps": "6–10 Mbps",

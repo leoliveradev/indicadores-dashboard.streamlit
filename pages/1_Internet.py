@@ -5,6 +5,7 @@ Vista de Internet Fijo.
 """
 
 import streamlit as st
+import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
@@ -42,6 +43,7 @@ CATEGORIES = [
     "Velocidad media",
     "Velocidad media - provincia",
     "Rangos de velocidad",
+    "Rangos de velocidad - provincia",
     "Banda ancha vs Dial-up",
     "Banda ancha - provincia",
     "Penetración",
@@ -183,6 +185,153 @@ elif categoria == "Velocidad media":
         use_container_width=True,
     )
 
+
+# ── Banda ancha vs Dial-up ───────────────────────────────────────────────────
+ 
+elif categoria == "Banda ancha vs Dial-up":
+    st.header("Banda ancha fija vs Dial-up")
+ 
+    df = load(InternetCSV.BANDA_ANCHA_DIALUP)
+    DataValidator.validate(df, ["anio", "trimestre", "banda_ancha_fija", "dial_up", "total"])
+    df = sort_by_periodo(add_periodo_col(df))
+ 
+    anio_desde, anio_hasta = render_range_filter(df, key_prefix="baf")
+    df_range = df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)].copy()
+ 
+    baf_actual, delta_baf   = last_period_delta(df_range, "banda_ancha_fija")
+    dup_actual, delta_dup   = last_period_delta(df_range, "dial_up")
+    tot_actual, delta_tot   = last_period_delta(df_range, "total")
+    pct_baf = baf_actual / tot_actual * 100 if tot_actual else 0
+ 
+    show_kpis([
+        {"label": "Banda ancha fija",  "value": baf_actual, "delta": delta_baf,
+         "format": "{:,.0f}"},
+        {"label": "Dial-up",           "value": dup_actual, "delta": delta_dup,
+         "format": "{:,.0f}"},
+        {"label": "Total",             "value": tot_actual, "delta": delta_tot,
+         "format": "{:,.0f}"},
+        {"label": "% Banda ancha",     "value": pct_baf,
+         "format": "{:.2f}%",
+         "help": "Proporción de banda ancha sobre el total de accesos"},
+    ])
+ 
+    st.divider()
+ 
+    df_long = melt_tecnologias(
+        df_range, ["banda_ancha_fija", "dial_up"],
+        id_col="periodo", var_name="Tipo", value_name="Accesos",
+    )
+    df_long["Tipo"] = df_long["Tipo"].map({
+        "banda_ancha_fija": "Banda ancha fija",
+        "dial_up": "Dial-up",
+    })
+ 
+    tab1, tab2, tab3 = st.tabs(["Área apilada", "Líneas", "Barras"])
+    with tab1:
+        fig = area_chart(df_long, "periodo", "Accesos", "Tipo",
+                         title="Evolución banda ancha vs dial-up",
+                         color_map={"Banda ancha fija": "#00B5E5", "Dial-up": "#C6C6C6"})
+        st.plotly_chart(fig, use_container_width=True)
+    with tab2:
+        fig = line_chart(df_long, "periodo", "Accesos", "Tipo",
+                         title="Evolución banda ancha vs dial-up",
+                         color_map={"Banda ancha fija": "#00B5E5", "Dial-up": "#C6C6C6"})
+        st.plotly_chart(fig, use_container_width=True)
+    with tab3:
+        fig = bar_chart(df_long, "periodo", "Accesos", "Tipo",
+                        title="Banda ancha vs dial-up por trimestre",
+                        barmode="stack",
+                        color_map={"Banda ancha fija": "#00B5E5", "Dial-up": "#C6C6C6"})
+        st.plotly_chart(fig, use_container_width=True)
+ 
+    # Evolución del porcentaje BA
+    st.subheader("Participación de banda ancha sobre el total")
+    df_range["pct_baf"] = (df_range["banda_ancha_fija"] / df_range["total"] * 100).round(2)
+
+    fig_pct = go.Figure(go.Scatter(
+        x=df_range["periodo"], y=df_range["pct_baf"],
+        mode="lines+markers", fill="tozeroy",
+        line={"color": "#00B5E5", "width": 2},
+        fillcolor="rgba(0,181,229,0.08)",
+        marker={"size": 4},
+    ))
+    fig_pct.update_layout(
+        title="% Banda ancha sobre total de accesos",
+        plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+        font={"family": "Inter, Arial, sans-serif", "size": 13},
+        margin={"t": 48, "b": 40, "l": 48, "r": 20},
+        yaxis={"ticksuffix": "%", "gridcolor": "#E8E8E8", "range": [95, 101]},
+        hovermode="x unified",
+    )
+    st.plotly_chart(fig_pct, use_container_width=True)
+ 
+
+# ── Rangos de velocidad ───────────────────────────────────────────────────────
+ 
+elif categoria == "Rangos de velocidad":
+    st.header("Accesos por rangos de velocidad")
+ 
+    df = load(InternetCSV.VELOCIDAD_RANGOS)
+    DataValidator.validate(df, ["anio", "trimestre"] + VELOCIDAD_RANGOS_COLS)
+    df = sort_by_periodo(add_periodo_col(df))
+ 
+    anio_desde, anio_hasta = render_range_filter(df, key_prefix="vrang")
+    df_range = df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)].copy()
+ 
+    # KPIs: último período
+    ultimo = df_range.iloc[-1]
+    total_acc  = ultimo["total"] if "total" in df_range.columns else df_range[VELOCIDAD_RANGOS_COLS].iloc[-1].sum()
+    alta_vel   = ultimo["mayor_30mbps"]
+    baja_vel   = ultimo["hasta_512_kbps"] + ultimo.get("entre_512_1mbps", 0)
+    pct_alta   = alta_vel / total_acc * 100 if total_acc else 0
+ 
+    show_kpis([
+        {"label": "Total accesos",    "value": total_acc, "format": "{:,.0f}"},
+        {"label": "+30 Mbps",         "value": alta_vel,  "format": "{:,.0f}"},
+        {"label": "% sobre +30 Mbps", "value": pct_alta,  "format": "{:.1f}%",
+         "help": "Proporción de accesos con velocidad mayor a 30 Mbps"},
+        {"label": "Hasta 1 Mbps",     "value": baja_vel,  "format": "{:,.0f}"},
+    ])
+ 
+    st.divider()
+ 
+    df_long = melt_tecnologias(
+        df_range, VELOCIDAD_RANGOS_COLS,
+        id_col="periodo", var_name="Rango", value_name="Accesos",
+    )
+    df_long["Rango"] = df_long["Rango"].map(VELOCIDAD_RANGOS_LABELS)
+ 
+    # Orden de menor a mayor velocidad
+    orden_rangos = list(VELOCIDAD_RANGOS_LABELS.values())
+    df_long["Rango"] = pd.Categorical(df_long["Rango"], categories=orden_rangos, ordered=True)
+    df_long = df_long.sort_values(["periodo", "Rango"])  # cronológico primero, rango segundo
+ 
+    tab1, tab2, tab3 = st.tabs(["Área apilada", "Barras", "Líneas"])
+    with tab1:
+        fig = area_chart(df_long, "periodo", "Accesos", "Rango",
+                         title="Evolución por rangos de velocidad")
+        st.plotly_chart(fig, use_container_width=True)
+    with tab2:
+        fig = bar_chart(df_long, "periodo", "Accesos", "Rango",
+                        title="Accesos por rango de velocidad", barmode="stack")
+        st.plotly_chart(fig, use_container_width=True)
+    with tab3:
+        fig = line_chart(df_long, "periodo", "Accesos", "Rango",
+                         title="Evolución por rango de velocidad")
+        st.plotly_chart(fig, use_container_width=True)
+ 
+    # Distribución en el último período (torta)
+    st.subheader(f"Distribución — {df_range['periodo'].iloc[-1]}")
+    ultimo_dist = df_range[VELOCIDAD_RANGOS_COLS].iloc[-1].rename(VELOCIDAD_RANGOS_LABELS)
+    df_pie = ultimo_dist.reset_index()
+    df_pie.columns = ["Rango", "Accesos"]
+    df_pie = df_pie[df_pie["Accesos"] > 0]
+ 
+    fig_pie = px.pie(df_pie, names="Rango", values="Accesos",
+                            hole=0.4, title=f"Composición por rango — {df_range['periodo'].iloc[-1]}")
+    fig_pie.update_layout(margin={"t": 50, "b": 0, "l": 0, "r": 0})
+    st.plotly_chart(fig_pie, use_container_width=True)
+ 
 
 # ── Penetración ───────────────────────────────────────────────────────────────
 
@@ -474,105 +623,7 @@ elif categoria == "Tecnología - provincia":
         )
 
 
-# ── Prov. — Penetración ───────────────────────────────────────────────────────
-
-elif categoria == "Penetración - provincia":
-    st.header("Penetración de Internet — por provincia")
-
-    df = load(InternetCSV.PENETRACION_PROVINCIA)
-    DataValidator.validate(df, ["anio", "trimestre", "provincia",
-                                "accesos_cada_100_hogares",
-                                "accesos_cada_100_habitantes"])
-
-    anio, trimestre = render_period_filters(df, key_prefix="prov_pen")
-
-    if not DataValidator.has_data(df, {"anio": anio, "trimestre": trimestre}):
-        st.stop()
-
-    df_periodo = filter_by_period(df, anio, trimestre).copy()
-
-    # ── KPIs: líderes ─────────────────────────────────────────────────────────
-    top_hog = df_periodo.nlargest(1, "accesos_cada_100_hogares").iloc[0]
-    top_hab = df_periodo.nlargest(1, "accesos_cada_100_habitantes").iloc[0]
-    low_hog = df_periodo.nsmallest(1, "accesos_cada_100_hogares").iloc[0]
-
-    show_kpis([
-        {"label": f"Mayor penetración hogares ({top_hog['provincia']})",
-         "value": top_hog["accesos_cada_100_hogares"], "format": "{:.2f}"},
-        {"label": f"Mayor penetración hab. ({top_hab['provincia']})",
-         "value": top_hab["accesos_cada_100_habitantes"], "format": "{:.2f}"},
-        {"label": f"Menor penetración hogares ({low_hog['provincia']})",
-         "value": low_hog["accesos_cada_100_hogares"], "format": "{:.2f}"},
-        {"label": "Promedio nacional (hogares)",
-         "value": df_periodo["accesos_cada_100_hogares"].mean(), "format": "{:.2f}"},
-    ])
-
-    st.divider()
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.subheader("Ranking — c/100 hogares")
-        df_hog = df_periodo[["provincia","accesos_cada_100_hogares"]].sort_values(
-            "accesos_cada_100_hogares", ascending=True
-        )
-        fig = bar_chart(df_hog, x="accesos_cada_100_hogares", y="provincia",
-                        title=f"{anio} T{trimestre}")
-        fig.update_layout(height=650, yaxis={"categoryorder": "total ascending"})
-        fig.update_traces(marker_color="#00B5E5", orientation="h")
-        st.plotly_chart(fig, use_container_width=True)
-
-    with col2:
-        st.subheader("Ranking — c/100 habitantes")
-        df_hab = df_periodo[["provincia","accesos_cada_100_habitantes"]].sort_values(
-            "accesos_cada_100_habitantes", ascending=True
-        )
-        fig = bar_chart(df_hab, x="accesos_cada_100_habitantes", y="provincia",
-                        title=f"{anio} T{trimestre}")
-        fig.update_layout(height=650, yaxis={"categoryorder": "total ascending"})
-        fig.update_traces(marker_color="#EEAE42", orientation="h")
-        st.plotly_chart(fig, use_container_width=True)
-
-    st.divider()
-
-    # ── Evolución de provincia vs nacional ────────────────────────────────────
-    st.subheader("Evolución provincia vs promedio nacional")
-
-    provincias = sorted(df["provincia"].unique())
-    prov_sel = st.selectbox("Seleccionar provincia", provincias, key="prov_pen_evol")
-
-    df_prov = sort_by_periodo(add_periodo_col(
-        df[df["provincia"] == prov_sel].copy()
-    ))
-    df_nac = sort_by_periodo(add_periodo_col(
-        df.groupby(["anio","trimestre"])["accesos_cada_100_hogares"].mean().reset_index()
-    ))
-
-    import plotly.graph_objects as go
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(
-        x=df_prov["periodo"], y=df_prov["accesos_cada_100_hogares"],
-        name=prov_sel, mode="lines+markers",
-        line={"color": "#00B5E5", "width": 2}, marker={"size": 4},
-    ))
-    fig.add_trace(go.Scatter(
-        x=df_nac["periodo"], y=df_nac["accesos_cada_100_hogares"].round(2),
-        name="Promedio nacional", mode="lines",
-        line={"color": "#C6C6C6", "width": 1.5, "dash": "dot"},
-    ))
-    fig.update_layout(
-        title=f"{prov_sel} vs promedio nacional — accesos c/100 hogares",
-        plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
-        font={"family": "Inter, Arial, sans-serif", "size": 13},
-        margin={"t": 48, "b": 40, "l": 48, "r": 20},
-        hovermode="x unified",
-        legend={"orientation": "h", "y": 1.02},
-        yaxis={"gridcolor": "#E8E8E8"},
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
-
-# ── Prov. — Velocidad media ───────────────────────────────────────────────────
+# ── Velocidad media - provincia ───────────────────────────────────────────────────
 
 elif categoria == "Velocidad media - provincia":
     st.header("Velocidad media de descarga — por provincia")
@@ -639,7 +690,7 @@ elif categoria == "Velocidad media - provincia":
         st.plotly_chart(fig, use_container_width=True)
 
 
-# ── Prov. — Banda ancha ───────────────────────────────────────────────────────
+# ── Banda ancha - provincia ───────────────────────────────────────────────────────
 
 elif categoria == "Banda ancha - provincia":
     st.header("Banda ancha fija vs Dial-up — por provincia")
@@ -722,6 +773,209 @@ elif categoria == "Banda ancha - provincia":
     fig = area_chart(df_long, "periodo", "Accesos", "Tipo",
                      title=f"{prov_sel} — evolución banda ancha vs dial-up",
                      color_map={"Banda ancha fija": "#00B5E5", "Dial-up": "#C6C6C6"})
+    st.plotly_chart(fig, use_container_width=True)
+
+
+# ── Rangos de velocidad - provincia ──────────────────────────────────────────
+
+elif categoria == "Rangos de velocidad - provincia":
+    st.header("Rangos de velocidad — por provincia")
+
+    df = load(InternetCSV.VELOCIDAD_RANGOS_PROVINCIA)
+    df = sort_by_periodo(add_periodo_col(df))
+
+    # El CSV provincial usa "hasta_512kbps" (sin guión), el nacional "hasta_512_kbps"
+    # Lo normalizamos para que coincida con VELOCIDAD_RANGOS_COLS y VELOCIDAD_RANGOS_LABELS
+    df = df.rename(columns={"hasta_512kbps": "hasta_512_kbps"})
+
+    DataValidator.validate(df, ["anio", "trimestre", "provincia"] + VELOCIDAD_RANGOS_COLS)
+
+    anio, trimestre = render_period_filters(df, key_prefix="prov_vrang")
+
+    if not DataValidator.has_data(df, {"anio": anio, "trimestre": trimestre}):
+        st.stop()
+
+    df_periodo = filter_by_period(df, anio, trimestre).copy()
+    df_periodo["pct_alta_vel"] = (
+        df_periodo["mayor_30mbps"] / df_periodo["total"] * 100
+    ).round(2)
+
+    # ── KPIs ─────────────────────────────────────────────────────────────────
+    top = df_periodo.nlargest(1, "pct_alta_vel").iloc[0]
+    low = df_periodo.nsmallest(1, "pct_alta_vel").iloc[0]
+
+    show_kpis([
+        {"label": f"Mayor % +30 Mbps ({top['provincia']})",
+         "value": top["pct_alta_vel"], "format": "{:.1f}%"},
+        {"label": f"Menor % +30 Mbps ({low['provincia']})",
+         "value": low["pct_alta_vel"], "format": "{:.1f}%"},
+        {"label": "Promedio nacional +30 Mbps",
+         "value": df_periodo["pct_alta_vel"].mean(), "format": "{:.1f}%"},
+        {"label": "Total accesos nacionales",
+         "value": df_periodo["total"].sum(), "format": "{:,.0f}"},
+    ])
+
+    st.divider()
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("% accesos +30 Mbps por provincia")
+        df_rank = df_periodo[["provincia", "pct_alta_vel"]].sort_values(
+            "pct_alta_vel", ascending=True
+        )
+        fig = bar_chart(df_rank, x="pct_alta_vel", y="provincia",
+                        title=f"% accesos >30 Mbps — {anio} T{trimestre}")
+        fig.update_layout(height=650, yaxis={"categoryorder": "total ascending"},
+                          xaxis={"ticksuffix": "%"})
+        fig.update_traces(marker_color="#00B5E5", orientation="h")
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col2:
+        st.subheader("Composición de rangos por provincia")
+        df_long = melt_tecnologias(
+            df_periodo, VELOCIDAD_RANGOS_COLS,
+            id_col="provincia", var_name="Rango", value_name="Accesos",
+        )
+        df_long["Rango"] = df_long["Rango"].map(VELOCIDAD_RANGOS_LABELS)
+        df_long = df_long.merge(
+            df_periodo[["provincia", "total"]], on="provincia"
+        ).sort_values("total", ascending=False)
+
+        fig = bar_chart(df_long, x="Accesos", y="provincia",
+                        color="Rango", barmode="stack",
+                        title=f"Distribución por rango — {anio} T{trimestre}")
+        fig.update_layout(height=650, yaxis={"categoryorder": "total ascending"},
+                          xaxis={"tickformat": ",.0f"})
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.divider()
+
+    # ── Evolución histórica de una provincia ─────────────────────────────────
+    st.subheader("Evolución histórica por provincia")
+
+    provincias = sorted(df["provincia"].unique())
+    prov_sel = st.selectbox("Seleccionar provincia", provincias, key="prov_vrang_evol")
+
+    df_prov = sort_by_periodo(add_periodo_col(
+        df[df["provincia"] == prov_sel].copy()
+    ))
+    df_long_evol = melt_tecnologias(
+        df_prov, VELOCIDAD_RANGOS_COLS,
+        id_col="periodo", var_name="Rango", value_name="Accesos",
+    )
+    df_long_evol["Rango"] = df_long_evol["Rango"].map(VELOCIDAD_RANGOS_LABELS)
+    orden_rangos = list(VELOCIDAD_RANGOS_LABELS.values())
+    df_long_evol["Rango"] = pd.Categorical(
+        df_long_evol["Rango"], categories=orden_rangos, ordered=True
+    )
+    df_long_evol = df_long_evol.sort_values(["periodo", "Rango"])
+
+    tab1, tab2 = st.tabs(["Área apilada", "Barras"])
+    with tab1:
+        fig = area_chart(df_long_evol, "periodo", "Accesos", "Rango",
+                         title=f"{prov_sel} — evolución por rangos de velocidad")
+        st.plotly_chart(fig, use_container_width=True)
+    with tab2:
+        fig = bar_chart(df_long_evol, "periodo", "Accesos", "Rango",
+                        title=f"{prov_sel} — rangos de velocidad", barmode="stack")
+        st.plotly_chart(fig, use_container_width=True)
+
+
+# ── Penetración - provincia ───────────────────────────────────────────────────────
+
+elif categoria == "Penetración - provincia":
+    st.header("Penetración de Internet — por provincia")
+
+    df = load(InternetCSV.PENETRACION_PROVINCIA)
+    DataValidator.validate(df, ["anio", "trimestre", "provincia",
+                                "accesos_cada_100_hogares",
+                                "accesos_cada_100_habitantes"])
+
+    anio, trimestre = render_period_filters(df, key_prefix="prov_pen")
+
+    if not DataValidator.has_data(df, {"anio": anio, "trimestre": trimestre}):
+        st.stop()
+
+    df_periodo = filter_by_period(df, anio, trimestre).copy()
+
+    # ── KPIs: líderes ─────────────────────────────────────────────────────────
+    top_hog = df_periodo.nlargest(1, "accesos_cada_100_hogares").iloc[0]
+    top_hab = df_periodo.nlargest(1, "accesos_cada_100_habitantes").iloc[0]
+    low_hog = df_periodo.nsmallest(1, "accesos_cada_100_hogares").iloc[0]
+
+    show_kpis([
+        {"label": f"Mayor penetración hogares ({top_hog['provincia']})",
+         "value": top_hog["accesos_cada_100_hogares"], "format": "{:.2f}"},
+        {"label": f"Mayor penetración hab. ({top_hab['provincia']})",
+         "value": top_hab["accesos_cada_100_habitantes"], "format": "{:.2f}"},
+        {"label": f"Menor penetración hogares ({low_hog['provincia']})",
+         "value": low_hog["accesos_cada_100_hogares"], "format": "{:.2f}"},
+        {"label": "Promedio nacional (hogares)",
+         "value": df_periodo["accesos_cada_100_hogares"].mean(), "format": "{:.2f}"},
+    ])
+
+    st.divider()
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("Ranking — c/100 hogares")
+        df_hog = df_periodo[["provincia","accesos_cada_100_hogares"]].sort_values(
+            "accesos_cada_100_hogares", ascending=True
+        )
+        fig = bar_chart(df_hog, x="accesos_cada_100_hogares", y="provincia",
+                        title=f"{anio} T{trimestre}")
+        fig.update_layout(height=650, yaxis={"categoryorder": "total ascending"})
+        fig.update_traces(marker_color="#00B5E5", orientation="h")
+        st.plotly_chart(fig, use_container_width=True)
+
+    with col2:
+        st.subheader("Ranking — c/100 habitantes")
+        df_hab = df_periodo[["provincia","accesos_cada_100_habitantes"]].sort_values(
+            "accesos_cada_100_habitantes", ascending=True
+        )
+        fig = bar_chart(df_hab, x="accesos_cada_100_habitantes", y="provincia",
+                        title=f"{anio} T{trimestre}")
+        fig.update_layout(height=650, yaxis={"categoryorder": "total ascending"})
+        fig.update_traces(marker_color="#EEAE42", orientation="h")
+        st.plotly_chart(fig, use_container_width=True)
+
+    st.divider()
+
+    # ── Evolución de provincia vs nacional ────────────────────────────────────
+    st.subheader("Evolución provincia vs promedio nacional")
+
+    provincias = sorted(df["provincia"].unique())
+    prov_sel = st.selectbox("Seleccionar provincia", provincias, key="prov_pen_evol")
+
+    df_prov = sort_by_periodo(add_periodo_col(
+        df[df["provincia"] == prov_sel].copy()
+    ))
+    df_nac = sort_by_periodo(add_periodo_col(
+        df.groupby(["anio","trimestre"])["accesos_cada_100_hogares"].mean().reset_index()
+    ))
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=df_prov["periodo"], y=df_prov["accesos_cada_100_hogares"],
+        name=prov_sel, mode="lines+markers",
+        line={"color": "#00B5E5", "width": 2}, marker={"size": 4},
+    ))
+    fig.add_trace(go.Scatter(
+        x=df_nac["periodo"], y=df_nac["accesos_cada_100_hogares"].round(2),
+        name="Promedio nacional", mode="lines",
+        line={"color": "#C6C6C6", "width": 1.5, "dash": "dot"},
+    ))
+    fig.update_layout(
+        title=f"{prov_sel} vs promedio nacional — accesos c/100 hogares",
+        plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+        font={"family": "Inter, Arial, sans-serif", "size": 13},
+        margin={"t": 48, "b": 40, "l": 48, "r": 20},
+        hovermode="x unified",
+        legend={"orientation": "h", "y": 1.02},
+        yaxis={"gridcolor": "#E8E8E8"},
+    )
     st.plotly_chart(fig, use_container_width=True)
 
 
