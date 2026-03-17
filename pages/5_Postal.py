@@ -16,7 +16,7 @@ from services.transformers import (
 from components.page_setup import setup_page
 from components.sidebar import render_sidebar
 from components.kpi_cards import show_kpis
-from components.filters import periodo_range_selector
+from components.filters import render_range_filter
 from components.charts import line_chart, bar_chart, area_chart
 
 
@@ -86,7 +86,7 @@ elif categoria == "Envíos":
     DataValidator.validate(df, ["anio", "trimestre"])
 
     df = sort_by_periodo(add_periodo_col(df))
-    anio_desde, anio_hasta = periodo_range_selector(df, key="postal_env_range")
+    anio_desde, anio_hasta = render_range_filter(df, key_prefix="postal_env_range")
     df_range = df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)]
 
     env_col = next((c for c in df.columns if "total" in c or "envio" in c or "pieza" in c),
@@ -132,7 +132,7 @@ elif categoria == "Ingresos":
     DataValidator.validate(df, ["anio", "trimestre"])
 
     df = sort_by_periodo(add_periodo_col(df))
-    anio_desde, anio_hasta = periodo_range_selector(df, key="postal_ing_range")
+    anio_desde, anio_hasta = render_range_filter(df, key_prefix="postal_ing_range")
     df_range = df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)]
 
     ing_col = next((c for c in df.columns if "ingreso" in c or "miles" in c), df.columns[-1])

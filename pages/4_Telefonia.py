@@ -16,7 +16,7 @@ from services.transformers import (
 from components.page_setup import setup_page
 from components.sidebar import render_sidebar
 from components.kpi_cards import show_kpis
-from components.filters import anio_selector, trimestre_selector, periodo_range_selector
+from components.filters import render_range_filter
 from components.charts import line_chart, bar_chart
 
 
@@ -97,7 +97,7 @@ elif categoria == "Accesos":
     DataValidator.validate(df, ["anio", "trimestre"])
 
     df = sort_by_periodo(add_periodo_col(df))
-    anio_desde, anio_hasta = periodo_range_selector(df, key="tel_acc_range")
+    anio_desde, anio_hasta = render_range_filter(df, key_prefix="tel_acc_range")
     df_range = df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)]
 
     acc_col = next((c for c in df.columns if "total" in c or "acceso" in c or "linea" in c),
@@ -169,7 +169,7 @@ elif categoria == "Ingresos":
     DataValidator.validate(df, ["anio", "trimestre"])
 
     df = sort_by_periodo(add_periodo_col(df))
-    anio_desde, anio_hasta = periodo_range_selector(df, key="tel_ing_range")
+    anio_desde, anio_hasta = render_range_filter(df, key_prefix="tel_ing_range")
     df_range = df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)]
 
     ing_col = next((c for c in df.columns if "ingreso" in c or "miles" in c), df.columns[-1])

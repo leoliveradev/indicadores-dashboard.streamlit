@@ -16,7 +16,7 @@ from services.transformers import (
 from components.page_setup import setup_page
 from components.sidebar import render_sidebar
 from components.kpi_cards import show_kpis
-from components.filters import anio_selector, trimestre_selector, periodo_range_selector
+from components.filters import render_range_filter
 from components.charts import line_chart, bar_chart, area_chart
 
 
@@ -24,7 +24,7 @@ st.set_page_config(page_title="TV Paga · ENACOM", page_icon="📺", layout="wid
 
 setup_page()
 
-CATEGORIES = ["Overview", "Accesos", "Ingresos"]
+CATEGORIES = ["Resumen general", "Accesos", "Ingresos"]
 
 categoria = render_sidebar(CATEGORIES, key="tv_categoria")
 st.title("📺 TV paga")
@@ -38,9 +38,9 @@ def load(filename: str):
         st.stop()
 
 
-# ── Overview ──────────────────────────────────────────────────────────────────
+# ── Resumen general ──────────────────────────────────────────────────────────────────
 
-if categoria == "Overview":
+if categoria == "Resumen general":
     st.header("Resumen general")
 
     df_acc = load(TVCSVs.ACCESOS)
@@ -88,7 +88,7 @@ elif categoria == "Accesos":
 
     df = sort_by_periodo(add_periodo_col(df))
 
-    anio_desde, anio_hasta = periodo_range_selector(df, key="tv_acc_range")
+    anio_desde, anio_hasta = render_range_filter(df, key_prefix="tv_acc_range")
     df_range = df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)]
 
     acc_col = next((c for c in df.columns if "total" in c or "acceso" in c), df.columns[-1])
@@ -132,7 +132,7 @@ elif categoria == "Ingresos":
 
     df = sort_by_periodo(add_periodo_col(df))
 
-    anio_desde, anio_hasta = periodo_range_selector(df, key="tv_ing_range")
+    anio_desde, anio_hasta = render_range_filter(df, key_prefix="tv_ing_range")
     df_range = df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)]
 
     ing_col = next((c for c in df.columns if "ingreso" in c or "miles" in c or "monto" in c),

@@ -28,6 +28,17 @@ def render_sidebar(
     str — La categoría actualmente seleccionada.
     """
     with st.sidebar:
+        
+        categoria = st.selectbox(
+            "Sección",
+            categories,
+            index=default_index,
+            key=key,
+            label_visibility="collapsed",
+        )
+       
+        st.divider()
+
         st.markdown(
             f"""
             <div style="margin-bottom: 8px;">
@@ -45,16 +56,6 @@ def render_sidebar(
             </div>
             """,
             unsafe_allow_html=True,
-        )
-
-        st.divider()
-
-        categoria = st.selectbox(
-            "Sección",
-            categories,
-            index=default_index,
-            key=key,
-            label_visibility="collapsed",
         )
 
         st.divider()

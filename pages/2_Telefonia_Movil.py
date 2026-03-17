@@ -16,7 +16,7 @@ from services.transformers import (
 from components.page_setup import setup_page
 from components.sidebar import render_sidebar
 from components.kpi_cards import show_kpis
-from components.filters import anio_selector, trimestre_selector, periodo_range_selector
+from components.filters import render_range_filter
 from components.charts import line_chart, bar_chart, area_chart
 
 
@@ -24,7 +24,7 @@ st.set_page_config(page_title="Móvil · ENACOM", page_icon="📱", layout="wide
 
 setup_page()
 
-CATEGORIES = ["Overview", "Accesos", "Ingresos", "Minutos de voz", "SMS"]
+CATEGORIES = ["Resumen general", "Accesos", "Ingresos", "Minutos de voz", "SMS"]
 
 categoria = render_sidebar(CATEGORIES, key="movil_categoria")
 st.title("📱 Comunicaciones móviles")
@@ -38,9 +38,9 @@ def load(filename: str):
         st.stop()
 
 
-# ── Overview ──────────────────────────────────────────────────────────────────
+# ── Resumen general ──────────────────────────────────────────────────────────────────
 
-if categoria == "Overview":
+if categoria == "Resumen general":
     st.header("Resumen general")
 
     df_acc = load(MovilCSV.ACCESOS)
@@ -97,7 +97,7 @@ elif categoria == "Accesos":
     DataValidator.validate(df, ["anio", "trimestre"])
 
     df = sort_by_periodo(add_periodo_col(df))
-    anio_desde, anio_hasta = periodo_range_selector(df, key="mov_acc_range")
+    anio_desde, anio_hasta = render_range_filter(df, key_prefix="mov_acc_range")
     df_range = df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)]
 
     acc_col = next((c for c in df.columns if "total" in c or "linea" in c), df.columns[-1])
@@ -144,7 +144,7 @@ elif categoria == "Ingresos":
     DataValidator.validate(df, ["anio", "trimestre"])
 
     df = sort_by_periodo(add_periodo_col(df))
-    anio_desde, anio_hasta = periodo_range_selector(df, key="mov_ing_range")
+    anio_desde, anio_hasta = render_range_filter(df, key_prefix="mov_ing_range")
     df_range = df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)]
 
     ing_col = next((c for c in df.columns if "ingreso" in c or "miles" in c), df.columns[-1])
@@ -173,7 +173,7 @@ elif categoria == "Minutos de voz":
     DataValidator.validate(df, ["anio", "trimestre"])
 
     df = sort_by_periodo(add_periodo_col(df))
-    anio_desde, anio_hasta = periodo_range_selector(df, key="mov_min_range")
+    anio_desde, anio_hasta = render_range_filter(df, key_prefix="mov_min_range")
     df_range = df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)]
 
     min_col = next((c for c in df.columns if "minuto" in c or "total" in c), df.columns[-1])
@@ -198,7 +198,7 @@ elif categoria == "SMS":
     DataValidator.validate(df, ["anio", "trimestre"])
 
     df = sort_by_periodo(add_periodo_col(df))
-    anio_desde, anio_hasta = periodo_range_selector(df, key="mov_sms_range")
+    anio_desde, anio_hasta = render_range_filter(df, key_prefix="mov_sms_range")
     df_range = df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)]
 
     sms_col = next((c for c in df.columns if "sms" in c or "mensaje" in c or "total" in c),
