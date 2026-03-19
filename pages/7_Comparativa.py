@@ -1,5 +1,5 @@
 """
-6_Comparativa.py
+7_Comparativa.py
 ────────────────
 Vista transversal: compara métricas entre todos los servicios.
 
@@ -36,9 +36,9 @@ setup_page()
 
 CATEGORIES = [
     "Accesos por servicio",
-    "Ingresos por servicio",
     "Penetración comparada",
     "Crecimiento relativo",
+    "Ingresos por servicio",
 ]
 
 # Colores fijos por servicio — consistentes en toda la página
@@ -117,11 +117,114 @@ def indice_base_100(df_long: pd.DataFrame, base_anio: int) -> pd.DataFrame:
     return pd.concat(result, ignore_index=True) if result else pd.DataFrame()
 
 
+# ── 1. Ingresos por servicio ──────────────────────────────────────────────────
+
+if categoria == "Ingresos por servicio":
+    st.header("Ingresos por servicio")
+    st.caption(
+        "Valores en pesos corrientes (no ajustados por inflación). "
+        "Internet, Móvil, TV y Telefonía fija en miles de pesos. "
+        "Postal en pesos."
+    )
+
+    series = {}
+
+    # Internet
+    df = try_load(InternetCSV.INGRESOS)
+    if df is not None:
+        df = prep_trimestral(df)
+        ing_col = next((c for c in df.columns if "ingreso" in c), None)
+        if ing_col:
+            series["Internet fijo"] = (df, ing_col, "Ingresos")
+
+    # Móvil
+    df = try_load(MovilCSV.INGRESOS)
+    if df is not None:
+        df = prep_trimestral(df)
+        ing_col = next((c for c in df.columns if "ingreso" in c), None)
+        if ing_col:
+            series["Telefonía móvil"] = (df, ing_col, "Ingresos")
+
+    # TV — suma suscripción + satelital
+    df = try_load(TVCSVs.INGRESOS)
+    if df is not None:
+        df = prep_trimestral(df)
+        if "tv_suscripcion" in df.columns and "tv_satelital" in df.columns:
+            df["total_tv"] = df["tv_suscripcion"] + df["tv_satelital"]
+            series["TV por suscripción"] = (df, "total_tv", "Ingresos")
+
+    # Telefonía fija
+    df = try_load(TelefoniaCSV.FIJA_INGRESOS)
+    if df is not None:
+        df = prep_trimestral(df)
+        if "ingresos" in df.columns:
+            series["Telefonía fija"] = (df, "ingresos", "Ingresos")
+
+    # Postal — mensual → trimestral, suma los 3 servicios
+    df = try_load(PostalCSV.FACTURACION)
+    if df is not None and "mes" in df.columns:
+        cols = [c for c in ["postales", "telegraficas", "monetarios"] if c in df.columns]
+        df_t = mensual_a_trimestral(df, cols)
+        df_t["total_postal"] = df_t[cols].sum(axis=1)
+        series["Mercado postal"] = (df_t, "total_postal", "Ingresos")
+
+    if not series:
+        st.warning("No se encontraron archivos de ingresos.", icon="⚠️")
+        st.stop()
+
+    # KPIs
+    kpis = []
+    for servicio, (df_s, col, _) in series.items():
+        val, delta = last_period_delta(df_s, col)
+        kpis.append({"label": servicio, "value": val, "delta": delta, "format": "{:,.0f}"})
+    show_kpis(kpis)
+
+    st.divider()
+
+    # Gráfico — cada servicio como traza separada
+    fig = go.Figure()
+    for servicio, (df_s, col, _) in series.items():
+        fig.add_trace(go.Scatter(
+            x=df_s["periodo"], y=df_s[col],
+            name=servicio, mode="lines",
+            line={"color": COLOR_SERVICIO.get(servicio, "#888"), "width": 2},
+        ))
+    todos_periodos_ing = sorted(set(
+        p for df_s, col, _ in series.values()
+        for p in df_s["periodo"].tolist()
+    ))
+    fig.update_layout(
+        title="Ingresos por servicio — evolución histórica",
+        plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
+        font={"family": "Inter, Arial, sans-serif", "size": 13},
+        margin={"t": 48, "b": 40, "l": 48, "r": 20},
+        hovermode="x unified",
+        separators=",.",
+        legend={"orientation": "h", "yanchor": "bottom", "y": 1.02, "x": 0},
+        yaxis={"tickformat": ",.0f", "gridcolor": "#E8E8E8"},
+        xaxis={"categoryorder": "array", "categoryarray": todos_periodos_ing},
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+    st.info(
+        "Las escalas difieren entre servicios (Internet y Móvil en miles de $, "
+        "Postal en $ nominales). Usá la leyenda para mostrar/ocultar series.",
+        icon="ℹ️",
+    )
+
+    with st.expander("Ver tabla de datos"):
+        rows = []
+        for servicio, (df_s, col, _) in series.items():
+            tmp = df_s[["periodo", col]].copy()
+            tmp["Servicio"] = servicio
+            tmp = tmp.rename(columns={col: "Ingresos"})
+            rows.append(tmp)
+        st.dataframe(pd.concat(rows), use_container_width=True)
 
 
-# ── 1. Accesos por servicio ───────────────────────────────────────────────────
+# ── 2. Accesos por servicio ───────────────────────────────────────────────────
 
-if categoria == "Accesos por servicio":
+elif categoria == "Accesos por servicio":
     st.header("Accesos por servicio")
 
     series = {}
@@ -203,6 +306,7 @@ if categoria == "Accesos por servicio":
             font={"family": "Inter, Arial, sans-serif", "size": 13},
             margin={"t": 48, "b": 40, "l": 48, "r": 20},
             hovermode="x unified",
+        separators=",.",
             legend={"orientation": "h", "yanchor": "bottom", "y": 1.02, "x": 0},
             yaxis={"tickformat": ",.0f", "gridcolor": "#E8E8E8"},
             xaxis={"categoryorder": "array", "categoryarray": todos_periodos},
@@ -249,6 +353,7 @@ if categoria == "Accesos por servicio":
                 font={"family": "Inter, Arial, sans-serif", "size": 13},
                 margin={"t": 48, "b": 40, "l": 48, "r": 20},
                 hovermode="x unified",
+        separators=",.",
                 legend={"orientation": "h", "yanchor": "bottom", "y": 1.02, "x": 0},
                 yaxis={"ticksuffix": "", "gridcolor": "#E8E8E8",
                        "title": "Índice (base = 100)"},
@@ -258,109 +363,6 @@ if categoria == "Accesos por servicio":
                 f"Un valor de 150 significa que el servicio tiene 50% más accesos "
                 f"que en el primer trimestre de {base_anio}."
             )
-
-# ── 2. Ingresos por servicio ──────────────────────────────────────────────────
-
-elif categoria == "Ingresos por servicio":
-    st.header("Ingresos por servicio")
-    st.caption(
-        "Valores en pesos corrientes (no ajustados por inflación). "
-        "Internet, Móvil, TV y Telefonía fija en miles de pesos. "
-        "Postal en pesos."
-    )
-
-    series = {}
-
-    # Internet
-    df = try_load(InternetCSV.INGRESOS)
-    if df is not None:
-        df = prep_trimestral(df)
-        ing_col = next((c for c in df.columns if "ingreso" in c), None)
-        if ing_col:
-            series["Internet fijo"] = (df, ing_col, "Ingresos")
-
-    # Móvil
-    df = try_load(MovilCSV.INGRESOS)
-    if df is not None:
-        df = prep_trimestral(df)
-        ing_col = next((c for c in df.columns if "ingreso" in c), None)
-        if ing_col:
-            series["Telefonía móvil"] = (df, ing_col, "Ingresos")
-
-    # TV — suma suscripción + satelital
-    df = try_load(TVCSVs.INGRESOS)
-    if df is not None:
-        df = prep_trimestral(df)
-        if "tv_suscripcion" in df.columns and "tv_satelital" in df.columns:
-            df["total_tv"] = df["tv_suscripcion"] + df["tv_satelital"]
-            series["TV por suscripción"] = (df, "total_tv", "Ingresos")
-
-    # Telefonía fija
-    df = try_load(TelefoniaCSV.FIJA_INGRESOS)
-    if df is not None:
-        df = prep_trimestral(df)
-        if "ingresos" in df.columns:
-            series["Telefonía fija"] = (df, "ingresos", "Ingresos")
-
-    # Postal — mensual → trimestral, suma los 3 servicios
-    df = try_load(PostalCSV.FACTURACION)
-    if df is not None and "mes" in df.columns:
-        cols = [c for c in ["postales", "telegraficas", "monetarios"] if c in df.columns]
-        df_t = mensual_a_trimestral(df, cols)
-        df_t["total_postal"] = df_t[cols].sum(axis=1)
-        series["Mercado postal"] = (df_t, "total_postal", "Ingresos")
-
-    if not series:
-        st.warning("No se encontraron archivos de ingresos.", icon="⚠️")
-        st.stop()
-
-    # KPIs
-    kpis = []
-    for servicio, (df_s, col, _) in series.items():
-        val, delta = last_period_delta(df_s, col)
-        kpis.append({"label": servicio, "value": val, "delta": delta, "format": "{:,.0f}"})
-    show_kpis(kpis)
-
-    st.divider()
-
-    # Gráfico — cada servicio como traza separada
-    fig = go.Figure()
-    for servicio, (df_s, col, _) in series.items():
-        fig.add_trace(go.Scatter(
-            x=df_s["periodo"], y=df_s[col],
-            name=servicio, mode="lines",
-            line={"color": COLOR_SERVICIO.get(servicio, "#888"), "width": 2},
-        ))
-    todos_periodos_ing = sorted(set(
-        p for df_s, col, _ in series.values()
-        for p in df_s["periodo"].tolist()
-    ))
-    fig.update_layout(
-        title="Ingresos por servicio — evolución histórica",
-        plot_bgcolor="rgba(0,0,0,0)", paper_bgcolor="rgba(0,0,0,0)",
-        font={"family": "Inter, Arial, sans-serif", "size": 13},
-        margin={"t": 48, "b": 40, "l": 48, "r": 20},
-        hovermode="x unified",
-        legend={"orientation": "h", "yanchor": "bottom", "y": 1.02, "x": 0},
-        yaxis={"tickformat": ",.0f", "gridcolor": "#E8E8E8"},
-        xaxis={"categoryorder": "array", "categoryarray": todos_periodos_ing},
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
-    st.info(
-        "Las escalas difieren entre servicios (Internet y Móvil en miles de $, "
-        "Postal en $ nominales). Usá la leyenda para mostrar/ocultar series.",
-        icon="ℹ️",
-    )
-
-    with st.expander("Ver tabla de datos"):
-        rows = []
-        for servicio, (df_s, col, _) in series.items():
-            tmp = df_s[["periodo", col]].copy()
-            tmp["Servicio"] = servicio
-            tmp = tmp.rename(columns={col: "Ingresos"})
-            rows.append(tmp)
-        st.dataframe(pd.concat(rows), use_container_width=True)
 
 
 # ── 3. Penetración comparada ──────────────────────────────────────────────────
@@ -447,6 +449,7 @@ elif categoria == "Penetración comparada":
         font={"family": "Inter, Arial, sans-serif", "size": 13},
         margin={"t": 48, "b": 40, "l": 48, "r": 80},
         hovermode="x unified",
+        separators=",.",
         legend={"orientation": "h", "yanchor": "bottom", "y": 1.02, "x": 0},
         xaxis={"categoryorder": "array", "categoryarray": todos_periodos_pen},
         yaxis=dict(
@@ -599,6 +602,7 @@ elif categoria == "Crecimiento relativo":
         font={"family": "Inter, Arial, sans-serif", "size": 13},
         margin={"t": 48, "b": 40, "l": 48, "r": 20},
         hovermode="x unified",
+        separators=",.",
         legend={"orientation": "h", "yanchor": "bottom", "y": 1.02, "x": 0},
         xaxis={"categoryorder": "array", "categoryarray": todos_periodos_crec},
         yaxis={"gridcolor": "#E8E8E8",
