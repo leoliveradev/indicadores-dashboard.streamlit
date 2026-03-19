@@ -29,23 +29,31 @@ class MovilCSV:
 
 
 class TVCSVs:
-    ACCESOS  = "tv_accesos.csv"
-    INGRESOS = "tv_ingresos.csv"
+    ACCESOS               = "tv_accesos.csv"
+    ACCESOS_PROVINCIA     = "tv_accesos_provincias.csv"
+    PENETRACION           = "tv_penetracion.csv"
+    PENETRACION_PROVINCIA = "tv_penetracion_provincias.csv"
+    INGRESOS              = "tv_ingresos.csv"
 
 
 class TelefoniaCSV:
-    FIJA_ACCESOS  = "telefonia_fija_accesos.csv"
-    FIJA_INGRESOS = "telefonia_fija_ingresos.csv"
-    FIJA_PENETRACION  = "telefonia_fija_penetracion.csv"
-    FIJA_PENETRACION_PROVINCIAS  = "telefonia_fija_penetracion_provincias.csv"
+    FIJA_ACCESOS                = "telefonia_fija_accesos.csv"
+    FIJA_ACCESOS_PROVINCIA      = "telefonia_fija_accesos_provincias.csv"
+    FIJA_PENETRACION            = "telefonia_fija_penetracion.csv"
+    FIJA_PENETRACION_PROVINCIA  = "telefonia_fija_penetracion_provincias.csv"
+    FIJA_INGRESOS               = "telefonia_fija_ingresos.csv"
 
 
 class PostalCSV:
-    FACTURACION   = "mercado_postal_facturacion.csv"
-    PRODUCCION = "mercado_postal_produccion.csv"
+    FACTURACION      = "mercado_postal_facturacion.csv"
+    PRODUCCION       = "mercado_postal_produccion.csv"
     PERSONAL_OCUPADO = "mercado_postal_personal_ocupado.csv"
+    PROV_FACTURACION = "mercado_postal_facturacion_produccion_provincias.csv"
 
-
+class PortabilidadCSV:
+    MOVIL = "portabilidad_movil.csv"
+    # FIJA = "portabilidad_fija.csv"  ← agregar cuando esté disponible
+    
 # ── Columnas estándar esperadas en todos los CSVs temporales ─────────────────
 COL_ANIO      = "anio"
 COL_TRIMESTRE = "trimestre"
