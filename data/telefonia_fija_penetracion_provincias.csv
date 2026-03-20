@@ -1,4 +1,4 @@
-﻿anio;trimestre;provincia;accesos_100_hab;accesos_100_hog
+anio;trimestre;provincia;accesos_100_hab;accesos_100_hog
 2014;1;Buenos Aires;26.72;85.26
 2014;1;CABA;52.66;128.57
 2014;1;Catamarca;10.03;39.45
@@ -1080,7 +1080,7 @@
 2025;1;Tierra del Fuego;8.24;31.34
 2025;1;Tucumán;7.2;30.8
 2025;2;Buenos Aires;11.63;33.5
-2025;2;Capital Federal;35.35;87.07
+2025;2;CABA;35.35;87.07
 2025;2;Catamarca;3.95;15.53
 2025;2;Chaco;3.46;12.93
 2025;2;Chubut;7.97;26
@@ -1104,7 +1104,7 @@
 2025;2;Tierra del Fuego;7.98;26.9
 2025;2;Tucumán;7.14;28.84
 2025;3;Buenos Aires;15.83;50.53
-2025;3;Capital Federal;51.57;124.38
+2025;3;CABA;51.57;124.38
 2025;3;Catamarca;3.98;16.29
 2025;3;Chaco;3.43;13.45
 2025;3;Chubut;7.9;27.91

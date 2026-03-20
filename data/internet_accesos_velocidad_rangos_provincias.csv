@@ -1,4 +1,4 @@
-﻿anio;trimestre;provincia;hasta_512kbps;entre_512_1Mbps;entre_1Mbps_6Mbps;entre_6Mbps_10Mbps;entre_10Mbps_20Mbps;entre_20Mbps_30Mbps;mayor_30Mbps;otros;total
+anio;trimestre;provincia;hasta_512kbps;entre_512_1Mbps;entre_1Mbps_6Mbps;entre_6Mbps_10Mbps;entre_10Mbps_20Mbps;entre_20Mbps_30Mbps;mayor_30Mbps;otros;total
 2014;1;Buenos Aires;8469;171244;2279875;121787;38923;206;4037;0;2624542
 2014;1;CABA;852;88826;1096050;70293;38798;55;6208;0;1301081
 2014;1;Catamarca;19;9147;13330;1672;64;0;0;0;24232
