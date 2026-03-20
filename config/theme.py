@@ -64,7 +64,7 @@ PLOTLY_BASE_LAYOUT = {
     },
     "plot_bgcolor":  "rgba(0,0,0,0)",
     "paper_bgcolor": "rgba(0,0,0,0)",
-    "margin": {"t": 48, "b": 40, "l": 48, "r": 20},
+    "margin": {"t": 48, "b": 80, "l": 48, "r": 20},
     "colorway": COLOR_SEQUENCE,
     "xaxis": {
         "showgrid":    True,
@@ -84,8 +84,8 @@ PLOTLY_BASE_LAYOUT = {
     },
     "legend": {
         "orientation": "h",
-        "yanchor":     "bottom",
-        "y":           1.02,
+        "yanchor":     "top",
+        "y":           -0.30,
         "xanchor":     "left",
         "x":           0,
         "font":        {"color": ENACOM["primary"]},
@@ -95,6 +95,7 @@ PLOTLY_BASE_LAYOUT = {
         "font": {"color": ENACOM["primary"], "size": 15},
         "x": 0,
         "xanchor": "left",
+        "pad": {"b": 8},
     },
     "hovermode": "x unified",
     "hoverlabel": {

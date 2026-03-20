@@ -29,7 +29,7 @@ from services.transformers import (
 from components.page_setup import setup_page
 from components.sidebar import render_sidebar
 from components.kpi_cards import show_kpis
-from components.filters import render_period_filters, render_range_filter, render_period_and_provincia_filters   # ← nuevo
+from components.filters import render_header_with_range_filter, render_period_filters, render_range_filter, render_header_with_filters, render_header_with_filters_and_provincia, render_period_and_provincia_filters
 from components.charts import line_chart, bar_chart, area_chart
 
 
@@ -205,15 +205,15 @@ if categoria == "Resumen general":
             value=vel_nac,
             number={"suffix": " Mbps", "font": {"size": 28, "color": "#0B1742"},
                     "valueformat": ".1f"},
-            delta={
-                "reference": vel_top,
-                "position":  "bottom",
-                "valueformat": ".1f",
-                "suffix": f" Mbps vs {nombre_top}",
-                "font": {"size": 11},
-                "decreasing": {"color": "#005297"},
-                "increasing": {"color": "#ACAE22"},
-            },
+            # delta={
+            #     "reference": vel_top,
+            #     "position":  "bottom",
+            #     "valueformat": ".1f",
+            #     "suffix": f" Mbps vs {nombre_top}",
+            #     "font": {"size": 11},
+            #     "decreasing": {"color": "#005297"},
+            #     "increasing": {"color": "#ACAE22"},
+            # },
             title={
                 "text": (
                     f"Velocidad media nacional ({periodo_vel})<br>"
@@ -299,13 +299,14 @@ if categoria == "Resumen general":
 # ── Tecnología ────────────────────────────────────────────────────────────────
 
 elif categoria == "Tecnología":
-    st.header("Accesos por tecnología")
+    # st.header("Accesos por tecnología")
 
     df = load(InternetCSV.TECNOLOGIAS)
     DataValidator.validate(df, ["anio", "trimestre"] + TECNOLOGIAS_COLS + ["total"])
 
-    # ← filtros inline, ya no en el sidebar
-    anio, trimestre = render_period_filters(df, key_prefix="tec")
+    anio, trimestre = render_header_with_filters("Accesos por tecnología", df, key_prefix="tec")
+
+    st.divider()
 
     if not DataValidator.has_data(df, {"anio": anio, "trimestre": trimestre}):
         st.stop()
@@ -348,13 +349,16 @@ elif categoria == "Tecnología":
 # ── Velocidad media ───────────────────────────────────────────────────────────
 
 elif categoria == "Velocidad media":
-    st.header("Velocidad media de descarga")
+    # st.header("Velocidad media de descarga")
 
     df = load(InternetCSV.VELOCIDAD_MEDIA)
     DataValidator.validate(df, ["anio", "trimestre", "mbps"])
 
     # ← slider de rango inline, ya no en el sidebar
-    anio_desde, anio_hasta = render_range_filter(df, key_prefix="vel")
+    # anio_desde, anio_hasta = render_range_filter(df, key_prefix="vel")
+    anio_desde, anio_hasta = render_header_with_range_filter("Velocidad media de descarga", df, key_prefix="vel")
+
+    st.divider()
 
     df_range = sort_by_periodo(add_periodo_col(
         df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)]
@@ -381,13 +385,18 @@ elif categoria == "Velocidad media":
 # ── Banda ancha vs Dial-up ───────────────────────────────────────────────────
  
 elif categoria == "Banda ancha vs Dial-up":
-    st.header("Banda ancha fija vs Dial-up")
+    # st.header("Banda ancha fija vs Dial-up")
  
     df = load(InternetCSV.BANDA_ANCHA_DIALUP)
     DataValidator.validate(df, ["anio", "trimestre", "banda_ancha_fija", "dial_up", "total"])
     df = sort_by_periodo(add_periodo_col(df))
  
-    anio_desde, anio_hasta = render_range_filter(df, key_prefix="baf")
+    # anio_desde, anio_hasta = render_range_filter(df, key_prefix="baf")
+
+    anio_desde, anio_hasta = render_header_with_range_filter("Banda ancha vs Dial-up", df, key_prefix="baf")
+
+    st.divider()
+
     df_range = df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)].copy()
  
     baf_actual, delta_baf   = last_period_delta(df_range, "banda_ancha_fija")
@@ -461,13 +470,17 @@ elif categoria == "Banda ancha vs Dial-up":
 # ── Rangos de velocidad ───────────────────────────────────────────────────────
  
 elif categoria == "Rangos de velocidad":
-    st.header("Accesos por rangos de velocidad")
+    # st.header("Accesos por rangos de velocidad")
  
     df = load(InternetCSV.VELOCIDAD_RANGOS)
     DataValidator.validate(df, ["anio", "trimestre"] + VELOCIDAD_RANGOS_COLS)
     df = sort_by_periodo(add_periodo_col(df))
  
-    anio_desde, anio_hasta = render_range_filter(df, key_prefix="vrang")
+    # anio_desde, anio_hasta = render_range_filter(df, key_prefix="vrang")
+    anio_desde, anio_hasta = render_header_with_range_filter("Rangos de velocidad", df, key_prefix="vrang")
+
+    st.divider()
+
     df_range = df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)].copy()
  
     # KPIs: último período
@@ -528,7 +541,7 @@ elif categoria == "Rangos de velocidad":
 # ── Penetración ───────────────────────────────────────────────────────────────
 
 elif categoria == "Penetración":
-    st.header("Penetración de Internet fijo")
+    # st.header("Penetración de Internet fijo")
 
     df = load(InternetCSV.PENETRACION)
     DataValidator.validate(df, ["anio", "trimestre",
@@ -537,7 +550,11 @@ elif categoria == "Penetración":
 
     df = sort_by_periodo(add_periodo_col(df))
 
-    anio_desde, anio_hasta = render_range_filter(df, key_prefix="pen")
+    # anio_desde, anio_hasta = render_range_filter(df, key_prefix="pen")
+    anio_desde, anio_hasta = render_header_with_range_filter("Penetración", df, key_prefix="pen")
+
+    st.divider()
+
     df_range = df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)]
 
     # ── KPIs ─────────────────────────────────────────────────────────────────
@@ -718,12 +735,15 @@ elif categoria == "── Por provincia ──":
 # ═══════════════════════════════════════════════════════════════════════════════
 
 elif categoria == "Tecnología - provincia":
-    st.header("Accesos por tecnología — por provincia")
+    # st.header("Accesos por tecnología — por provincia")
 
     df = load(InternetCSV.TECNOLOGIAS_PROVINCIA)
     DataValidator.validate(df, ["anio", "trimestre", "provincia"] + TECNOLOGIAS_COLS + ["total"])
 
-    anio, trimestre = render_period_filters(df, key_prefix="prov_tec")
+    # anio, trimestre = render_period_filters(df, key_prefix="prov_tec")
+    anio, trimestre = render_header_with_filters("Accesos tecnología — por provincia", df, key_prefix="prov_tec")
+
+    st.divider()
 
     if not DataValidator.has_data(df, {"anio": anio, "trimestre": trimestre}):
         st.stop()
@@ -818,12 +838,15 @@ elif categoria == "Tecnología - provincia":
 # ── Velocidad media - provincia ───────────────────────────────────────────────────
 
 elif categoria == "Velocidad media - provincia":
-    st.header("Velocidad media de descarga — por provincia")
+    # st.header("Velocidad media de descarga — por provincia")
 
     df = load(InternetCSV.VELOCIDAD_MEDIA_PROVINCIA)
     DataValidator.validate(df, ["anio", "trimestre", "provincia", "mbps"])
 
-    anio, trimestre = render_period_filters(df, key_prefix="prov_vel")
+    # anio, trimestre = render_period_filters(df, key_prefix="prov_vel")
+    anio, trimestre = render_header_with_filters("Velocidad media de descarga — por provincia", df, key_prefix="prov_vel")
+
+    st.divider()
 
     if not DataValidator.has_data(df, {"anio": anio, "trimestre": trimestre}):
         st.stop()
@@ -885,13 +908,16 @@ elif categoria == "Velocidad media - provincia":
 # ── Banda ancha - provincia ───────────────────────────────────────────────────────
 
 elif categoria == "Banda ancha - provincia":
-    st.header("Banda ancha fija vs Dial-up — por provincia")
+    # st.header("Banda ancha fija vs Dial-up — por provincia")
 
     df = load(InternetCSV.BAF_PROVINCIA)
     DataValidator.validate(df, ["anio", "trimestre", "provincia",
                                 "banda_ancha_fija", "dial_up", "total"])
 
-    anio, trimestre = render_period_filters(df, key_prefix="prov_baf")
+    # anio, trimestre = render_period_filters(df, key_prefix="prov_baf")
+    anio, trimestre = render_header_with_filters("Banda ancha fija vs Dial-up — por provincia", df, key_prefix="prov_baf")
+
+    st.divider()
 
     if not DataValidator.has_data(df, {"anio": anio, "trimestre": trimestre}):
         st.stop()
@@ -971,7 +997,7 @@ elif categoria == "Banda ancha - provincia":
 # ── Rangos de velocidad - provincia ──────────────────────────────────────────
 
 elif categoria == "Rangos de velocidad - provincia":
-    st.header("Rangos de velocidad — por provincia")
+    # st.header("Rangos de velocidad — por provincia")
 
     df = load(InternetCSV.VELOCIDAD_RANGOS_PROVINCIA)
     df = sort_by_periodo(add_periodo_col(df))
@@ -982,7 +1008,10 @@ elif categoria == "Rangos de velocidad - provincia":
 
     DataValidator.validate(df, ["anio", "trimestre", "provincia"] + VELOCIDAD_RANGOS_COLS)
 
-    anio, trimestre = render_period_filters(df, key_prefix="prov_vrang")
+    # anio, trimestre = render_period_filters(df, key_prefix="prov_vrang")
+    anio, trimestre = render_header_with_filters("Rangos de velocidad — por provincia", df, key_prefix="prov_vrang")
+
+    st.divider()
 
     if not DataValidator.has_data(df, {"anio": anio, "trimestre": trimestre}):
         st.stop()
@@ -1077,14 +1106,17 @@ elif categoria == "Rangos de velocidad - provincia":
 # ── Penetración - provincia ───────────────────────────────────────────────────────
 
 elif categoria == "Penetración - provincia":
-    st.header("Penetración de Internet — por provincia")
+    # st.header("Penetración — por provincia")
 
     df = load(InternetCSV.PENETRACION_PROVINCIA)
     DataValidator.validate(df, ["anio", "trimestre", "provincia",
                                 "accesos_cada_100_hogares",
                                 "accesos_cada_100_habitantes"])
 
-    anio, trimestre = render_period_filters(df, key_prefix="prov_pen")
+    # anio, trimestre = render_period_filters(df, key_prefix="prov_pen")
+    anio, trimestre = render_header_with_filters("Penetración — por provincia", df, key_prefix="prov_pen")
+
+    st.divider()
 
     if not DataValidator.has_data(df, {"anio": anio, "trimestre": trimestre}):
         st.stop()
