@@ -1,5 +1,5 @@
 """
-5_Postal.py
+6_Mercado_Postal.py
 ───────────
 Vista de Mercado Postal.
 
@@ -36,8 +36,8 @@ CATEGORIES = [
     "Resumen general",
     "Facturación",
     "Producción",
-    "Personal ocupado",
     "Facturación y producción - provincia",
+    "Personal ocupado",
 ]
 
 SERVICIOS_COLS = ["postales", "telegraficas", "monetarios"]
@@ -275,7 +275,7 @@ elif categoria == "Producción":
         font={"family": "Inter, Arial, sans-serif", "size": 13},
         margin={"t": 48, "b": 40, "l": 48, "r": 60},
         hovermode="x unified",
-        legend={"orientation": "h", "yanchor": "bottom", "y": 1.02, "x": 0},
+        legend={"orientation": "h", "yanchor": "top", "y": -0.20, "x": 0},
         yaxis=dict(
             title=dict(text="Unidades", font={"color": "#00B5E5"}),
             tickfont={"color": "#00B5E5"}, gridcolor="#E8E8E8",
