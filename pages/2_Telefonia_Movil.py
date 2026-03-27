@@ -5,8 +5,6 @@ Vista de Comunicaciones Móviles.
 """
 
 import streamlit as st
-# import pandas as pd
-# import plotly.express as px
 import plotly.graph_objects as go
 
 from config.constants import MovilCSV
@@ -19,7 +17,7 @@ from services.transformers import (
 from components.page_setup import setup_page
 from components.sidebar import render_sidebar
 from components.kpi_cards import show_kpis
-from components.filters import render_range_filter, render_period_filters
+from components.filters import render_header_with_range_filter, render_range_filter, render_period_filters
 from components.charts import line_chart, bar_chart, area_chart
 
 
@@ -131,13 +129,16 @@ if categoria == "Resumen general":
 # ── Accesos ───────────────────────────────────────────────────────────────────
 
 elif categoria == "Accesos":
-    st.header("Líneas móviles activas")
+    # st.header("Líneas móviles activas")
 
     df = load(MovilCSV.ACCESOS)
     DataValidator.validate(df, ["anio", "trimestre"])
     df = sort_by_periodo(add_periodo_col(df))
 
-    anio_desde, anio_hasta = render_range_filter(df, key_prefix="mov_acc")
+    # anio_desde, anio_hasta = render_range_filter(df, key_prefix="mov_acc")
+    anio_desde, anio_hasta = render_header_with_range_filter("Líneas móviles activas", df, key_prefix="mov_acc")
+
+    st.divider()
     df_range = df[(df["anio"] >= anio_desde) & (df["anio"] <= anio_hasta)].copy()
 
     acc_col = next((c for c in df.columns if "operativo" in c or "total" in c), df.columns[-1])
