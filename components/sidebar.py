@@ -37,26 +37,26 @@ def render_sidebar(
             label_visibility="collapsed",
         )
        
-        st.divider()
+        # st.divider()
 
-        st.markdown(
-            f"""
-            <div style="margin-bottom: 8px;">
-                <span style="
-                    font-size: 13px;
-                    font-weight: 700;
-                    color: {ENACOM['white']};
-                    letter-spacing: 0.03em;
-                ">{APP_TITLE}</span>
-                <br>
-                <span style="
-                    font-size: 10px;
-                    color: {ENACOM['light_gray']};
-                ">v{APP_VERSION}</span>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        # st.markdown(
+        #     f"""
+        #     <div style="margin-bottom: 8px;">
+        #         <span style="
+        #             font-size: 13px;
+        #             font-weight: 700;
+        #             color: {ENACOM['white']};
+        #             letter-spacing: 0.03em;
+        #         ">{APP_TITLE}</span>
+        #         <br>
+        #         <span style="
+        #             font-size: 10px;
+        #             color: {ENACOM['light_gray']};
+        #         ">v{APP_VERSION}</span>
+        #     </div>
+        #     """,
+        #     unsafe_allow_html=True,
+        # )
 
         st.divider()
         _render_footer()
@@ -72,7 +72,15 @@ def _render_footer() -> None:
                       target="_blank"
                       style="color: {ENACOM['cyan']}; text-decoration: none;">
                 ENACOM
-            </a><br>
+            <br>
+            </a>
+                <span style="
+                     font-size: 13px;
+                     font-weight: 700;
+                     color: {ENACOM['white']};
+                     letter-spacing: 0.03em;
+                ">{APP_TITLE}</span>
+            <br>
             Series históricas del sector<br>
             de telecomunicaciones de Argentina
         </div>
