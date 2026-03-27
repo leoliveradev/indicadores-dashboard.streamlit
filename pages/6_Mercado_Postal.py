@@ -127,8 +127,31 @@ if categoria == "Resumen general":
 
     st.divider()
 
-    col1, col2 = st.columns(2)
-    with col1:
+    # col1, col2 = st.columns(1)
+    # with col1:
+    #     df_long = melt_tecnologias(df_fac_t, SERVICIOS_COLS,
+    #                                id_col="periodo", var_name="Servicio", value_name="Facturación")
+    #     df_long["Servicio"] = df_long["Servicio"].map(SERVICIOS_LABELS)
+    #     fig = area_chart(df_long, "periodo", "Facturación", "Servicio",
+    #                      title="Facturación por tipo de servicio ($)")
+    #     st.plotly_chart(fig, use_container_width=True)
+
+    # with col2:
+    #     df_long_p = melt_tecnologias(df_pro_t, SERVICIOS_COLS,
+    #                                  id_col="periodo", var_name="Servicio", value_name="Producción")
+    #     df_long_p["Servicio"] = df_long_p["Servicio"].map(SERVICIOS_LABELS)
+    #     fig = area_chart(df_long_p, "periodo", "Producción", "Servicio",
+    #                      title="Producción por tipo de servicio (unidades)")
+    #     st.plotly_chart(fig, use_container_width=True)
+
+    # col3, _ = st.columns([1, 1])
+    # with col3:
+    #     fig = line_chart(df_per, "periodo", "personal_ocupado",
+    #                      title="Personal ocupado — evolución",
+    #                      labels={"personal_ocupado": "Personas"}, markers=False)
+    #     st.plotly_chart(fig, use_container_width=True)
+    
+    with st.container():
         df_long = melt_tecnologias(df_fac_t, SERVICIOS_COLS,
                                    id_col="periodo", var_name="Servicio", value_name="Facturación")
         df_long["Servicio"] = df_long["Servicio"].map(SERVICIOS_LABELS)
@@ -136,7 +159,6 @@ if categoria == "Resumen general":
                          title="Facturación por tipo de servicio ($)")
         st.plotly_chart(fig, use_container_width=True)
 
-    with col2:
         df_long_p = melt_tecnologias(df_pro_t, SERVICIOS_COLS,
                                      id_col="periodo", var_name="Servicio", value_name="Producción")
         df_long_p["Servicio"] = df_long_p["Servicio"].map(SERVICIOS_LABELS)
@@ -144,13 +166,10 @@ if categoria == "Resumen general":
                          title="Producción por tipo de servicio (unidades)")
         st.plotly_chart(fig, use_container_width=True)
 
-    col3, _ = st.columns([1, 1])
-    with col3:
         fig = line_chart(df_per, "periodo", "personal_ocupado",
                          title="Personal ocupado — evolución",
                          labels={"personal_ocupado": "Personas"}, markers=False)
-        st.plotly_chart(fig, use_container_width=True)
-
+        st.plotly_chart(fig, use_container_width=True)        
 
 # ── Facturación ───────────────────────────────────────────────────────────────
 
