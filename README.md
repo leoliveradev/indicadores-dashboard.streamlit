@@ -33,7 +33,7 @@ indicadores-dashboard/
 ## 🚀 Instalación y Ejecución
 1.  Clonar el repositorio:
 ```bash
-git clone [https://github.com/leoliveradev/indicadores-dashboard.streamlit.git](https://github.com/leoliveradev/indicadores-dashboard.streamlit.git)
+git clone https://github.com/leoliveradev/indicadores-dashboard.streamlit.git
 cd indicadores-dashboard.streamlit
 ```
 2. Instalar dependencias:
