@@ -6,10 +6,10 @@ DATA_DIR = BASE_DIR / "data"
 
 # ── Lectura de CSVs ────────────────────────────────────────────────────────
 CSV_ENCODING = "utf-8"
-CSV_SEPARATOR = ";"
+CSV_SEPARATOR = ","
 
 # ── App ────────────────────────────────────────────────────────────────────
-APP_TITLE = "Indicadores - ENACOM"
+APP_TITLE = "ENACOM - Indicadores"
 APP_ICON = "📡"
 APP_LAYOUT = "wide"
 APP_VERSION = "1.0.0"
