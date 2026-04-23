@@ -1,12 +1,7 @@
-from pathlib import Path
+import streamlit as st
 
-# ── Rutas ──────────────────────────────────────────────────────────────────
-BASE_DIR = Path(__file__).resolve().parent.parent
-DATA_DIR = BASE_DIR / "data"
-
-# ── Lectura de CSVs ────────────────────────────────────────────────────────
-CSV_ENCODING = "utf-8"
-CSV_SEPARATOR = ","
+API_BASE_URL = st.secrets.get("API_BASE_URL", "http://localhost:3000/api")
+TIMEOUT_CONEXION = 50
 
 # ── App ────────────────────────────────────────────────────────────────────
 APP_TITLE = "ENACOM - Indicadores"
