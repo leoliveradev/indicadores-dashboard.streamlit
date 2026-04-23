@@ -1,48 +1,64 @@
 # Indicadores ENACOM — Dashboard
 
-Dashboard de indicadores del sector de telecomunicaciones de Argentina,
-basado en datos abiertos de ENACOM.
+Dashboard profesional para la visualización y análisis de indicadores del sector de telecomunicaciones en Argentina.
 
-## Estructura del proyecto
+## 🚀 Arquitectura del Sistema
 
-```
+El dashboard funciona como un cliente de datos que se conecta a una infraestructura moderna:
+* **Fuente de Datos:** Portal de Datos Abiertos de ENACOM.
+* **Backend:** API desarrollada en TypeScript/Node.js.
+* **Base de Datos:** PostgreSQL administrado en **Supabase**.
+* **Frontend:** Streamlit Cloud.
+
+## 📁 Estructura del proyecto
+
+```text
 dashboard/
-├── app.py                        # Entry point
-├── requirements.txt
+├── app.py                  # Punto de entrada (Entry point)
+├── requirements.txt        # Dependencias del proyecto
+├── .streamlit/
+│   └── secrets.toml        # Configuración local de variables de entorno (no trackeado)
 ├── config/
-│   ├── settings.py               # Rutas, encoding, metadata de la app
-│   ├── constants.py              # Nombres de archivos CSV y columnas
-│   └── theme.py                  # Colores y layout de Plotly
+│   ├── settings.py         # Configuración global (API URLs, Timeouts)
+│   ├── theme.py            # Estilos visuales y paleta de colores de Plotly
+│   ├── constants.py        # Constantes globales (Provincias, Nombres de columnas)
+│   └── endpoints/          # Definición de recursos de la API
+│       ├── __init__.py     # Exportación centralizada de servicios
+│       ├── internet.py     # Endpoints de conectividad fija
+│       ├── movil.py        # Endpoints de telefonía móvil
+│       └── ...             # Otros servicios (TV, Postal, Telefonia)
 ├── services/
-│   ├── data_manager.py           # Carga y cache de CSVs
-│   ├── data_validator.py         # Validación de columnas y datos
-│   └── transformers.py           # Transformaciones de pandas (funciones puras)
-├── components/
-│   ├── kpi_cards.py              # Métricas genéricas
-│   ├── charts.py                 # Gráficos reutilizables (Plotly)
-│   ├── filters.py                # Widgets de filtro para el sidebar
-│   └── sidebar.py                # Sidebar común
-├── pages/
-│   ├── 1_Internet.py
-│   ├── 2_Movil.py
-│   ├── 3_TV.py
-│   ├── 4_Telefonia.py
-│   ├── 5_Postal.py
-│   └── 6_Comparativa.py
-└── data/                         # CSVs de ENACOM (no incluidos en el repo)
+│   ├── data_manager.py     # Motor de carga, cache (st.cache_data) y normalización
+│   ├── data_validator.py   # Validación de integridad de datos
+│   └── transformers.py     # Lógica de negocio y transformaciones de Pandas
+├── components/             # UI Reutilizable (Charts, KPI cards, Filters)
+└── pages/                  # Vistas del dashboard (Internet, Móvil, TV, etc.)
+
+## 🛠️ Instalación y Configuración
+
+1. Clonar el repositorio
+```bash
+git clone https://github.com/leoliveradev/indicadores-dashboard.streamlit
+cd indicadores-dashboard.streamlit
 ```
 
-## Instalación y ejecución
-
+2. Instalar dependencias
 ```bash
 pip install -r requirements.txt
+```
+
+3. Configurar Variables de Entorno
+Crea un archivo llamado `.streamlit/secrets.toml` en la raíz del proyecto para conectar con la API:
+
+4. Ejecutar localmente
+```bash
 streamlit run app.py
 ```
 
-## Principios de arquitectura
+## 🏗️ Principios de Diseño
 
 **Dependencia descendente**: las capas solo conocen a la que está debajo.
-`pages → components → services → config`. Nunca al revés.
+`pages → components → services → config`.
 
 **Una sola fuente de verdad por responsabilidad**:
 - Nombres de archivos → `config/constants.py`
@@ -50,17 +66,34 @@ streamlit run app.py
 - Lógica de pandas → `services/transformers.py`
 - Colores y estilo → `config/theme.py`
 
-**Páginas livianas**: cada página solo orquesta.
+**Páginas livianas**: Cada página solo orquesta.
 El patrón es siempre: `load → validate → transform → render`.
 
-## Agregar una nueva página
+**Consumo Eficiente**: Se implementa un sistema de cacheo inteligente con un TTL (Time To Live) de 1 hora para minimizar el tráfico hacia la API y mejorar la experiencia de usuario.
 
-1. Agregar el nombre del CSV en `config/constants.py`.
-2. Crear `pages/N_NombreServicio.py` copiando la estructura de cualquier página existente.
-3. Importar las funciones necesarias de `services/` y `components/`.
-4. La página no debe contener lógica de pandas ni strings de archivos CSV directamente.
+**Normalización Automática**: El DataManager procesa cada respuesta de la API para estandarizar nombres de columnas (snake_case), limpiar strings y asegurar tipos de datos numéricos.
 
-## Agregar un nuevo gráfico reutilizable
+## 📈 Cómo extender el Dashboard
+
+### Agregar un nuevo endpoint:
+
+1. Define el string del recurso en su archivo correspondiente dentro de `config/endpoints/`.
+2. Si es un servicio nuevo, asegúrate de exportar la clase en `config/endpoints/__init__.py`.
+
+### Crear una nueva página:
+
+1. Crea el archivo en `pages/`.
+2. Usa el patrón estándar:
+
+```bash
+df = DataManager.load(InternetEndpoints.NUEVO_RECURSO)
+# El DataFrame ya viene normalizado y cacheado.
+```
+
+### Agregar un nuevo gráfico reutilizable
 
 Agregar una función en `components/charts.py` siguiendo el patrón existente:
 recibe un DataFrame y parámetros, aplica `_apply_theme()`, devuelve una figura Plotly.
+
+## 📄 Licencia
+Este proyecto es de código abierto y utiliza datos públicos. Consulta los términos de uso en ENACOM Datos Abiertos.
