@@ -1,20 +1,9 @@
-"""
-7_Portabilidad.py
-─────────────────
-Vista de Portabilidad Numérica.
-
-Datos disponibles: telefonía móvil (desde 2012).
-Estructura preparada para escalar con portabilidad fija cuando esté disponible.
-
-Granularidad: mensual → se puede ver mensual o agregar a trimestral/anual.
-"""
-
 import streamlit as st
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
 
-from config.constants import PortabilidadCSV
+from config.endpoints import PortabilidadEndpoints
 from services.data_manager import DataManager, DataLoadError
 from services.data_validator import DataValidator
 from services.transformers import add_periodo_col, sort_by_periodo, last_period_delta
@@ -79,7 +68,7 @@ def add_mes_col(df):
 if categoria == "Resumen general":
     st.header("Resumen general")
 
-    df = load(PortabilidadCSV.MOVIL)
+    df = load(PortabilidadEndpoints.MOVIL)
     DataValidator.validate(df, ["anio", "mes", "total"])
 
     df_t  = mensual_a_trimestral(df)
@@ -146,7 +135,7 @@ if categoria == "Resumen general":
 elif categoria == "Telefonía móvil":
     st.header("Portabilidad — telefonía móvil")
 
-    df = load(PortabilidadCSV.MOVIL)
+    df = load(PortabilidadEndpoints.MOVIL)
     DataValidator.validate(df, ["anio", "mes", "total"])
     df = add_mes_col(df)
 

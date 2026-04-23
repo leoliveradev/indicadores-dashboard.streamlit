@@ -1,16 +1,11 @@
-"""
-1_Internet.py
-─────────────
-Vista de Internet Fijo.
-"""
-
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 
+from config.endpoints import InternetEndpoints
 from config.constants import (
-    InternetCSV, TECNOLOGIAS_COLS, TECNOLOGIAS_LABELS,
+    TECNOLOGIAS_COLS, TECNOLOGIAS_LABELS,
     VELOCIDAD_RANGOS_COLS, VELOCIDAD_RANGOS_LABELS,
 )
 from config.theme import COLORS
@@ -69,10 +64,10 @@ def load(filename: str):
 if categoria == "Resumen general":
     st.header("Resumen general")
  
-    df_tec  = load(InternetCSV.TECNOLOGIAS)
-    df_pen  = load(InternetCSV.PENETRACION)
-    df_ing  = load(InternetCSV.INGRESOS)
-    df_rang = load(InternetCSV.VELOCIDAD_RANGOS)
+    df_tec  = load(InternetEndpoints.TECNOLOGIAS)
+    df_pen  = load(InternetEndpoints.PENETRACION)
+    df_ing  = load(InternetEndpoints.INGRESOS)
+    df_rang = load(InternetEndpoints.VELOCIDAD_RANGOS)
  
     for df, cols in [
         (df_tec,  ["anio", "trimestre", "total", "fibra_optica", "cablemodem", "adsl"]),
@@ -177,8 +172,8 @@ if categoria == "Resumen general":
  
     with col2:
         # Velocidad media nacional y máx. provincial
-        df_vel  = load(InternetCSV.VELOCIDAD_MEDIA)
-        df_velp = load(InternetCSV.VELOCIDAD_MEDIA_PROVINCIA)
+        df_vel  = load(InternetEndpoints.VELOCIDAD_MEDIA)
+        df_velp = load(InternetEndpoints.VELOCIDAD_MEDIA_PROVINCIA)
  
         df_vel  = sort_by_periodo(add_periodo_col(df_vel))
         df_velp = sort_by_periodo(add_periodo_col(df_velp))
@@ -301,7 +296,7 @@ if categoria == "Resumen general":
 elif categoria == "Tecnología":
     # st.header("Accesos por tecnología")
 
-    df = load(InternetCSV.TECNOLOGIAS)
+    df = load(InternetEndpoints.TECNOLOGIAS)
     DataValidator.validate(df, ["anio", "trimestre"] + TECNOLOGIAS_COLS + ["total"])
 
     anio, trimestre = render_header_with_filters("Accesos por tecnología", df, key_prefix="tec")
@@ -351,7 +346,7 @@ elif categoria == "Tecnología":
 elif categoria == "Velocidad media":
     # st.header("Velocidad media de descarga")
 
-    df = load(InternetCSV.VELOCIDAD_MEDIA)
+    df = load(InternetEndpoints.VELOCIDAD_MEDIA)
     DataValidator.validate(df, ["anio", "trimestre", "mbps"])
 
     # ← slider de rango inline, ya no en el sidebar
@@ -387,7 +382,7 @@ elif categoria == "Velocidad media":
 elif categoria == "Banda ancha vs Dial-up":
     # st.header("Banda ancha fija vs Dial-up")
  
-    df = load(InternetCSV.BANDA_ANCHA_DIALUP)
+    df = load(InternetEndpoints.BAF)
     DataValidator.validate(df, ["anio", "trimestre", "banda_ancha_fija", "dial_up", "total"])
     df = sort_by_periodo(add_periodo_col(df))
  
@@ -472,7 +467,7 @@ elif categoria == "Banda ancha vs Dial-up":
 elif categoria == "Rangos de velocidad":
     # st.header("Accesos por rangos de velocidad")
  
-    df = load(InternetCSV.VELOCIDAD_RANGOS)
+    df = load(InternetEndpoints.VELOCIDAD_RANGOS)
     DataValidator.validate(df, ["anio", "trimestre"] + VELOCIDAD_RANGOS_COLS)
     df = sort_by_periodo(add_periodo_col(df))
  
@@ -543,7 +538,7 @@ elif categoria == "Rangos de velocidad":
 elif categoria == "Penetración":
     # st.header("Penetración de Internet fijo")
 
-    df = load(InternetCSV.PENETRACION)
+    df = load(InternetEndpoints.PENETRACION)
     DataValidator.validate(df, ["anio", "trimestre",
                                 "accesos_cada_100_hogares",
                                 "accesos_cada_100_habitantes"])
@@ -701,7 +696,7 @@ elif categoria == "Penetración":
 elif categoria == "Ingresos":
     st.header("Ingresos del sector")
 
-    df = load(InternetCSV.INGRESOS)
+    df = load(InternetEndpoints.INGRESOS)
     DataValidator.validate(df, ["anio", "trimestre"])
     df = sort_by_periodo(add_periodo_col(df))
 
@@ -737,7 +732,7 @@ elif categoria == "── Por provincia ──":
 elif categoria == "Tecnología - provincia":
     # st.header("Accesos por tecnología — por provincia")
 
-    df = load(InternetCSV.TECNOLOGIAS_PROVINCIA)
+    df = load(InternetEndpoints.TECNOLOGIAS_PROVINCIA)
     DataValidator.validate(df, ["anio", "trimestre", "provincia"] + TECNOLOGIAS_COLS + ["total"])
 
     # anio, trimestre = render_period_filters(df, key_prefix="prov_tec")
@@ -840,7 +835,7 @@ elif categoria == "Tecnología - provincia":
 
 elif categoria == "Velocidad media - provincia":
  
-    df = load(InternetCSV.VELOCIDAD_MEDIA_PROVINCIA)
+    df = load(InternetEndpoints.VELOCIDAD_MEDIA_PROVINCIA)
     DataValidator.validate(df, ["anio", "trimestre", "provincia", "mbps"])
  
     anio, trimestre = render_header_with_filters("Velocidad media de descarga — por provincia", df, key_prefix="prov_vel")
@@ -855,7 +850,7 @@ elif categoria == "Velocidad media - provincia":
     low  = df_periodo.nsmallest(1, "mbps").iloc[0]
  
     # Velocidad media nacional del mismo período
-    df_vel_nac = load(InternetCSV.VELOCIDAD_MEDIA)
+    df_vel_nac = load(InternetEndpoints.VELOCIDAD_MEDIA)
     df_vel_nac = sort_by_periodo(add_periodo_col(df_vel_nac))
     df_nac_periodo = filter_by_period(df_vel_nac, anio, trimestre)
     vel_nac = float(df_nac_periodo["mbps"].iloc[0]) if len(df_nac_periodo) > 0 else None
@@ -915,7 +910,7 @@ elif categoria == "Velocidad media - provincia":
 elif categoria == "Banda ancha - provincia":
     # st.header("Banda ancha fija vs Dial-up — por provincia")
 
-    df = load(InternetCSV.BAF_PROVINCIA)
+    df = load(InternetEndpoints.BAF_PROVINCIA)
     DataValidator.validate(df, ["anio", "trimestre", "provincia",
                                 "banda_ancha_fija", "dial_up", "total"])
 
@@ -1004,7 +999,7 @@ elif categoria == "Banda ancha - provincia":
 elif categoria == "Rangos de velocidad - provincia":
     # st.header("Rangos de velocidad — por provincia")
 
-    df = load(InternetCSV.VELOCIDAD_RANGOS_PROVINCIA)
+    df = load(InternetEndpoints.VELOCIDAD_RANGOS_PROVINCIA)
     df = sort_by_periodo(add_periodo_col(df))
 
     # El CSV provincial usa "hasta_512kbps" (sin guión), el nacional "hasta_512_kbps"
@@ -1113,7 +1108,7 @@ elif categoria == "Rangos de velocidad - provincia":
 elif categoria == "Penetración - provincia":
     # st.header("Penetración — por provincia")
 
-    df = load(InternetCSV.PENETRACION_PROVINCIA)
+    df = load(InternetEndpoints.PENETRACION_PROVINCIA)
     DataValidator.validate(df, ["anio", "trimestre", "provincia",
                                 "accesos_cada_100_hogares",
                                 "accesos_cada_100_habitantes"])

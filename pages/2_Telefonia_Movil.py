@@ -1,13 +1,7 @@
-"""
-2_Movil.py
-──────────
-Vista de Comunicaciones Móviles.
-"""
-
 import streamlit as st
 import plotly.graph_objects as go
 
-from config.constants import MovilCSV
+from config.endpoints import MovilEndpoints
 from services.data_manager import DataManager, DataLoadError
 from services.data_validator import DataValidator
 from services.transformers import (
@@ -64,10 +58,10 @@ def split_prepago_pospago(df, value_name="Valor"):
 if categoria == "Resumen general":
     st.header("Resumen general")
 
-    df_acc = load(MovilCSV.ACCESOS)
-    df_ing = load(MovilCSV.INGRESOS)
-    df_min = load(MovilCSV.MINUTOS)
-    df_pen = load(MovilCSV.PENETRACION)
+    df_acc = load(MovilEndpoints.ACCESOS)
+    df_ing = load(MovilEndpoints.INGRESOS)
+    df_min = load(MovilEndpoints.MINUTOS)
+    df_pen = load(MovilEndpoints.PENETRACION)
 
     for df, cols in [
         (df_acc, ["anio", "trimestre"]),
@@ -131,7 +125,7 @@ if categoria == "Resumen general":
 elif categoria == "Accesos":
     # st.header("Líneas móviles activas")
 
-    df = load(MovilCSV.ACCESOS)
+    df = load(MovilEndpoints.ACCESOS)
     DataValidator.validate(df, ["anio", "trimestre"])
     df = sort_by_periodo(add_periodo_col(df))
 
@@ -188,7 +182,7 @@ elif categoria == "Accesos":
 elif categoria == "Llamadas":
     st.header("Llamadas cursadas")
 
-    df = load(MovilCSV.LLAMADAS)
+    df = load(MovilEndpoints.LLAMADAS)
     DataValidator.validate(df, ["anio", "trimestre", "pospago", "prepago", "total"])
     df = sort_by_periodo(add_periodo_col(df))
 
@@ -257,7 +251,7 @@ elif categoria == "Llamadas":
 elif categoria == "Minutos de voz":
     st.header("Minutos de voz cursados")
 
-    df = load(MovilCSV.MINUTOS)
+    df = load(MovilEndpoints.MINUTOS)
     DataValidator.validate(df, ["anio", "trimestre", "pospago", "prepago", "total"])
     df = sort_by_periodo(add_periodo_col(df))
 
@@ -326,7 +320,7 @@ elif categoria == "Minutos de voz":
 elif categoria == "SMS":
     st.header("Mensajes de texto (SMS)")
 
-    df = load(MovilCSV.SMS)
+    df = load(MovilEndpoints.SMS)
     DataValidator.validate(df, ["anio", "trimestre"])
     df = sort_by_periodo(add_periodo_col(df))
 
@@ -356,7 +350,7 @@ elif categoria == "SMS":
 elif categoria == "Penetración":
     st.header("Penetración de telefonía móvil")
 
-    df = load(MovilCSV.PENETRACION)
+    df = load(MovilEndpoints.PENETRACION)
     DataValidator.validate(df, ["anio", "trimestre", "accesos_100_hab"])
     df = sort_by_periodo(add_periodo_col(df))
 
@@ -434,7 +428,7 @@ elif categoria == "Penetración":
 elif categoria == "Ingresos":
     st.header("Ingresos del sector móvil")
 
-    df = load(MovilCSV.INGRESOS)
+    df = load(MovilEndpoints.INGRESOS)
     DataValidator.validate(df, ["anio", "trimestre"])
     df = sort_by_periodo(add_periodo_col(df))
 

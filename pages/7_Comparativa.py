@@ -1,26 +1,9 @@
-"""
-7_Comparativa.py
-────────────────
-Vista transversal: compara métricas entre todos los servicios.
-
-Secciones:
-1. Ingresos por servicio  — Internet, Móvil, TV, Tel. fija, Postal
-2. Accesos por servicio   — escala absoluta + índice base 100
-3. Penetración comparada  — c/100 hogares (Internet, TV, Tel. fija) y c/100 hab. (Móvil)
-4. Crecimiento relativo   — todos los accesos normalizados a base 100
-
-Patrones de carga:
-- TV ingresos/accesos: suma suscripción + satelital
-- Postal: agrega mensual a trimestral, suma los 3 servicios
-- Carga silenciosa (try_load): si un CSV no existe, la sección sigue con los disponibles
-"""
-
 import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-from config.constants import (
-    InternetCSV, MovilCSV, TVCSVs, TelefoniaCSV, PostalCSV,
+from config.endpoints import (
+    InternetEndpoints, MovilEndpoints, TVEndpoints, FijaEndpoints, PostalEndpoints,
 )
 from config.theme import ENACOM
 from services.data_manager import DataManager, DataLoadError
@@ -130,7 +113,7 @@ if categoria == "Ingresos por servicio":
     series = {}
 
     # Internet
-    df = try_load(InternetCSV.INGRESOS)
+    df = try_load(InternetEndpoints.INGRESOS)
     if df is not None:
         df = prep_trimestral(df)
         ing_col = next((c for c in df.columns if "ingreso" in c), None)
@@ -138,7 +121,7 @@ if categoria == "Ingresos por servicio":
             series["Internet fijo"] = (df, ing_col, "Ingresos")
 
     # Móvil
-    df = try_load(MovilCSV.INGRESOS)
+    df = try_load(MovilEndpoints.INGRESOS)
     if df is not None:
         df = prep_trimestral(df)
         ing_col = next((c for c in df.columns if "ingreso" in c), None)
@@ -146,7 +129,7 @@ if categoria == "Ingresos por servicio":
             series["Telefonía móvil"] = (df, ing_col, "Ingresos")
 
     # TV — suma suscripción + satelital
-    df = try_load(TVCSVs.INGRESOS)
+    df = try_load(TVEndpoints.INGRESOS)
     if df is not None:
         df = prep_trimestral(df)
         if "tv_suscripcion" in df.columns and "tv_satelital" in df.columns:
@@ -154,14 +137,14 @@ if categoria == "Ingresos por servicio":
             series["TV por suscripción"] = (df, "total_tv", "Ingresos")
 
     # Telefonía fija
-    df = try_load(TelefoniaCSV.FIJA_INGRESOS)
+    df = try_load(FijaEndpoints.FIJA_INGRESOS)
     if df is not None:
         df = prep_trimestral(df)
         if "ingresos" in df.columns:
             series["Telefonía fija"] = (df, "ingresos", "Ingresos")
 
     # Postal — mensual → trimestral, suma los 3 servicios
-    df = try_load(PostalCSV.FACTURACION)
+    df = try_load(PostalEndpoints.FACTURACION)
     if df is not None and "mes" in df.columns:
         cols = [c for c in ["postales", "telegraficas", "monetarios"] if c in df.columns]
         df_t = mensual_a_trimestral(df, cols)
@@ -230,14 +213,14 @@ elif categoria == "Accesos por servicio":
     series = {}
 
     # Internet — total
-    df = try_load(InternetCSV.TECNOLOGIAS)
+    df = try_load(InternetEndpoints.TECNOLOGIAS)
     if df is not None:
         df = prep_trimestral(df)
         if "total" in df.columns:
             series["Internet fijo"] = (df, "total")
 
     # Móvil — operativos
-    df = try_load(MovilCSV.ACCESOS)
+    df = try_load(MovilEndpoints.ACCESOS)
     if df is not None:
         df = prep_trimestral(df)
         acc_col = next((c for c in df.columns if "operativo" in c or "total" in c), None)
@@ -245,7 +228,7 @@ elif categoria == "Accesos por servicio":
             series["Telefonía móvil"] = (df, acc_col)
 
     # TV — suma suscripción + satelital
-    df = try_load(TVCSVs.ACCESOS)
+    df = try_load(TVEndpoints.ACCESOS)
     if df is not None:
         df = prep_trimestral(df)
         if "tv_suscripcion" in df.columns and "tv_satelital" in df.columns:
@@ -253,7 +236,7 @@ elif categoria == "Accesos por servicio":
             series["TV por suscripción"] = (df, "total_tv")
 
     # Telefonía fija — total
-    df = try_load(TelefoniaCSV.FIJA_ACCESOS)
+    df = try_load(FijaEndpoints.FIJA_ACCESOS)
     if df is not None:
         df = prep_trimestral(df)
         if "total" in df.columns:
@@ -378,28 +361,28 @@ elif categoria == "Penetración comparada":
     series_hab = {}   # c/100 habitantes (móvil)
 
     # Internet — c/100 hogares
-    df = try_load(InternetCSV.PENETRACION)
+    df = try_load(InternetEndpoints.PENETRACION)
     if df is not None:
         df = prep_trimestral(df)
         if "accesos_cada_100_hogares" in df.columns:
             series_hog["Internet fijo"] = (df, "accesos_cada_100_hogares")
 
     # TV — c/100 hogares (suscripción)
-    df = try_load(TVCSVs.PENETRACION)
+    df = try_load(TVEndpoints.PENETRACION)
     if df is not None:
         df = prep_trimestral(df)
         if "tv_suscripcion_100_hogares" in df.columns:
             series_hog["TV por suscripción"] = (df, "tv_suscripcion_100_hogares")
 
     # Telefonía fija — c/100 hogares
-    df = try_load(TelefoniaCSV.FIJA_PENETRACION)
+    df = try_load(FijaEndpoints.FIJA_PENETRACION)
     if df is not None:
         df = prep_trimestral(df)
         if "accesos_100_hog" in df.columns:
             series_hog["Telefonía fija"] = (df, "accesos_100_hog")
 
     # Móvil — c/100 habitantes (eje derecho)
-    df = try_load(MovilCSV.PENETRACION)
+    df = try_load(MovilEndpoints.PENETRACION)
     if df is not None:
         df = prep_trimestral(df)
         if "accesos_100_hab" in df.columns:
@@ -502,27 +485,27 @@ elif categoria == "Crecimiento relativo":
 
     series = {}
 
-    df = try_load(InternetCSV.TECNOLOGIAS)
+    df = try_load(InternetEndpoints.TECNOLOGIAS)
     if df is not None:
         df = prep_trimestral(df)
         if "total" in df.columns:
             series["Internet fijo"] = (df, "total")
 
-    df = try_load(MovilCSV.ACCESOS)
+    df = try_load(MovilEndpoints.ACCESOS)
     if df is not None:
         df = prep_trimestral(df)
         acc_col = next((c for c in df.columns if "operativo" in c or "total" in c), None)
         if acc_col:
             series["Telefonía móvil"] = (df, acc_col)
 
-    df = try_load(TVCSVs.ACCESOS)
+    df = try_load(TVEndpoints.ACCESOS)
     if df is not None:
         df = prep_trimestral(df)
         if "tv_suscripcion" in df.columns and "tv_satelital" in df.columns:
             df["total_tv"] = df["tv_suscripcion"] + df["tv_satelital"]
             series["TV por suscripción"] = (df, "total_tv")
 
-    df = try_load(TelefoniaCSV.FIJA_ACCESOS)
+    df = try_load(FijaEndpoints.FIJA_ACCESOS)
     if df is not None:
         df = prep_trimestral(df)
         if "total" in df.columns:

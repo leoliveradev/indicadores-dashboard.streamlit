@@ -1,14 +1,8 @@
-"""
-3_TV.py
-───────
-Vista de Televisión por Suscripción.
-"""
-
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 
-from config.constants import TVCSVs
+from config.endpoints import TVEndpoints
 from services.data_manager import DataManager, DataLoadError
 from services.data_validator import DataValidator
 from services.transformers import (
@@ -64,9 +58,9 @@ def split_tipo(df, value_name="Valor"):
 if categoria == "Resumen general":
     st.header("Resumen general")
 
-    df_acc = load(TVCSVs.ACCESOS)
-    df_ing = load(TVCSVs.INGRESOS)
-    df_pen = load(TVCSVs.PENETRACION)
+    df_acc = load(TVEndpoints.ACCESOS)
+    df_ing = load(TVEndpoints.INGRESOS)
+    df_pen = load(TVEndpoints.PENETRACION)
 
     for df, cols in [
         (df_acc, ["anio", "trimestre", "tv_suscripcion", "tv_satelital"]),
@@ -136,7 +130,7 @@ if categoria == "Resumen general":
 elif categoria == "Accesos":
     st.header("Accesos a TV por suscripción")
 
-    df = load(TVCSVs.ACCESOS)
+    df = load(TVEndpoints.ACCESOS)
     DataValidator.validate(df, ["anio", "trimestre", "tv_suscripcion", "tv_satelital"])
     df = sort_by_periodo(add_periodo_col(df))
 
@@ -212,7 +206,7 @@ elif categoria == "Accesos":
 elif categoria == "Accesos - provincia":
     st.header("Accesos TV suscripción — por provincia")
 
-    df = load(TVCSVs.ACCESOS_PROVINCIA)
+    df = load(TVEndpoints.ACCESOS_PROVINCIA)
     DataValidator.validate(df, ["anio", "trimestre", "provincia", "tv_suscripcion"])
     df = sort_by_periodo(add_periodo_col(df))
 
@@ -276,7 +270,7 @@ elif categoria == "Accesos - provincia":
 elif categoria == "Penetración":
     st.header("Penetración de TV por suscripción")
 
-    df = load(TVCSVs.PENETRACION)
+    df = load(TVEndpoints.PENETRACION)
     DataValidator.validate(df, [
         "anio", "trimestre",
         "tv_suscripcion_100_habitantes", "tv_satelital_100_habitantes",
@@ -378,7 +372,7 @@ elif categoria == "Penetración":
 elif categoria == "Penetración - provincia":
     st.header("Penetración TV suscripción — por provincia")
 
-    df = load(TVCSVs.PENETRACION_PROVINCIA)
+    df = load(TVEndpoints.PENETRACION_PROVINCIA)
 
     # Normalizar nombres de columnas (100habitantes vs 100_habitantes)
     df = df.rename(columns={
@@ -478,7 +472,7 @@ elif categoria == "Penetración - provincia":
 elif categoria == "Ingresos":
     st.header("Ingresos del sector")
 
-    df = load(TVCSVs.INGRESOS)
+    df = load(TVEndpoints.INGRESOS)
     DataValidator.validate(df, ["anio", "trimestre", "tv_suscripcion", "tv_satelital"])
     df = sort_by_periodo(add_periodo_col(df))
 

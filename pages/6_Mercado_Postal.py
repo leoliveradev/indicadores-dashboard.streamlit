@@ -1,21 +1,8 @@
-"""
-6_Mercado_Postal.py
-───────────
-Vista de Mercado Postal.
-
-Particularidades:
-- Facturación y producción son mensuales → se agregan a trimestral para
-  consistencia visual con el resto del dashboard.
-- Personal ocupado es trimestral.
-- Provincias arranca en 2015.
-- CSV provincial tiene typos en nombres de provincia (espacios, tildes).
-"""
-
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 
-from config.constants import PostalCSV
+from config.endpoints import PostalEndpoints
 from services.data_manager import DataManager, DataLoadError
 from services.data_validator import DataValidator
 from services.transformers import (
@@ -90,9 +77,9 @@ def limpiar_provincias(df):
 if categoria == "Resumen general":
     st.header("Resumen general")
 
-    df_fac = load(PostalCSV.FACTURACION)
-    df_pro = load(PostalCSV.PRODUCCION)
-    df_per = load(PostalCSV.PERSONAL_OCUPADO)
+    df_fac = load(PostalEndpoints.FACTURACION)
+    df_pro = load(PostalEndpoints.PRODUCCION)
+    df_per = load(PostalEndpoints.PERSONAL_OCUPADO)
 
     for df, cols in [
         (df_fac, ["anio", "mes"] + SERVICIOS_COLS),
@@ -177,7 +164,7 @@ elif categoria == "Facturación":
     st.header("Facturación del mercado postal")
     st.caption("Datos mensuales agregados a trimestral.")
 
-    df = load(PostalCSV.FACTURACION)
+    df = load(PostalEndpoints.FACTURACION)
     DataValidator.validate(df, ["anio", "mes"] + SERVICIOS_COLS)
     df_t = mensual_a_trimestral(df, SERVICIOS_COLS)
 
@@ -231,7 +218,7 @@ elif categoria == "Producción":
     st.header("Producción del mercado postal")
     st.caption("Datos mensuales agregados a trimestral. Unidades físicas despachadas.")
 
-    df = load(PostalCSV.PRODUCCION)
+    df = load(PostalEndpoints.PRODUCCION)
     DataValidator.validate(df, ["anio", "mes"] + SERVICIOS_COLS)
     df_t = mensual_a_trimestral(df, SERVICIOS_COLS)
 
@@ -273,7 +260,7 @@ elif categoria == "Producción":
     st.subheader("Facturación vs producción — ¿crecen juntos?")
     st.caption("Compara si la facturación y el volumen físico evolucionan en la misma dirección.")
 
-    df_fac = load(PostalCSV.FACTURACION)
+    df_fac = load(PostalEndpoints.FACTURACION)
     df_fac_t = mensual_a_trimestral(df_fac, SERVICIOS_COLS)
     df_fac_r = df_fac_t[(df_fac_t["anio"] >= anio_desde) & (df_fac_t["anio"] <= anio_hasta)]
 
@@ -313,7 +300,7 @@ elif categoria == "Producción":
 elif categoria == "Personal ocupado":
     st.header("Personal ocupado en el mercado postal")
 
-    df = load(PostalCSV.PERSONAL_OCUPADO)
+    df = load(PostalEndpoints.PERSONAL_OCUPADO)
     DataValidator.validate(df, ["anio", "trimestre", "personal_ocupado"])
     df = sort_by_periodo(add_periodo_col(df))
 
@@ -378,7 +365,7 @@ elif categoria == "Facturación y producción - provincia":
     st.header("Facturación y producción — por provincia")
     st.caption("Datos disponibles desde 2015. CABA y GBA aparecen agrupados en la fuente original.")
 
-    df = load(PostalCSV.PROV_FACTURACION)
+    df = load(PostalEndpoints.PROV_FACTURACION)
     df = limpiar_provincias(df)
     DataValidator.validate(df, ["anio", "trimestre", "provincia", "pesos", "unidades"])
     df = sort_by_periodo(add_periodo_col(df))

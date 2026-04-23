@@ -1,14 +1,8 @@
-"""
-4_Telefonia.py
-──────────────
-Vista de Telefonía Fija.
-"""
-
 import streamlit as st
 import plotly.express as px
 import plotly.graph_objects as go
 
-from config.constants import TelefoniaCSV
+from config.endpoints import FijaEndpoints
 from services.data_manager import DataManager, DataLoadError
 from services.data_validator import DataValidator
 from services.transformers import (
@@ -60,9 +54,9 @@ def load(filename: str):
 if categoria == "Resumen general":
     st.header("Resumen general")
 
-    df_acc = load(TelefoniaCSV.FIJA_ACCESOS)
-    df_ing = load(TelefoniaCSV.FIJA_INGRESOS)
-    df_pen = load(TelefoniaCSV.FIJA_PENETRACION)
+    df_acc = load(FijaEndpoints.FIJA_ACCESOS)
+    df_ing = load(FijaEndpoints.FIJA_INGRESOS)
+    df_pen = load(FijaEndpoints.FIJA_PENETRACION)
 
     for df, cols in [
         (df_acc, ["anio", "trimestre"] + SEGMENTOS_COLS + ["total"]),
@@ -134,7 +128,7 @@ if categoria == "Resumen general":
 elif categoria == "Accesos":
     st.header("Accesos de telefonía fija")
 
-    df = load(TelefoniaCSV.FIJA_ACCESOS)
+    df = load(FijaEndpoints.FIJA_ACCESOS)
     DataValidator.validate(df, ["anio", "trimestre"] + SEGMENTOS_COLS + ["total"])
     df = sort_by_periodo(add_periodo_col(df))
 
@@ -202,7 +196,7 @@ elif categoria == "Accesos":
 elif categoria == "Accesos - provincia":
     st.header("Accesos telefonía fija — por provincia")
 
-    df = load(TelefoniaCSV.FIJA_ACCESOS_PROVINCIA)
+    df = load(FijaEndpoints.FIJA_ACCESOS_PROVINCIA)
 
     # Typo en el CSV original: "hogres" → "hogares"
     df = df.rename(columns={"hogres": "hogares"})
@@ -288,7 +282,7 @@ elif categoria == "Accesos - provincia":
 elif categoria == "Penetración":
     st.header("Penetración de telefonía fija")
 
-    df = load(TelefoniaCSV.FIJA_PENETRACION)
+    df = load(FijaEndpoints.FIJA_PENETRACION)
     DataValidator.validate(df, ["anio", "trimestre", "accesos_100_hab", "accesos_100_hog"])
     df = sort_by_periodo(add_periodo_col(df))
 
@@ -375,7 +369,7 @@ elif categoria == "Penetración":
 elif categoria == "Penetración - provincia":
     st.header("Penetración telefonía fija — por provincia")
 
-    df = load(TelefoniaCSV.FIJA_PENETRACION_PROVINCIA)
+    df = load(FijaEndpoints.FIJA_PENETRACION_PROVINCIA)
     DataValidator.validate(df, ["anio", "trimestre", "provincia",
                                 "accesos_100_hab", "accesos_100_hog"])
     df = sort_by_periodo(add_periodo_col(df))
@@ -467,7 +461,7 @@ elif categoria == "Penetración - provincia":
 elif categoria == "Ingresos":
     st.header("Ingresos del sector")
 
-    df = load(TelefoniaCSV.FIJA_INGRESOS)
+    df = load(FijaEndpoints.FIJA_INGRESOS)
     DataValidator.validate(df, ["anio", "trimestre", "ingresos"])
     df = sort_by_periodo(add_periodo_col(df))
 
