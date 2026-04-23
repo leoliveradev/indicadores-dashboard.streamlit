@@ -1,119 +1,64 @@
-"""
-data_manager.py
-───────────────
-Única responsabilidad: cargar CSVs desde disco y cachearlos en memoria.
-
-Reglas:
-- Todo acceso a disco pasa por acá. Las páginas NUNCA hacen pd.read_csv directamente.
-- El cache de Streamlit vive acá y en ningún otro lado.
-- Si un archivo no existe o falla la lectura, lanza DataLoadError con mensaje claro.
-"""
-
 import pandas as pd
 import streamlit as st
-
-from config.settings import DATA_DIR, CSV_ENCODING, CSV_SEPARATOR
-
+import requests
+from config.settings import API_BASE_URL, TIMEOUT_CONEXION
 
 class DataLoadError(Exception):
-    """Error controlado al cargar un CSV."""
+    """Error controlado al cargar datos desde la API."""
     pass
-
 
 class DataManager:
 
     @staticmethod
-    @st.cache_data(show_spinner=False)
-    def load(filename: str) -> pd.DataFrame:
-        """
-        Carga y cachea un CSV del directorio data/.
+    @st.cache_data(show_spinner="Conectando con la API de ENACOM...", ttl=3600)
+    def load(endpoint: str) -> pd.DataFrame:
 
-        Parameters
-        ----------
-        filename : str
-            Nombre del archivo, ej. "internet_accesos_tecnologias.csv".
-            Usar las constantes de config/constants.py, nunca strings literales.
-
-        Returns
-        -------
-        pd.DataFrame
-            DataFrame con columnas en minúsculas y strings sin espacios.
-
-        Raises
-        ------
-        DataLoadError
-            Si el archivo no existe o no puede parsearse.
-        """
-        filepath = DATA_DIR / filename
-
-        if not filepath.exists():
-            raise DataLoadError(
-                f"Archivo no encontrado: `{filepath}`\n"
-                f"Verificá que el archivo esté en `{DATA_DIR}`."
-            )
-
+        url = f"{API_BASE_URL}/{endpoint}"
+        
         try:
-            # Auto-detecta encoding (utf-8-sig elimina BOM) y separador (, o ;)
-            encoding_ok = CSV_ENCODING
-            for enc in ("utf-8-sig", CSV_ENCODING):
-                try:
-                    with open(filepath, encoding=enc, errors="strict") as f:
-                        first_line = f.readline()
-                    encoding_ok = enc
-                    break
-                except UnicodeDecodeError:
-                    continue
+            response = requests.get(url, timeout=TIMEOUT_CONEXION)
+            response.raise_for_status() # Lanza error si no es 200 OK
+            
+            json_response = response.json()
+        
+            if isinstance(json_response, dict) and "data" in json_response:
+                raw_data = json_response["data"]
+            else:
+                raw_data = json_response
 
-            sep = ";" if first_line.count(";") > first_line.count(",") else CSV_SEPARATOR
+            df = pd.DataFrame(raw_data)
 
-            df = pd.read_csv(
-                filepath,
-                sep=sep,
-                encoding=encoding_ok,
-            )
+            if df.empty:
+                raise DataLoadError(f"Sin datos para: `{endpoint}`")
+
         except Exception as exc:
-            raise DataLoadError(
-                f"Error al parsear `{filename}`: {exc}"
-            ) from exc
+            raise DataLoadError(f"Error al procesar `{endpoint}`: {exc}")
 
-        df = DataManager._normalize_dataframe(df)
-        return df
+        return DataManager._normalize_dataframe(df)
 
     @staticmethod
     def _normalize_dataframe(df: pd.DataFrame) -> pd.DataFrame:
-        """
-        Normalización estándar aplicada a todos los DataFrames:
-        - Columnas a minúsculas y sin espacios.
-        - Strings sin espacios en blanco al inicio/fin.
-        - Columnas numéricas que llegaron como string (puntos de miles).
-        """
-        # Columnas: minúsculas, sin espacios, sin caracteres raros
+
         df.columns = (
             df.columns
             .str.strip()
             .str.lower()
             .str.replace(" ", "_")
             .str.replace(r"[^\w]", "_", regex=True)
-            .str.strip("_")   # elimina BOM residual (ï__, etc.)
+            .str.strip("_")
         )
 
-        # Strip de strings en columnas object
         str_cols = df.select_dtypes(include="object").columns
-        df[str_cols] = df[str_cols].apply(lambda c: c.str.strip())
+        df[str_cols] = df[str_cols].apply(lambda c: c.str.strip() if hasattr(c, 'str') else c)
 
-        # Columnas numéricas que vienen como string (ej. pandas lee números con sep=;
-        # como object en algunos casos). Intenta convertir directamente — los CSVs
-        # usan punto como decimal, que es lo que Python/pandas espera.
         for col in df.columns:
             if df[col].dtype == object:
                 try:
                     df[col] = pd.to_numeric(df[col])
                 except (ValueError, AttributeError):
-                    pass  # No era numérica, se deja como está
-
+                    pass
         return df
 
     @staticmethod
     def clear_cache() -> None:
-        """Limpia el cache de Streamlit. Útil en desarrollo."""
         st.cache_data.clear()

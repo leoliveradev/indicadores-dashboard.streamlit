@@ -2,7 +2,7 @@
 Valida que un DataFrame tenga la forma esperada antes de que llegue a la UI.
 
 Usar en cada página justo después de cargar el CSV:
-    df = DataManager.load(InternetCSV.TECNOLOGIAS)
+    df = DataManager.load(InternetEndpoints.TECNOLOGIAS)
     DataValidator.validate(df, required_cols=["anio", "trimestre", "total"])
 """
 
