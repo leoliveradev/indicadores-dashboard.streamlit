@@ -4,28 +4,9 @@ import plotly.graph_objects as go
 from components.kpi_cards import show_kpis
 from components.filters import render_range_filter
 from components.charts import area_chart, line_chart, bar_chart
-from services.transformers import melt_tecnologias
 
-from pages.tv.utils import load_dataset, build_kpis
+from pages.tv.utils import load_dataset, build_kpis, split_tipo
 from pages.tv.config import ACCESOS_KPIS, TV_COLOR_MAP
-
-
-def split_tipo(df):
-    df_long = melt_tecnologias(
-        df,
-        ["tv_suscripcion", "tv_satelital"],
-        id_col="periodo",
-        var_name="Tipo",
-        value_name="Accesos",
-    )
-
-    df_long["Tipo"] = df_long["Tipo"].map({
-        "tv_suscripcion": "TV suscripción",
-        "tv_satelital": "TV satelital",
-    })
-
-    return df_long
-
 
 def render():
     st.header("Accesos a TV por suscripción")
@@ -48,7 +29,7 @@ def render():
     st.divider()
 
     # datos long para charts
-    df_long = split_tipo(df_range)
+    df_long = split_tipo(df_range, "Accesos")
 
     tab1, tab2, tab3 = st.tabs(["Área", "Líneas", "Barras"])
 
