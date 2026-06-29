@@ -118,3 +118,69 @@ ACCESOS_PROV_KPIS = [
         "format": "{:,.0f}",
     },
 ]
+
+PENETRACION_KPIS = [
+    {
+        "label": "Suscripción c/100 hogares",
+        "column": "tv_suscripcion_100_hogares",
+        "format": "{:.2f}",
+    },
+    {
+        "label": "Satelital c/100 hogares",
+        "column": "tv_satelital_100_hogares",
+        "format": "{:.2f}",
+    },
+    {
+        "label": "Suscripción c/100 hab.",
+        "column": "tv_suscripcion_100_habitantes",
+        "format": "{:.2f}",
+    },
+    {
+        "label": "Satelital c/100 hab.",
+        "column": "tv_satelital_100_habitantes",
+        "format": "{:.2f}",
+    },
+]
+
+DUAL_AXIS_CONFIG = {
+    "title": "Evolución — c/100 hogares vs c/100 habitantes",
+
+    "left_axis": {
+        "label": "c/100 hogares",
+        "prefix": "",
+        "suffix": "", 
+        "series": [
+            {
+                "column": "tv_suscripcion_100_hogares",
+                "name": "Suscripción hogares",
+                "color": "#00B5E5",
+                "mode": "lines+markers",
+            },
+            {
+                "column": "tv_satelital_100_hogares",
+                "name": "Satelital hogares",
+                "color": "#EEAE42",
+                "mode": "lines+markers",
+                "dash": "dot",
+            },
+        ],
+    },
+
+    "right_axis": {
+        "label": "c/100 habitantes",
+        "prefix": "",
+        "suffix": "%", 
+        "series": [
+            {
+                "column": "tv_suscripcion_100_habitantes",
+                "name": "Suscripción hab.",
+                "color": "#005297",
+            },
+            {
+                "column": "tv_satelital_100_habitantes",
+                "name": "Satelital hab.",
+                "color": "#854F0B",
+            },
+        ],
+    },
+}
