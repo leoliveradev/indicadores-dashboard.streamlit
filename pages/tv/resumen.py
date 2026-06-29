@@ -1,10 +1,9 @@
 import streamlit as st
 from components.kpi_cards import show_kpis
-from components.charts import area_chart
+from components.charts import area_chart, line_chart, bar_chart
 
-from pages.tv.config import RESUMEN_KPIS, TV_COLOR_MAP
-from pages.tv.utils import load_dataset, build_kpis, split_tipo
-
+from pages.tv.config import RESUMEN_KPIS
+from pages.tv.utils import load_dataset, build_kpis
 
 def render():
     st.header("Resumen general")
@@ -16,28 +15,49 @@ def render():
     }
 
     kpis = build_kpis(RESUMEN_KPIS, datasets)
-
     show_kpis(kpis)
 
     st.divider()
 
-    with st.container():
-        fig = area_chart(
-            split_tipo(datasets["accesos"], "Accesos"),
-            "periodo",
-            "Accesos",
-            "Tipo",
-            title="Accesos — suscripción vs satelital",
-            color_map=TV_COLOR_MAP,
-        )
-        st.plotly_chart(fig, use_container_width=True)
+    # construir totales sin modificar los originales
+    df_acc = datasets["accesos"].copy()
+    df_acc["total"] = (
+        df_acc["tv_suscripcion"] +
+        df_acc["tv_satelital"]
+    )
 
-        fig = area_chart(
-            split_tipo(datasets["ingresos"], "Ingresos"),
-            "periodo",
-            "Ingresos",
-            "Tipo",
-            title="Ingresos — suscripción vs satelital",
-            color_map=TV_COLOR_MAP,
-        )
-        st.plotly_chart(fig, use_container_width=True)
+    df_ing = datasets["ingresos"].copy()
+    df_ing["total"] = (
+        df_ing["tv_suscripcion"] +
+        df_ing["tv_satelital"]
+    )
+    
+    chart_type = st.radio(
+        "Tipo de gráfico",
+        ["Área", "Líneas", "Barras"],
+        horizontal=True,
+    )
+
+    chart_fn = {
+        "Área": area_chart,
+        "Líneas": line_chart,
+        "Barras": bar_chart,
+    }[chart_type]
+
+
+    fig = chart_fn(
+        df_acc,
+        "periodo",
+        "total",
+        title="Accesos totales",
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+
+    fig = chart_fn(
+        df_ing,
+        "periodo",
+        "total",
+        title="Ingresos totales (miles $)",
+    )
+    st.plotly_chart(fig, use_container_width=True)
