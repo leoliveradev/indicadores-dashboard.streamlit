@@ -239,7 +239,7 @@ def compare_vs_national(
 
 
 
-def split_tipo(df, value_name):
+def split_tipo(df, value_name, label_map=None):
     df_long = melt_tecnologias(
         df,
         ["tv_suscripcion", "tv_satelital"],
@@ -252,5 +252,11 @@ def split_tipo(df, value_name):
         "tv_suscripcion": "TV suscripción",
         "tv_satelital": "TV satelital",
     })
+
+    if label_map is None:
+        label_map = {
+            "tv_suscripcion": "TV suscripción",
+            "tv_satelital": "TV satelital",
+        }
 
     return df_long
