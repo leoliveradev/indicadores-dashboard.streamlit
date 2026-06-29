@@ -11,6 +11,9 @@ from pages.tv.config import DATASETS
 
 @st.cache_data
 def load_dataset(dataset_key):
+    if dataset_key not in DATASETS:
+        raise ValueError(f"Dataset '{dataset_key}' no está definido en config")
+
     cfg = DATASETS[dataset_key]
 
     df = DataManager.load(cfg["endpoint"])
@@ -19,7 +22,6 @@ def load_dataset(dataset_key):
     return sort_by_periodo(add_periodo_col(df))
 
 
-# ✅ helpers seguros
 def apply_operation(df, cfg):
     """Aplica operación declarativa (ej: sum)."""
     df = df.copy()
@@ -72,3 +74,43 @@ def apply_operation(df, cfg):
         df["_metric"] = df[cfg["column"]]
 
     return df, "_metric"
+
+def build_kpis_agg(kpi_config, df):
+    kpis = []
+
+    for cfg in kpi_config:
+        col = cfg["column"]
+
+        if cfg["agg"] == "sum":
+            val = df[col].sum()
+
+        elif cfg["agg"] == "mean":
+            val = df[col].mean()
+
+        else:
+            raise ValueError(f"agg no soportado: {cfg['agg']}")
+
+        kpis.append({
+            "label": cfg["label"],
+            "value": val,
+            "format": cfg["format"],
+        })
+
+    return kpis
+
+def get_top_bottom(df, col, label_col="provincia", fmt="{:,.0f}"):
+    top = df.nlargest(1, col).iloc[0]
+    low = df.nsmallest(1, col).iloc[0]
+
+    return [
+        {
+            "label": f"Mayor ({top[label_col]})",
+            "value": top[col],
+            "format": fmt,
+        },
+        {
+            "label": f"Menor ({low[label_col]})",
+            "value": low[col],
+            "format": fmt,
+        },
+    ]

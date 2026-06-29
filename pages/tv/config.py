@@ -5,6 +5,10 @@ DATASETS = {
         "endpoint": TVEndpoints.ACCESOS,
         "cols": ["anio", "trimestre", "tv_suscripcion", "tv_satelital"],
     },
+    "accesos_provincia": {
+        "endpoint": TVEndpoints.ACCESOS_PROVINCIA,
+        "cols": ["anio", "trimestre", "provincia", "tv_suscripcion"],
+    },
     "ingresos": {
         "endpoint": TVEndpoints.INGRESOS,
         "cols": ["anio", "trimestre", "tv_suscripcion", "tv_satelital"],
@@ -74,5 +78,43 @@ ACCESOS_KPIS = [
         "num": "tv_suscripcion",
         "den": ["tv_suscripcion", "tv_satelital"],
         "format": "{:.1f}%",
+    },
+]
+
+def build_kpis_agg(kpi_config, df):
+    kpis = []
+
+    for cfg in kpi_config:
+        col = cfg["column"]
+
+        if cfg["agg"] == "sum":
+            val = df[col].sum()
+
+        elif cfg["agg"] == "mean":
+            val = df[col].mean()
+
+        else:
+            raise ValueError(f"agg no soportado: {cfg['agg']}")
+
+        kpis.append({
+            "label": cfg["label"],
+            "value": val,
+            "format": cfg["format"],
+        })
+
+    return kpis
+
+ACCESOS_PROV_KPIS = [
+    {
+        "label": "Total nacional",
+        "column": "tv_suscripcion",
+        "agg": "sum",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Promedio por provincia",
+        "column": "tv_suscripcion",
+        "agg": "mean",
+        "format": "{:,.0f}",
     },
 ]
