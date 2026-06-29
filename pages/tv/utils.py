@@ -8,7 +8,7 @@ from services.transformers import (
 import streamlit as st
 
 import plotly.graph_objects as go
-from services.transformers import add_periodo_col, sort_by_periodo
+from services.transformers import add_periodo_col, sort_by_periodo, melt_tecnologias
 
 from pages.tv.config import DATASETS
 
@@ -236,3 +236,21 @@ def compare_vs_national(
     )
 
     return fig
+
+
+
+def split_tipo(df, value_name):
+    df_long = melt_tecnologias(
+        df,
+        ["tv_suscripcion", "tv_satelital"],
+        id_col="periodo",
+        var_name="Tipo",
+        value_name=value_name,
+    )
+
+    df_long["Tipo"] = df_long["Tipo"].map({
+        "tv_suscripcion": "TV suscripción",
+        "tv_satelital": "TV satelital",
+    })
+
+    return df_long

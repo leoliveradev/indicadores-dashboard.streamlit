@@ -207,3 +207,22 @@ PENETRACION_PROV_KPIS = [
         "format": "{:.2f}",
     },
 ]
+
+INGRESOS_KPIS = [
+    {
+        "label": "Ingresos totales (miles $)",
+        "type": "sum",
+        "columns": ["tv_suscripcion", "tv_satelital"],
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Ingresos suscripción",
+        "column": "tv_suscripcion",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Ingresos satelital",
+        "column": "tv_satelital",
+        "format": "{:,.0f}",
+    },
+]
