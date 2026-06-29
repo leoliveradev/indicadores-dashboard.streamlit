@@ -21,6 +21,14 @@ DATASETS = {
             "tv_satelital_100_hogares",
         ],
     },
+    "penetracion_provincia": {
+        "endpoint": TVEndpoints.PENETRACION_PROVINCIA,
+        "cols": [
+            "anio", "trimestre", "provincia",
+            "tv_suscripcion_100habitantes",
+            "tv_suscripcion_100hogares",
+        ],
+    },
 }
 
 RESUMEN_KPIS = [
@@ -184,3 +192,18 @@ DUAL_AXIS_CONFIG = {
         ],
     },
 }
+
+PENETRACION_PROV_KPIS = [
+    {
+        "label": "Promedio nacional (hogares)",
+        "column": "tv_suscripcion_100_hogares",
+        "agg": "mean",
+        "format": "{:.2f}",
+    },
+    {
+        "label": "Promedio nacional (hab.)",
+        "column": "tv_suscripcion_100_habitantes",
+        "agg": "mean",
+        "format": "{:.2f}",
+    },
+]
