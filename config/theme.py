@@ -204,3 +204,38 @@ STREAMLIT_CSS = f"""
     }}
 </style>
 """
+
+CARD_CSS = """
+<style>
+.card {
+    padding: 20px;
+    border-radius: 16px;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    text-align: center;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    border: 1px solid #eee;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+}
+
+.card-icon {
+    font-size: 40px;
+    margin-bottom: 10px;
+}
+
+.card-title {
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.card-desc {
+    font-size: 14px;
+    color: #666;
+}
+</style>
+"""
