@@ -179,66 +179,6 @@ def dual_axis_chart(config, df, x="periodo"):
 
     return fig
 
-
-def compare_vs_national(
-    df,
-    group_col,
-    value_col,
-    selected,
-    period_cols=("anio", "trimestre"),
-    title=None,
-    y_suffix=None
-):
-    """
-    Genera gráfico comparando una serie (ej: provincia)
-    contra el promedio nacional.
-    """
-
-    # serie del grupo seleccionado
-    df_sel = df[df[group_col] == selected].copy()
-    df_sel = sort_by_periodo(add_periodo_col(df_sel))
-
-    # promedio nacional
-    df_nac = (
-        df.groupby(list(period_cols))[value_col]
-        .mean()
-        .reset_index()
-    )
-    df_nac = sort_by_periodo(add_periodo_col(df_nac))
-
-    # gráfico
-    fig = go.Figure()
-
-    # serie seleccionada
-    fig.add_trace(go.Scatter(
-        x=df_sel["periodo"],
-        y=df_sel[value_col],
-        name=selected,
-        mode="lines+markers",
-        line={"width": 2},
-    ))
-
-    # promedio nacional
-    fig.add_trace(go.Scatter(
-        x=df_nac["periodo"],
-        y=df_nac[value_col].round(2),
-        name="Promedio nacional",
-        mode="lines",
-        line={"dash": "dot"},
-    ))
-
-    fig.update_layout(
-        title=title,
-        yaxis={"ticksuffix": y_suffix or ""},
-        hovermode="x unified",
-        margin={"t": 40, "b": 40, "l": 40, "r": 20},
-        legend={"orientation": "h", "y": 1.02},
-    )
-
-    return fig
-
-
-
 def split_tipo(df, value_name, label_map=None):
     df_long = melt_tecnologias(
         df,

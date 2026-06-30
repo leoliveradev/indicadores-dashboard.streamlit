@@ -14,19 +14,19 @@ from services.transformers import (
 from pages.tv.utils import (
     load_dataset,
     build_kpis_agg,
-    get_top_bottom,
-    compare_vs_national
+    get_top_bottom
 )
+
+from services.chart_helpers import compare_vs_national
+
 from pages.tv.config import PENETRACION_PROV_KPIS
 
 
 def render():
     st.header("Penetración TV suscripción — por provincia")
 
-    # dataset
     df = load_dataset("penetracion_provincia")
 
-    # normalización
     df = df.rename(columns={
         "tv_suscripcion_100habitantes": "tv_suscripcion_100_habitantes",
         "tv_suscripcion_100hogares": "tv_suscripcion_100_hogares",
