@@ -9,7 +9,7 @@ from pages.tv.utils import load_dataset, build_kpis, compute_yoy
 from services.chart_helpers import dual_axis_chart
 
 def render():
-    st.header("Penetración de TV por suscripción")
+    st.header("Penetración")
 
     df = load_dataset("penetracion")
 

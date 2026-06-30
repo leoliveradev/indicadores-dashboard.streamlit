@@ -71,7 +71,7 @@ ACCESOS_KPIS = [
         "format": "{:,.0f}",
     },
     {
-        "label": "TV suscripción",
+        "label": "TV por suscripción (VRF)",
         "column": "tv_suscripcion",
         "format": "{:,.0f}",
     },
@@ -79,14 +79,7 @@ ACCESOS_KPIS = [
         "label": "TV satelital",
         "column": "tv_satelital",
         "format": "{:,.0f}",
-    },
-    {
-        "label": "% Suscripción",
-        "type": "ratio",
-        "num": "tv_suscripcion",
-        "den": ["tv_suscripcion", "tv_satelital"],
-        "format": "{:.1f}%",
-    },
+    }
 ]
 
 def build_kpis_agg(kpi_config, df):
@@ -114,17 +107,17 @@ def build_kpis_agg(kpi_config, df):
 
 ACCESOS_PROV_KPIS = [
     {
-        "label": "Total nacional",
+        "label": "Accesos totales (VRF)",
         "column": "tv_suscripcion",
         "agg": "sum",
         "format": "{:,.0f}",
     },
-    {
-        "label": "Promedio por provincia",
-        "column": "tv_suscripcion",
-        "agg": "mean",
-        "format": "{:,.0f}",
-    },
+    # {
+    #     "label": "Promedio por provincia",
+    #     "column": "tv_suscripcion",
+    #     "agg": "mean",
+    #     "format": "{:,.0f}",
+    # },
 ]
 
 PENETRACION_KPIS = [
@@ -216,7 +209,7 @@ INGRESOS_KPIS = [
         "format": "{:,.0f}",
     },
     {
-        "label": "Ingresos suscripción",
+        "label": "Ingresos (VRF)",
         "column": "tv_suscripcion",
         "format": "{:,.0f}",
     },

@@ -11,7 +11,7 @@ from pages.tv.config import ACCESOS_PROV_KPIS
 
 
 def render():
-    st.header("Accesos TV suscripción — por provincia")
+    st.header("Accesos — por provincia")
 
     df = load_dataset("accesos_provincia")
 
