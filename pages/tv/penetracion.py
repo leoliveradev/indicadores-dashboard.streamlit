@@ -5,7 +5,8 @@ from components.kpi_cards import show_kpis
 from components.filters import render_range_filter
 
 from pages.tv.config import PENETRACION_KPIS, DUAL_AXIS_CONFIG
-from pages.tv.utils import load_dataset, build_kpis, dual_axis_chart, compute_yoy
+from pages.tv.utils import load_dataset, build_kpis, compute_yoy
+from services.chart_helpers import dual_axis_chart
 
 def render():
     st.header("Penetración de TV por suscripción")
@@ -38,23 +39,23 @@ def render():
     st.divider()
 
     # YoY (reusable)
-    st.subheader("Variación interanual — suscripción c/100 hogares")
+    # st.subheader("Variación interanual — suscripción c/100 hogares")
 
-    df_yoy = compute_yoy(df_range, "tv_suscripcion_100_hogares")
+    # df_yoy = compute_yoy(df_range, "tv_suscripcion_100_hogares")
 
-    fig_yoy = go.Figure(go.Bar(
-        x=df_yoy["periodo"],
-        y=df_yoy["yoy"].round(2),
-        marker_color=[
-            "#00B5E5" if v >= 0 else "#E74242"
-            for v in df_yoy["yoy"]
-        ],
-    ))
+    # fig_yoy = go.Figure(go.Bar(
+    #     x=df_yoy["periodo"],
+    #     y=df_yoy["yoy"].round(2),
+    #     marker_color=[
+    #         "#00B5E5" if v >= 0 else "#E74242"
+    #         for v in df_yoy["yoy"]
+    #     ],
+    # ))
 
-    fig_yoy.update_layout(
-        yaxis={"ticksuffix": "%"},
-        margin={"t": 20, "b": 40, "l": 40, "r": 20},
-        showlegend=False,
-    )
+    # fig_yoy.update_layout(
+    #     yaxis={"ticksuffix": "%"},
+    #     margin={"t": 20, "b": 40, "l": 40, "r": 20},
+    #     showlegend=False,
+    # )
 
-    st.plotly_chart(fig_yoy, use_container_width=True)
+    # st.plotly_chart(fig_yoy, use_container_width=True)
