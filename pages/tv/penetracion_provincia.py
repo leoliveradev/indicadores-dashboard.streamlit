@@ -1,15 +1,10 @@
 import streamlit as st
-import plotly.graph_objects as go
 
 from components.kpi_cards import show_kpis
 from components.filters import render_period_filters
 from components.charts import bar_chart
 
-from services.transformers import (
-    filter_by_period,
-    add_periodo_col,
-    sort_by_periodo,
-)
+from services.transformers import filter_by_period
 
 from pages.tv.utils import (
     load_dataset,
@@ -43,7 +38,7 @@ def render():
     # KPIs base (promedios)
     kpis = build_kpis_agg(PENETRACION_PROV_KPIS, df_periodo)
 
-    # top/bottom reusable
+    # top/bottom
     kpis.extend(
         get_top_bottom(
             df_periodo,

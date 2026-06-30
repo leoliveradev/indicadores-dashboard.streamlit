@@ -1,11 +1,10 @@
 import streamlit as st
-import plotly.graph_objects as go
 
 from components.kpi_cards import show_kpis
 from components.filters import render_range_filter
 
 from pages.tv.config import PENETRACION_KPIS, DUAL_AXIS_CONFIG
-from pages.tv.utils import load_dataset, build_kpis, compute_yoy
+from pages.tv.utils import load_dataset, build_kpis
 from services.chart_helpers import dual_axis_chart
 
 def render():
