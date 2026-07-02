@@ -5,6 +5,7 @@ from pages.telefonia_fija.config import PENETRACION_KPIS
 
 from services.kpi_builder import build_kpis
 from services.chart_helpers import dual_axis_chart
+from services.kpi_helpers import build_max_kpi
 
 from components.kpi_cards import show_kpis
 from components.filters import render_range_filter
@@ -31,16 +32,24 @@ def render():
     )
 
     # KPI (máximo histórico)
-    max_val = df_range["accesos_100_hab"].max()
-    periodo_max = df_range.loc[
-        df_range["accesos_100_hab"].idxmax(), "periodo"
-    ]
+    # max_val = df_range["accesos_100_hab"].max()
+    # periodo_max = df_range.loc[
+    #     df_range["accesos_100_hab"].idxmax(), "periodo"
+    # ]
 
-    kpis.append({
-        "label": f"Máx. histórico c/100 habitantes ({periodo_max})",
-        "value": max_val,
-        "format": "{:.2f}",
-    })
+    # kpis.append({
+    #     "label": f"Máx. histórico c/100 habitantes ({periodo_max})",
+    #     "value": max_val,
+    #     "format": "{:.2f}",
+    # })
+
+    kpis.append(
+        build_max_kpi(
+            df_range,
+            "accesos_100_hab",
+            fmt="{:.2f}",
+        )
+    )
 
     show_kpis(kpis)
 

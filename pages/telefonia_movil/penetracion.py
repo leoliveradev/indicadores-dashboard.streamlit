@@ -10,6 +10,7 @@ from components.charts import (
 )
 
 from services.kpi_builder import build_kpis
+from services.kpi_helpers import build_max_kpi, build_growth_kpi
 
 from pages.telefonia_movil.utils import load_dataset
 from pages.telefonia_movil.config import PENETRACION_KPIS
@@ -45,33 +46,46 @@ def render():
         "periodo",
     ]
 
-    # variación acumulada
-    val_inicio = df_range["accesos_100_hab"].iloc[0]
-    val_actual = df_range["accesos_100_hab"].iloc[-1]
+    # # variación acumulada (refactorizar a función en kpi_helpers.py)
+    # val_inicio = df_range["accesos_100_hab"].iloc[0]
+    # val_actual = df_range["accesos_100_hab"].iloc[-1]
 
-    variacion_acum = (
-        (val_actual - val_inicio)
-        / val_inicio
-        * 100
-        if val_inicio
-        else None
-    )
+    # variacion_acum = (
+    #     (val_actual - val_inicio)
+    #     / val_inicio
+    #     * 100
+    #     if val_inicio
+    #     else None
+    # )
+
+    # kpis.extend([
+    #     {
+    #         "label": f"Máximo histórico ({periodo_max})",
+    #         "value": max_val,
+    #         "format": "{:.2f}",
+    #     },
+    #     {
+    #         "label": "Variación acumulada",
+    #         "value": variacion_acum,
+    #         "format": "{:+.1f}%",
+    #         "help": (
+    #             f"Variación desde "
+    #             f"{anio_desde} hasta {anio_hasta}"
+    #         ),
+    #     },
+    # ])
 
     kpis.extend([
-        {
-            "label": f"Máximo histórico ({periodo_max})",
-            "value": max_val,
-            "format": "{:.2f}",
-        },
-        {
-            "label": "Variación acumulada",
-            "value": variacion_acum,
-            "format": "{:+.1f}%",
-            "help": (
-                f"Variación desde "
-                f"{anio_desde} hasta {anio_hasta}"
-            ),
-        },
+        build_max_kpi(
+            df_range,
+            "accesos_100_hab",
+            fmt="{:.2f}",
+        ),
+        build_growth_kpi(
+            df_range,
+            "accesos_100_hab",
+            help_text=f"Variación desde {anio_desde} hasta {anio_hasta}",
+        ),
     ])
 
     show_kpis(kpis)
