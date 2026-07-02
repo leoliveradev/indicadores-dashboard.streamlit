@@ -9,6 +9,7 @@ from components.charts import (
 )
 
 from services.kpi_builder import build_kpis
+from services.kpi_helpers import build_growth_kpi
 
 from pages.telefonia_movil.utils import load_dataset
 from pages.telefonia_movil.config import INGRESOS_KPIS
@@ -37,28 +38,37 @@ def render():
     )
 
     # crecimiento acumulado
-    val_inicio = df_range["ingresos"].iloc[0]
-    val_actual = df_range["ingresos"].iloc[-1]
+    # val_inicio = df_range["ingresos"].iloc[0]
+    # val_actual = df_range["ingresos"].iloc[-1]
 
-    crecimiento = (
-        (val_actual - val_inicio)
-        / val_inicio
-        * 100
-        if val_inicio
-        else None
-    )
+    # crecimiento = (
+    #     (val_actual - val_inicio)
+    #     / val_inicio
+    #     * 100
+    #     if val_inicio
+    #     else None
+    # )
 
+    # kpis.append(
+    #     {
+    #         "label": "Crecimiento acumulado",
+    #         "value": crecimiento,
+    #         "format": "{:+.1f}%",
+    #         "help": (
+    #             f"Variación desde "
+    #             f"{anio_desde} hasta {anio_hasta}"
+    #         ),
+    #     }
+    # )
+    
     kpis.append(
-        {
-            "label": "Crecimiento acumulado",
-            "value": crecimiento,
-            "format": "{:+.1f}%",
-            "help": (
-                f"Variación desde "
-                f"{anio_desde} hasta {anio_hasta}"
-            ),
-        }
+        build_growth_kpi(
+            df_range,
+            "ingresos",
+            help_text=f"Variación desde {anio_desde} hasta {anio_hasta}",
+        )
     )
+
 
     show_kpis(kpis)
 
