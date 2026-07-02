@@ -5,14 +5,10 @@ from components.filters import render_period_filters
 from components.charts import bar_chart
 
 from services.transformers import filter_by_period
-
-from pages.tv.utils import (
-    load_dataset,
-    build_kpis_agg,
-    get_top_bottom
-)
-
+from services.kpi_builder import build_kpis_agg
 from services.chart_helpers import compare_vs_national
+
+from pages.tv.utils import load_dataset, get_top_bottom
 
 from pages.tv.config import PENETRACION_PROV_KPIS
 

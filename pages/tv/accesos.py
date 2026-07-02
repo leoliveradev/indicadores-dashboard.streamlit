@@ -5,7 +5,9 @@ from components.kpi_cards import show_kpis
 from components.filters import render_range_filter
 from components.charts import area_chart, line_chart, bar_chart
 
-from pages.tv.utils import load_dataset, build_kpis, split_tipo
+from services.kpi_builder import build_kpis
+
+from pages.tv.utils import load_dataset, split_tipo
 from pages.tv.config import ACCESOS_KPIS, TV_COLOR_MAP
 
 def render():

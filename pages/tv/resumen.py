@@ -3,7 +3,10 @@ from components.kpi_cards import show_kpis
 from components.charts import area_chart, line_chart, bar_chart
 
 from pages.tv.config import RESUMEN_KPIS
-from pages.tv.utils import load_dataset, build_kpis
+from services.kpi_builder import build_kpis
+
+from pages.tv.utils import load_dataset
+
 
 def render():
     st.header("Resumen general")
