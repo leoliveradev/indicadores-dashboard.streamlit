@@ -152,3 +152,11 @@ MINUTOS_KPIS = [
         "format": "{:.1f}%",
     },
 ]
+
+SMS_KPIS = [
+    {
+        "label": "SMS enviados (miles)",
+        "column": "total",
+        "format": "{:,.0f}",
+    },
+]

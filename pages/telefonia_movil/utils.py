@@ -53,5 +53,17 @@ def normalize_columns(df, dataset_key):
             if "ingreso" in col_lower or "miles" in col_lower:
                 df["ingresos"] = df[col]
 
+    elif dataset_key == "sms":
+
+        for col in df.columns:
+            col_lower = col.lower()
+
+            if (
+                "sms" in col_lower
+                or "mensaje" in col_lower
+                or "total" in col_lower
+            ):
+                df["total"] = df[col]
+                break
     return df
 
