@@ -4,31 +4,34 @@ import plotly.graph_objects as go
 from components.kpi_cards import show_kpis
 from components.filters import render_range_filter
 from components.charts import (
-    line_chart,
     area_chart,
+    line_chart,
     bar_chart,
 )
 
 from services.chart_helpers import participation_chart
 from services.kpi_builder import build_kpis
 
-from pages.telefonia_movil.utils import load_dataset
 from services.modality_helpers import melt_modalidad
 
+from pages.telefonia_movil.utils import load_dataset
+
 from pages.telefonia_movil.config import (
-    ACCESOS_KPIS,
+    LLAMADAS_KPIS,
     MODALIDAD_COLOR_MAP,
 )
 
 
 def render():
-    st.header("Líneas móviles activas")
+    st.header("Llamadas cursadas")
 
-    df = load_dataset("accesos")
+    # dataset
+    df = load_dataset("llamadas")
 
+    # filtro
     anio_desde, anio_hasta = render_range_filter(
         df,
-        key_prefix="mov_acc",
+        key_prefix="mov_llam",
     )
 
     df_range = df[
@@ -38,29 +41,28 @@ def render():
 
     # KPIs
     kpis = build_kpis(
-        ACCESOS_KPIS,
-        {"accesos": df_range},
-        default_dataset="accesos",
+        LLAMADAS_KPIS,
+        {"llamadas": df_range},
+        default_dataset="llamadas",
     )
 
     show_kpis(kpis)
 
     st.divider()
 
-    # datos para gráficos
+    # datos gráficos
     df_long = melt_modalidad(
         df_range,
-        "Líneas",
+        "Llamadas",
     )
 
-    # selector único
     st.subheader("📊 Evolución por modalidad")
 
     chart_type = st.radio(
         "Tipo de gráfico",
         ["Área", "Líneas", "Barras"],
         horizontal=True,
-        key="mov_acc_chart",
+        key="mov_llam_chart",
     )
 
     chart_fn = {
@@ -72,9 +74,9 @@ def render():
     fig = chart_fn(
         df_long,
         "periodo",
-        "Líneas",
+        "Llamadas",
         "Modalidad",
-        title="Líneas móviles — pospago vs prepago",
+        title="Llamadas — pospago vs prepago",
         color_map=MODALIDAD_COLOR_MAP,
     )
 
@@ -88,25 +90,21 @@ def render():
 
     st.divider()
 
-    # participación pospago
-    st.subheader("% líneas pospago sobre el total")
+    st.subheader("% llamadas pospago sobre el total")
 
     df_pct = df_range.copy()
 
-    total = (
-        df_pct["pospago"]
-        + df_pct["prepago"]
-    )
-
     df_pct["pct_pospago"] = (
-        df_pct["pospago"] / total * 100
+        df_pct["pospago"]
+        / df_pct["total"]
+        * 100
     ).round(2)
-        
+
     fig_pct = participation_chart(
         df_range,
         numerator="pospago",
         denominator="total",
-        title="% líneas pospago sobre el total",
+        title="% llamadas pospago sobre el total",
     )
 
     st.plotly_chart(
@@ -114,7 +112,7 @@ def render():
         use_container_width=True,
     )
 
-    with st.expander("Ver datos"):
+    with st.expander("Ver datos completos"):
         st.dataframe(
             df_range,
             use_container_width=True,
