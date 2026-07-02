@@ -9,6 +9,7 @@ from pages.telefonia_movil import (
     llamadas,
     minutos,
     sms,
+    penetracion,
 )
 
 st.set_page_config(

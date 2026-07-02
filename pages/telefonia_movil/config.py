@@ -160,3 +160,11 @@ SMS_KPIS = [
         "format": "{:,.0f}",
     },
 ]
+
+PENETRACION_KPIS = [
+    {
+        "label": "Accesos c/100 hab.",
+        "column": "accesos_100_hab",
+        "format": "{:.2f}",
+    },
+]
