@@ -5,6 +5,7 @@ from components.sidebar import render_sidebar
 
 from pages.telefonia_movil import (
     resumen,
+    accesos,
     
 )
 

@@ -3,7 +3,8 @@ import streamlit as st
 from components.kpi_cards import show_kpis
 from components.charts import line_chart, bar_chart, area_chart
 
-from pages.telefonia_movil.utils import load_dataset, melt_modalidad
+from pages.telefonia_movil.utils import load_dataset
+from services.modality_helpers import melt_modalidad
 
 from services.kpi_builder import build_kpis
 

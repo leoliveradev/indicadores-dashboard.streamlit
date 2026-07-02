@@ -48,7 +48,7 @@ DATASETS = {
 }
 
 # ─────────────────────────────────────────────
-# 🎯 KPIS
+# KPIS
 # ─────────────────────────────────────────────
 
 RESUMEN_KPIS = [
@@ -75,5 +75,55 @@ RESUMEN_KPIS = [
         "dataset": "penetracion",
         "column": "accesos_100_hab",
         "format": "{:.2f}",
+    },
+]
+
+ACCESOS_KPIS = [
+    {
+        "label": "Líneas operativas",
+        "column": "total",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Pospago",
+        "column": "pospago",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Prepago",
+        "column": "prepago",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "% Pospago",
+        "type": "ratio",
+        "num": "pospago",
+        "den": ["pospago", "prepago"],
+        "format": "{:.1f}%",
+    },
+]
+
+LLAMADAS_KPIS = [
+    {
+        "label": "Total llamadas",
+        "column": "total",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Pospago",
+        "column": "pospago",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Prepago",
+        "column": "prepago",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "% Pospago",
+        "type": "ratio",
+        "num": "pospago",
+        "den": ["pospago", "prepago"],
+        "format": "{:.1f}%",
     },
 ]

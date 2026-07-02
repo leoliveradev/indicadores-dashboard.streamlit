@@ -3,8 +3,7 @@ from services.data_manager import DataManager
 from services.data_validator import DataValidator
 from services.transformers import (
   add_periodo_col, 
-  sort_by_periodo, 
-  last_period_delta, 
+  sort_by_periodo,  
   melt_tecnologias
 )
 from pages.telefonia_fija.config import DATASETS
@@ -21,24 +20,6 @@ def load_dataset(dataset_key):
     DataValidator.validate(df, cfg["cols"])
 
     return sort_by_periodo(add_periodo_col(df))
-
-
-def melt_segmentos(df, segmentos_cols, labels, id_col="periodo"):
-
-    if id_col not in df.columns:
-        raise ValueError(f"{id_col} no está en el dataframe")
-
-    df_long = melt_tecnologias(
-        df,
-        segmentos_cols,
-        id_col=id_col,
-        var_name="Segmento",
-        value_name="Accesos",
-    )
-
-    df_long["Segmento"] = df_long["Segmento"].map(labels)
-
-    return df_long
 
 
 def get_top_bottom(df, col, label_col="provincia", fmt="{:,.0f}"):
