@@ -1,19 +1,12 @@
 import streamlit as st
-import plotly.express as px
 
 from components.kpi_cards import show_kpis
 from components.charts import area_chart, line_chart, bar_chart
 
-from pages.telefonia_fija.utils import (
-    load_dataset,
-    build_kpis,
-    get_last_period_composition,
-)
-from pages.telefonia_fija.config import (
-    RESUMEN_KPIS,
-    SEGMENTOS_COLS,
-    SEGMENTOS_LABELS,
-)
+from services.kpi_builder import build_kpis
+
+from pages.telefonia_fija.utils import load_dataset
+from pages.telefonia_fija.config import RESUMEN_KPIS
 
 
 def render():

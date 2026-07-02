@@ -1,16 +1,13 @@
 import streamlit as st
-import plotly.graph_objects as go
+
+from pages.telefonia_fija.utils import load_dataset
+from pages.telefonia_fija.config import PENETRACION_KPIS
+
+from services.kpi_builder import build_kpis
+from services.chart_helpers import dual_axis_chart
 
 from components.kpi_cards import show_kpis
 from components.filters import render_range_filter
-
-from pages.telefonia_fija.utils import (
-    load_dataset,
-    build_kpis,
-    compute_yoy
-)
-from services.chart_helpers import dual_axis_chart
-from pages.telefonia_fija.config import PENETRACION_KPIS
 
 
 def render():

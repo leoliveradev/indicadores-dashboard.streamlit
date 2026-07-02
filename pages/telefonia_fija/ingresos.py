@@ -4,7 +4,9 @@ from components.kpi_cards import show_kpis
 from components.filters import render_range_filter
 from components.charts import line_chart, bar_chart, area_chart
 
-from pages.telefonia_fija.utils import load_dataset, build_kpis
+from services.kpi_builder import build_kpis
+
+from pages.telefonia_fija.utils import load_dataset
 from pages.telefonia_fija.config import INGRESOS_KPIS
 
 

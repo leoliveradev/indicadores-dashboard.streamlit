@@ -4,15 +4,11 @@ from components.kpi_cards import show_kpis
 from components.filters import render_period_filters
 from components.charts import bar_chart
 
-from services.transformers import (
-    filter_by_period,
-    add_periodo_col,
-    sort_by_periodo,
-)
+from services.transformers import filter_by_period
+from services.kpi_builder import build_kpis_agg
 
 from pages.telefonia_fija.utils import (
     load_dataset,
-    build_kpis_agg,
     get_top_bottom,
 )
 from services.chart_helpers import compare_vs_national

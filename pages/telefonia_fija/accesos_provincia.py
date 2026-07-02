@@ -5,10 +5,10 @@ from components.filters import render_period_filters
 from components.charts import bar_chart, line_chart
 
 from services.transformers import filter_by_period, add_periodo_col, sort_by_periodo
+from services.kpi_builder import build_kpis_agg
 
 from pages.telefonia_fija.utils import (
     load_dataset,
-    build_kpis_agg,
     get_top_bottom,
     melt_segmentos,
 )
