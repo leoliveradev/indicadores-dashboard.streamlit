@@ -6,7 +6,9 @@ from components.charts import area_chart, bar_chart
 
 from services.kpi_builder import build_kpis
 
-from pages.tv.utils import load_dataset, split_tipo
+from pages.tv.utils import load_dataset
+from services.modality_helpers import split_tipo
+
 from pages.tv.config import INGRESOS_KPIS, TV_COLOR_MAP
 
 

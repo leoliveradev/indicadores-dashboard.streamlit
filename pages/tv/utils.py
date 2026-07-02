@@ -101,25 +101,3 @@ def dual_axis_chart(config, df, x="periodo"):
     )
 
     return fig
-
-def split_tipo(df, value_name, label_map=None):
-    df_long = melt_tecnologias(
-        df,
-        ["tv_suscripcion", "tv_satelital"],
-        id_col="periodo",
-        var_name="Tipo",
-        value_name=value_name,
-    )
-
-    df_long["Tipo"] = df_long["Tipo"].map({
-        "tv_suscripcion": "TV suscripción",
-        "tv_satelital": "TV satelital",
-    })
-
-    if label_map is None:
-        label_map = {
-            "tv_suscripcion": "TV suscripción",
-            "tv_satelital": "TV satelital",
-        }
-
-    return df_long
