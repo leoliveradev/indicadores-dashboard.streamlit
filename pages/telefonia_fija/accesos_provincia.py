@@ -9,9 +9,10 @@ from services.kpi_builder import build_kpis_agg
 
 from pages.telefonia_fija.utils import (
     load_dataset,
-    get_top_bottom,
-    melt_segmentos,
+    get_top_bottom
 )
+from services.modality_helpers import melt_segmentos
+
 from pages.telefonia_fija.config import (
     ACCESOS_PROV_KPIS,
     SEGMENTOS_COLS,
