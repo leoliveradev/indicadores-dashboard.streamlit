@@ -45,14 +45,6 @@ def normalize_columns(df, dataset_key):
             if "pospago" in col_lower:
                 df["pospago"] = df[col]
 
-    elif dataset_key == "ingresos":
-
-        for col in df.columns:
-            col_lower = col.lower()
-
-            if "ingreso" in col_lower or "miles" in col_lower:
-                df["ingresos"] = df[col]
-
     elif dataset_key == "sms":
 
         for col in df.columns:
@@ -65,5 +57,14 @@ def normalize_columns(df, dataset_key):
             ):
                 df["total"] = df[col]
                 break
+
+    elif dataset_key == "ingresos":
+
+        for col in df.columns:
+            col_lower = col.lower()
+
+            if "ingreso" in col_lower or "miles" in col_lower:
+                df["ingresos"] = df[col]
+                
     return df
 

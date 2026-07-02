@@ -168,3 +168,11 @@ PENETRACION_KPIS = [
         "format": "{:.2f}",
     },
 ]
+
+INGRESOS_KPIS = [
+    {
+        "label": "Ingresos (miles $)",
+        "column": "ingresos",
+        "format": "{:,.0f}",
+    },
+]

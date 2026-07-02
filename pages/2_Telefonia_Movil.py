@@ -10,6 +10,7 @@ from pages.telefonia_movil import (
     minutos,
     sms,
     penetracion,
+    ingresos
 )
 
 st.set_page_config(
