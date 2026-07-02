@@ -113,3 +113,61 @@ def compare_vs_national(
     )
 
     return fig
+
+
+def participation_chart(
+    df,
+    numerator,
+    denominator,
+    title,
+    x="periodo",
+    y_suffix="%",
+    color="#00B5E5",
+):
+    """
+    Genera un gráfico de participación porcentual.
+
+    Ejemplo:
+        pospago / total * 100
+        hogares / total * 100
+    """
+
+    df_plot = df.copy()
+
+    df_plot["_pct"] = (
+        df_plot[numerator]
+        / df_plot[denominator]
+        * 100
+    ).round(2)
+
+    fig = go.Figure(
+        go.Scatter(
+            x=df_plot[x],
+            y=df_plot["_pct"],
+            mode="lines+markers",
+            fill="tozeroy",
+            line={
+                "color": color,
+                "width": 2,
+            },
+            fillcolor="rgba(0,181,229,0.08)",
+            marker={"size": 4},
+        )
+    )
+
+    fig.update_layout(
+        title=title,
+        hovermode="x unified",
+        margin={
+            "t": 40,
+            "b": 40,
+            "l": 40,
+            "r": 20,
+        },
+        yaxis={
+            "ticksuffix": y_suffix,
+            "gridcolor": "#E8E8E8",
+        },
+    )
+
+    return fig
