@@ -31,39 +31,27 @@ def load_dataset(dataset_key):
 def normalize_columns(df, dataset_key):
     df = df.copy()
 
-    # accesos / ingresos → nombres variables
-    if dataset_key in ["accesos", "ingresos"]:
+    if dataset_key == "accesos":
+
         for col in df.columns:
             col_lower = col.lower()
 
-            if "total" in col_lower or "operativo" in col_lower:
+            if "operativo" in col_lower or "total" in col_lower:
                 df["total"] = df[col]
+
+            if "prepago" in col_lower:
+                df["prepago"] = df[col]
+
+            if "pospago" in col_lower:
+                df["pospago"] = df[col]
+
+    elif dataset_key == "ingresos":
+
+        for col in df.columns:
+            col_lower = col.lower()
 
             if "ingreso" in col_lower or "miles" in col_lower:
                 df["ingresos"] = df[col]
 
     return df
 
-
-# ─────────────────────────────────────────────
-# MELT MODALIDADES 
-# ─────────────────────────────────────────────
-
-from services.transformers import melt_tecnologias
-
-
-def melt_modalidad(df, value_name):
-    df_long = melt_tecnologias(
-        df,
-        ["pospago", "prepago"],
-        id_col="periodo",
-        var_name="Modalidad",
-        value_name=value_name,
-    )
-
-    df_long["Modalidad"] = df_long["Modalidad"].map({
-        "pospago": "Pospago",
-        "prepago": "Prepago",
-    })
-
-    return df_long
