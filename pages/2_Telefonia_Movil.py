@@ -7,7 +7,7 @@ from pages.telefonia_movil import (
     resumen,
     accesos,
     llamadas,
-    
+    minutos
 )
 
 st.set_page_config(

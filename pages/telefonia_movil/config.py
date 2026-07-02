@@ -127,3 +127,28 @@ LLAMADAS_KPIS = [
         "format": "{:.1f}%",
     },
 ]
+
+MINUTOS_KPIS = [
+    {
+        "label": "Total minutos",
+        "column": "total",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Pospago",
+        "column": "pospago",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Prepago",
+        "column": "prepago",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "% Pospago",
+        "type": "ratio",
+        "num": "pospago",
+        "den": ["pospago", "prepago"],
+        "format": "{:.1f}%",
+    },
+]
