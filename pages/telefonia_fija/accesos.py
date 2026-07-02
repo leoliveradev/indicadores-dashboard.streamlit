@@ -5,6 +5,7 @@ from components.kpi_cards import show_kpis
 from components.filters import render_range_filter
 from components.charts import area_chart, line_chart, bar_chart
 
+from services.chart_helpers import participation_chart
 from services.kpi_builder import build_kpis
 
 from pages.telefonia_fija.utils import load_dataset
@@ -94,24 +95,17 @@ def render():
 
     df_pct["pct_hogares"] = (df_pct["hogares"] / total * 100).round(2)
 
-    fig_pct = go.Figure(go.Scatter(
-        x=df_pct["periodo"],
-        y=df_pct["pct_hogares"],
-        mode="lines+markers",
-        fill="tozeroy",
-        line={"color": "#00B5E5", "width": 2},
-        fillcolor="rgba(0,181,229,0.08)",
-        marker={"size": 4},
-    ))
-
-    fig_pct.update_layout(
+    fig_pct = participation_chart(
+        df_range,
+        numerator="hogares",
+        denominator="total",
         title="% accesos hogares sobre el total",
-        yaxis={"ticksuffix": "%"},
-        hovermode="x unified",
-        margin={"t": 40, "b": 40, "l": 40, "r": 20},
     )
-
-    st.plotly_chart(fig_pct, use_container_width=True)
+        
+    st.plotly_chart(
+        fig_pct,
+        use_container_width=True,
+    )
 
     with st.expander("Ver datos completos"):
         st.dataframe(df_range, use_container_width=True)
