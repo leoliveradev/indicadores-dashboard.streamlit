@@ -100,3 +100,31 @@ FACTURACION_KPIS = [
         "format": "{:,.0f}",
     },
 ]
+
+PRODUCCION_KPIS = [
+    {
+        "label": "Postales (unid.)",
+        "column": "postales",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Telegráficos (unid.)",
+        "column": "telegraficas",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Monetarios (unid.)",
+        "column": "monetarios",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Total (unid.)",
+        "type": "sum",
+        "columns": [
+            "postales",
+            "telegraficas",
+            "monetarios",
+        ],
+        "format": "{:,.0f}",
+    },
+]

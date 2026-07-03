@@ -6,6 +6,7 @@ from components.sidebar import render_sidebar
 from pages.mercado_postal import (
     resumen,
     facturacion,
+    produccion,
 )
 
 st.set_page_config(
