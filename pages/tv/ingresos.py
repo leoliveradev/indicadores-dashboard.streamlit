@@ -46,7 +46,7 @@ def render():
             title="Ingresos — suscripción vs satelital",
             color_map=TV_COLOR_MAP,
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with tab2:
         fig = bar_chart(
@@ -58,7 +58,7 @@ def render():
             barmode="stack",
             color_map=TV_COLOR_MAP,
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     # tabla opcional (igual que antes)
     with st.expander("Ver datos completos"):
@@ -73,5 +73,5 @@ def render():
                 "anio", "trimestre", "periodo",
                 "tv_suscripcion", "tv_satelital", "total"
             ]],
-            use_container_width=True,
+            width="stretch",
         )

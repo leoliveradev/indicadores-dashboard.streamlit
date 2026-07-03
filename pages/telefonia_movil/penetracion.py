@@ -160,7 +160,7 @@ def render():
 
     st.plotly_chart(
         fig,
-        use_container_width=True,
+        width="stretch",
     )
 
     with st.expander("Ver datos completos"):
@@ -173,5 +173,5 @@ def render():
                     "accesos_100_hab",
                 ]
             ],
-            use_container_width=True,
+            width="stretch",
         )

@@ -144,7 +144,7 @@ def render():
 
     st.plotly_chart(
         fig,
-        use_container_width=True,
+        width="stretch",
     )
 
     st.divider()
@@ -168,7 +168,7 @@ def render():
 
     st.plotly_chart(
         fig_est,
-        use_container_width=True,
+        width="stretch",
     )
 
     # df_estac = (
@@ -219,7 +219,7 @@ def render():
 
     # st.plotly_chart(
     #     fig_est,
-    #     use_container_width=True,
+    #     width="stretch",
     # )
 
     with st.expander("Ver datos completos"):
@@ -234,5 +234,5 @@ def render():
             ].rename(
                 columns={"total": "portaciones"}
             ),
-            use_container_width=True,
+            width="stretch",
         )

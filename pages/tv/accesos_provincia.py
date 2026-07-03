@@ -52,7 +52,7 @@ def render():
     )
     fig.update_traces(marker_color="#00B5E5", orientation="h")
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     st.divider()
 
@@ -80,4 +80,4 @@ def render():
             title="Comparativa provincial de accesos",
         )
 
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")

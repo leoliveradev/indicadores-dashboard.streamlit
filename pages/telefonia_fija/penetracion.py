@@ -89,7 +89,7 @@ def render():
     }
 
     fig = dual_axis_chart(DUAL_AXIS_CONFIG, df_range)
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     st.divider()
 
@@ -113,7 +113,7 @@ def render():
     #     showlegend=False,
     # )
 
-    # st.plotly_chart(fig_yoy, use_container_width=True)
+    # st.plotly_chart(fig_yoy, width="stretch")
 
     with st.expander("Ver datos completos"):
         st.dataframe(
@@ -121,5 +121,5 @@ def render():
                 ["anio", "trimestre", "periodo",
                  "accesos_100_hab", "accesos_100_hog"]
             ],
-            use_container_width=True,
+            width="stretch",
         )

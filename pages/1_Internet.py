@@ -168,7 +168,7 @@ if categoria == "Resumen general":
             separators=",.",
             legend={"orientation": "h", "y": -0.1},
         )
-        st.plotly_chart(fig_pie, use_container_width=True)
+        st.plotly_chart(fig_pie, width="stretch")
  
     with col2:
         # Velocidad media nacional y máx. provincial
@@ -248,7 +248,7 @@ if categoria == "Resumen general":
             font={"family": "Inter, Arial, sans-serif"},
             separators=",.",
         )
-        st.plotly_chart(fig_gauge, use_container_width=True)
+        st.plotly_chart(fig_gauge, width="stretch")
  
     # ── Fila 2: Fibra vs ADSL vs Cablemodem + Anillo rangos de velocidad ─────
     col3, col4 = st.columns([2, 1])
@@ -270,7 +270,7 @@ if categoria == "Resumen general":
                 "Cablemodem":   "#EEAE42",
             },
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
  
     with col4:
         periodo_rang = df_rang["periodo"].iloc[-1]
@@ -288,7 +288,7 @@ if categoria == "Resumen general":
             separators=",.",
             legend={"orientation": "h", "y": -0.15},
         )
-        st.plotly_chart(fig_rang, use_container_width=True)
+        st.plotly_chart(fig_rang, width="stretch")
  
 
 # ── Tecnología ────────────────────────────────────────────────────────────────
@@ -330,15 +330,15 @@ elif categoria == "Tecnología":
     with tab_linea:
         st.plotly_chart(line_chart(df_long, "periodo", "Accesos", "Tecnología",
                                    title="Evolución por tecnología"),
-                        use_container_width=True)
+                        width="stretch")
     with tab_area:
         st.plotly_chart(area_chart(df_long, "periodo", "Accesos", "Tecnología",
                                    title="Composición en el tiempo"),
-                        use_container_width=True)
+                        width="stretch")
     with tab_barra:
         st.plotly_chart(bar_chart(df_long, "periodo", "Accesos", "Tecnología",
                                   title="Barras apiladas por tecnología", barmode="stack"),
-                        use_container_width=True)
+                        width="stretch")
 
 
 # ── Velocidad media ───────────────────────────────────────────────────────────
@@ -373,7 +373,7 @@ elif categoria == "Velocidad media":
                    labels={"mbps": "Mbps", "periodo": "Período"}, 
                    markers=True,
                    y_tickformat=",.2f"),
-        use_container_width=True,
+        width="stretch",
     )
 
 
@@ -427,18 +427,18 @@ elif categoria == "Banda ancha vs Dial-up":
         fig = area_chart(df_long, "periodo", "Accesos", "Tipo",
                          title="Evolución banda ancha vs dial-up",
                          color_map={"Banda ancha fija": "#00B5E5", "Dial-up": "#C6C6C6"})
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     with tab2:
         fig = line_chart(df_long, "periodo", "Accesos", "Tipo",
                          title="Evolución banda ancha vs dial-up",
                          color_map={"Banda ancha fija": "#00B5E5", "Dial-up": "#C6C6C6"})
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     with tab3:
         fig = bar_chart(df_long, "periodo", "Accesos", "Tipo",
                         title="Banda ancha vs dial-up por trimestre",
                         barmode="stack",
                         color_map={"Banda ancha fija": "#00B5E5", "Dial-up": "#C6C6C6"})
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
  
     # Evolución del porcentaje BA
     st.subheader("Participación de banda ancha sobre el total")
@@ -459,7 +459,7 @@ elif categoria == "Banda ancha vs Dial-up":
         yaxis={"ticksuffix": "%", "gridcolor": "#E8E8E8", "range": [95, 101]},
         hovermode="x unified",
     )
-    st.plotly_chart(fig_pct, use_container_width=True)
+    st.plotly_chart(fig_pct, width="stretch")
  
 
 # ── Rangos de velocidad ───────────────────────────────────────────────────────
@@ -510,15 +510,15 @@ elif categoria == "Rangos de velocidad":
     with tab1:
         fig = area_chart(df_long, "periodo", "Accesos", "Rango",
                          title="Evolución por rangos de velocidad")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     with tab2:
         fig = bar_chart(df_long, "periodo", "Accesos", "Rango",
                         title="Accesos por rango de velocidad", barmode="stack")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     with tab3:
         fig = line_chart(df_long, "periodo", "Accesos", "Rango",
                          title="Evolución por rango de velocidad")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
  
     # Distribución en el último período (torta)
     st.subheader(f"Distribución — {df_range['periodo'].iloc[-1]}")
@@ -530,7 +530,7 @@ elif categoria == "Rangos de velocidad":
     fig_pie = px.pie(df_pie, names="Rango", values="Accesos",
                             hole=0.4, title=f"Composición por rango — {df_range['periodo'].iloc[-1]}")
     fig_pie.update_layout(margin={"t": 50, "b": 0, "l": 0, "r": 0})
-    st.plotly_chart(fig_pie, use_container_width=True)
+    st.plotly_chart(fig_pie, width="stretch")
  
 
 # ── Penetración ───────────────────────────────────────────────────────────────
@@ -629,7 +629,7 @@ elif categoria == "Penetración":
         ),
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     # ── Crecimiento interanual ────────────────────────────────────────────────
     st.subheader("Variación interanual")
@@ -659,7 +659,7 @@ elif categoria == "Penetración":
             yaxis={"ticksuffix": "%", "gridcolor": "#E8E8E8"},
             showlegend=False,
         )
-        st.plotly_chart(fig_yoy1, use_container_width=True)
+        st.plotly_chart(fig_yoy1, width="stretch")
 
     with col2:
         fig_yoy2 = go.Figure(go.Bar(
@@ -680,14 +680,14 @@ elif categoria == "Penetración":
             yaxis={"ticksuffix": "%", "gridcolor": "#E8E8E8"},
             showlegend=False,
         )
-        st.plotly_chart(fig_yoy2, use_container_width=True)
+        st.plotly_chart(fig_yoy2, width="stretch")
 
     with st.expander("Ver datos completos"):
         st.dataframe(
             df_range[["anio", "trimestre", "periodo",
                        "accesos_cada_100_hogares",
                        "accesos_cada_100_habitantes"]],
-            use_container_width=True,
+            width="stretch",
         )
 
 
@@ -715,7 +715,7 @@ elif categoria == "Ingresos":
     st.plotly_chart(
         bar_chart(df, x="periodo", y=value_col,
                   title="Ingresos por trimestre (miles de pesos)"),
-        use_container_width=True,
+        width="stretch",
     )
 
 
@@ -776,7 +776,7 @@ elif categoria == "Tecnología - provincia":
             xaxis={"tickformat": ",.0f"},
         )
         fig_rank.update_traces(marker_color="#00B5E5", orientation="h")
-        st.plotly_chart(fig_rank, use_container_width=True)
+        st.plotly_chart(fig_rank, width="stretch")
 
     with col2:
         st.subheader("Composición por tecnología")
@@ -800,7 +800,7 @@ elif categoria == "Tecnología - provincia":
             yaxis={"categoryorder": "total ascending"},
             xaxis={"tickformat": ",.0f"},
         )
-        st.plotly_chart(fig_comp, use_container_width=True)
+        st.plotly_chart(fig_comp, width="stretch")
 
     st.divider()
 
@@ -820,13 +820,13 @@ elif categoria == "Tecnología - provincia":
         st.plotly_chart(
             line_chart(df_long_evol, "periodo", "Accesos", "Tecnología",
                        title=f"{prov_sel} — evolución por tecnología"),
-            use_container_width=True,
+            width="stretch",
         )
     with tab2:
         st.plotly_chart(
             area_chart(df_long_evol, "periodo", "Accesos", "Tecnología",
                        title=f"{prov_sel} — composición en el tiempo"),
-            use_container_width=True,
+            width="stretch",
         )
 
 
@@ -879,7 +879,7 @@ elif categoria == "Velocidad media - provincia":
         xaxis={"ticksuffix": " Mbps"},
     )
     fig.update_traces(marker_color="#00B5E5", orientation="h")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
  
     st.divider()
  
@@ -902,7 +902,7 @@ elif categoria == "Velocidad media - provincia":
             title="Velocidad media — comparativa entre provincias",
             labels={"mbps": "Mbps"},
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
  
 
 # ── Banda ancha - provincia ───────────────────────────────────────────────────────
@@ -955,7 +955,7 @@ elif categoria == "Banda ancha - provincia":
         fig.update_layout(height=650, yaxis={"categoryorder": "total ascending"},
                           xaxis={"tickformat": ",.0f"})
         fig.update_traces(marker_color="#00B5E5", orientation="h")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with col2:
         st.subheader("% Banda ancha sobre total")
@@ -967,7 +967,7 @@ elif categoria == "Banda ancha - provincia":
         fig.update_layout(height=650, yaxis={"categoryorder": "total ascending"},
                           xaxis={"ticksuffix": "%"})
         fig.update_traces(marker_color="#ACAE22", orientation="h")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     st.divider()
 
@@ -991,7 +991,7 @@ elif categoria == "Banda ancha - provincia":
     fig = area_chart(df_long, "periodo", "Accesos", "Tipo",
                      title=f"{prov_sel} — evolución banda ancha vs dial-up",
                      color_map={"Banda ancha fija": "#00B5E5", "Dial-up": "#C6C6C6"})
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 
 # ── Rangos de velocidad - provincia ──────────────────────────────────────────
@@ -1050,7 +1050,7 @@ elif categoria == "Rangos de velocidad - provincia":
         fig.update_layout(height=650, yaxis={"categoryorder": "total ascending"},
                           xaxis={"ticksuffix": "%"})
         fig.update_traces(marker_color="#00B5E5", orientation="h")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with col2:
         st.subheader("Composición de rangos por provincia")
@@ -1068,7 +1068,7 @@ elif categoria == "Rangos de velocidad - provincia":
                         title=f"Distribución por rango — {anio} T{trimestre}")
         fig.update_layout(height=650, yaxis={"categoryorder": "total ascending"},
                           xaxis={"tickformat": ",.0f"})
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     st.divider()
 
@@ -1096,11 +1096,11 @@ elif categoria == "Rangos de velocidad - provincia":
     with tab1:
         fig = area_chart(df_long_evol, "periodo", "Accesos", "Rango",
                          title=f"{prov_sel} — evolución por rangos de velocidad")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     with tab2:
         fig = bar_chart(df_long_evol, "periodo", "Accesos", "Rango",
                         title=f"{prov_sel} — rangos de velocidad", barmode="stack")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
 
 # ── Penetración - provincia ───────────────────────────────────────────────────────
@@ -1152,7 +1152,7 @@ elif categoria == "Penetración - provincia":
                         title=f"{anio} T{trimestre}")
         fig.update_layout(height=650, yaxis={"categoryorder": "total ascending"})
         fig.update_traces(marker_color="#00B5E5", orientation="h")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with col2:
         st.subheader("Ranking — c/100 habitantes")
@@ -1163,7 +1163,7 @@ elif categoria == "Penetración - provincia":
                         title=f"{anio} T{trimestre}")
         fig.update_layout(height=650, yaxis={"categoryorder": "total ascending"})
         fig.update_traces(marker_color="#EEAE42", orientation="h")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     st.divider()
 
@@ -1200,7 +1200,7 @@ elif categoria == "Penetración - provincia":
         legend={"orientation": "h", "y": 1.02},
         yaxis={"gridcolor": "#E8E8E8"},
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 
 # ── En desarrollo ─────────────────────────────────────────────────────────────

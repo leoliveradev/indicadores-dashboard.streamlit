@@ -84,8 +84,8 @@ def render():
         title="Ingresos por trimestre (miles $)",
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     # tabla opcional
     with st.expander("Ver datos completos"):
-        st.dataframe(df_range, use_container_width=True)
+        st.dataframe(df_range, width="stretch")

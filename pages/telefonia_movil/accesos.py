@@ -83,7 +83,7 @@ def render():
 
     st.plotly_chart(
         fig,
-        use_container_width=True,
+        width="stretch",
     )
 
     st.divider()
@@ -111,11 +111,11 @@ def render():
 
     st.plotly_chart(
         fig_pct,
-        use_container_width=True,
+        width="stretch",
     )
 
     with st.expander("Ver datos"):
         st.dataframe(
             df_range,
-            use_container_width=True,
+            width="stretch",
         )

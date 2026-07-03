@@ -70,7 +70,7 @@ def render():
         )
         fig.update_traces(marker_color="#00B5E5", orientation="h")
 
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     # composición por segmento
     with col2:
@@ -103,7 +103,7 @@ def render():
             xaxis={"tickformat": ",.0f"},
         )
 
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     st.divider()
 
@@ -132,4 +132,4 @@ def render():
             labels={"total": "Accesos"},
         )
 
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")

@@ -187,7 +187,7 @@ if categoria == "Ingresos por servicio":
         yaxis={"tickformat": ",.0f", "gridcolor": "#E8E8E8"},
         xaxis={"categoryorder": "array", "categoryarray": todos_periodos_ing},
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     st.info(
         "Las escalas difieren entre servicios (Internet y Móvil en miles de $, "
@@ -202,7 +202,7 @@ if categoria == "Ingresos por servicio":
             tmp["Servicio"] = servicio
             tmp = tmp.rename(columns={col: "Ingresos"})
             rows.append(tmp)
-        st.dataframe(pd.concat(rows), use_container_width=True)
+        st.dataframe(pd.concat(rows), width="stretch")
 
 
 # ── 2. Accesos por servicio ───────────────────────────────────────────────────
@@ -294,7 +294,7 @@ elif categoria == "Accesos por servicio":
             yaxis={"tickformat": ",.0f", "gridcolor": "#E8E8E8"},
             xaxis={"categoryorder": "array", "categoryarray": todos_periodos},
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     else:
         anios_disponibles = sorted(set(
@@ -341,7 +341,7 @@ elif categoria == "Accesos por servicio":
                 yaxis={"ticksuffix": "", "gridcolor": "#E8E8E8",
                        "title": "Índice (base = 100)"},
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
             st.caption(
                 f"Un valor de 150 significa que el servicio tiene 50% más accesos "
                 f"que en el primer trimestre de {base_anio}."
@@ -446,7 +446,7 @@ elif categoria == "Penetración comparada":
             overlaying="y", side="right", showgrid=False,
         ),
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     st.divider()
 
@@ -471,7 +471,7 @@ elif categoria == "Penetración comparada":
         })
 
     df_tabla = pd.DataFrame(rows).sort_values("Penetración", ascending=False)
-    st.dataframe(df_tabla, use_container_width=True, hide_index=True)
+    st.dataframe(df_tabla, width="stretch", hide_index=True)
 
 
 # ── 4. Crecimiento relativo ───────────────────────────────────────────────────
@@ -591,7 +591,7 @@ elif categoria == "Crecimiento relativo":
         yaxis={"gridcolor": "#E8E8E8",
                "title": f"Índice (base 100 = T1 {base_anio})"},
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     st.caption(
         "Fibra óptica impulsó el crecimiento de Internet fijo. "
@@ -603,4 +603,4 @@ elif categoria == "Crecimiento relativo":
         pivot = df_idx.pivot_table(
             index="periodo", columns="Servicio", values="indice"
         ).round(1)
-        st.dataframe(pivot, use_container_width=True)
+        st.dataframe(pivot, width="stretch")

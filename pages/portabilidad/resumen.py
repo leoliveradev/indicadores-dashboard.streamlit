@@ -78,7 +78,7 @@ def render():
 
         st.plotly_chart(
             fig,
-            use_container_width=True,
+            width="stretch",
         )
 
     with col2:
@@ -92,5 +92,5 @@ def render():
 
         st.plotly_chart(
             fig,
-            use_container_width=True,
+            width="stretch",
         )

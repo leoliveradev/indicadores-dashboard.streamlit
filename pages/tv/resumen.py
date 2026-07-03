@@ -54,7 +54,7 @@ def render():
         "total",
         title="Accesos totales",
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 
     fig = chart_fn(
@@ -63,4 +63,4 @@ def render():
         "total",
         title="Ingresos totales (miles $)",
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")

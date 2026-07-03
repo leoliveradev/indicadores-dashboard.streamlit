@@ -66,7 +66,7 @@ def render():
         fig.update_layout(height=650, yaxis={"categoryorder": "total ascending"})
         fig.update_traces(marker_color="#00B5E5", orientation="h")
 
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with col2:
         st.subheader("Ranking — c/100 habitantes")
@@ -85,7 +85,7 @@ def render():
         fig.update_layout(height=650, yaxis={"categoryorder": "total ascending"})
         fig.update_traces(marker_color="#EEAE42", orientation="h")
 
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     st.divider()
 
@@ -109,4 +109,4 @@ def render():
     )
 
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")

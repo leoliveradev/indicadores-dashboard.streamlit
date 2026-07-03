@@ -121,7 +121,7 @@ if categoria == "Resumen general":
     #     df_long["Servicio"] = df_long["Servicio"].map(SERVICIOS_LABELS)
     #     fig = area_chart(df_long, "periodo", "Facturación", "Servicio",
     #                      title="Facturación por tipo de servicio ($)")
-    #     st.plotly_chart(fig, use_container_width=True)
+    #     st.plotly_chart(fig, width="stretch")
 
     # with col2:
     #     df_long_p = melt_tecnologias(df_pro_t, SERVICIOS_COLS,
@@ -129,14 +129,14 @@ if categoria == "Resumen general":
     #     df_long_p["Servicio"] = df_long_p["Servicio"].map(SERVICIOS_LABELS)
     #     fig = area_chart(df_long_p, "periodo", "Producción", "Servicio",
     #                      title="Producción por tipo de servicio (unidades)")
-    #     st.plotly_chart(fig, use_container_width=True)
+    #     st.plotly_chart(fig, width="stretch")
 
     # col3, _ = st.columns([1, 1])
     # with col3:
     #     fig = line_chart(df_per, "periodo", "personal_ocupado",
     #                      title="Personal ocupado — evolución",
     #                      labels={"personal_ocupado": "Personas"}, markers=False)
-    #     st.plotly_chart(fig, use_container_width=True)
+    #     st.plotly_chart(fig, width="stretch")
     
     with st.container():
         df_long = melt_tecnologias(df_fac_t, SERVICIOS_COLS,
@@ -144,19 +144,19 @@ if categoria == "Resumen general":
         df_long["Servicio"] = df_long["Servicio"].map(SERVICIOS_LABELS)
         fig = area_chart(df_long, "periodo", "Facturación", "Servicio",
                          title="Facturación por tipo de servicio ($)")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
         df_long_p = melt_tecnologias(df_pro_t, SERVICIOS_COLS,
                                      id_col="periodo", var_name="Servicio", value_name="Producción")
         df_long_p["Servicio"] = df_long_p["Servicio"].map(SERVICIOS_LABELS)
         fig = area_chart(df_long_p, "periodo", "Producción", "Servicio",
                          title="Producción por tipo de servicio (unidades)")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
         fig = line_chart(df_per, "periodo", "personal_ocupado",
                          title="Personal ocupado — evolución",
                          labels={"personal_ocupado": "Personas"}, markers=False)
-        st.plotly_chart(fig, use_container_width=True)        
+        st.plotly_chart(fig, width="stretch")        
 
 # ── Facturación ───────────────────────────────────────────────────────────────
 
@@ -193,15 +193,15 @@ elif categoria == "Facturación":
     with tab1:
         fig = area_chart(df_long, "periodo", "Facturación", "Servicio",
                          title="Facturación por tipo de servicio ($)")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     with tab2:
         fig = line_chart(df_long, "periodo", "Facturación", "Servicio",
                          title="Evolución de facturación por servicio")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     with tab3:
         fig = bar_chart(df_long, "periodo", "Facturación", "Servicio",
                         title="Facturación por trimestre", barmode="stack")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     # Composición último trimestre
     st.subheader(f"Composición — {df_range['periodo'].iloc[-1]}")
@@ -209,7 +209,7 @@ elif categoria == "Facturación":
     ultimo.columns = ["Servicio", "Facturación"]
     fig_pie = px.pie(ultimo, names="Servicio", values="Facturación", hole=0.45)
     fig_pie.update_layout(margin={"t": 20, "b": 0, "l": 0, "r": 0})
-    st.plotly_chart(fig_pie, use_container_width=True)
+    st.plotly_chart(fig_pie, width="stretch")
 
 
 # ── Producción ────────────────────────────────────────────────────────────────
@@ -251,11 +251,11 @@ elif categoria == "Producción":
     with tab1:
         fig = area_chart(df_long, "periodo", "Producción", "Servicio",
                          title="Producción por tipo de servicio (unidades)")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
     with tab2:
         fig = line_chart(df_long, "periodo", "Producción", "Servicio",
                          title="Evolución de producción por servicio")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     st.subheader("Facturación vs producción — ¿crecen juntos?")
     st.caption("Compara si la facturación y el volumen físico evolucionan en la misma dirección.")
@@ -292,7 +292,7 @@ elif categoria == "Producción":
             overlaying="y", side="right", showgrid=False,
         ),
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 
 # ── Personal ocupado ──────────────────────────────────────────────────────────
@@ -339,7 +339,7 @@ elif categoria == "Personal ocupado":
         yaxis={"tickformat": ",.0f", "gridcolor": "#E8E8E8"},
         hovermode="x unified",
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     st.subheader("Variación interanual")
     df_yoy = df_range.copy()
@@ -356,7 +356,7 @@ elif categoria == "Personal ocupado":
         yaxis={"ticksuffix": "%", "gridcolor": "#E8E8E8"},
         showlegend=False,
     )
-    st.plotly_chart(fig_yoy, use_container_width=True)
+    st.plotly_chart(fig_yoy, width="stretch")
 
 
 # ── Facturación y producción - provincia ─────────────────────────────────────────
@@ -403,7 +403,7 @@ elif categoria == "Facturación y producción - provincia":
         fig.update_layout(height=700, yaxis={"categoryorder": "total ascending"},
                           xaxis={"tickformat": ",.0f"})
         fig.update_traces(marker_color="#00B5E5", orientation="h")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with col2:
         st.subheader("Ranking — producción (unidades)")
@@ -413,7 +413,7 @@ elif categoria == "Facturación y producción - provincia":
         fig.update_layout(height=700, yaxis={"categoryorder": "total ascending"},
                           xaxis={"tickformat": ",.0f"})
         fig.update_traces(marker_color="#EEAE42", orientation="h")
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     st.divider()
 
@@ -435,4 +435,4 @@ elif categoria == "Facturación y producción - provincia":
         fig = line_chart(df_multi, "periodo", val_col, "provincia",
                          title=f"{metric} — comparativa provincial",
                          labels={val_col: metric})
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")

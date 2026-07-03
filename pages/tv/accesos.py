@@ -44,7 +44,7 @@ def render():
             title="Accesos — suscripción vs satelital",
             color_map=TV_COLOR_MAP,
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with tab2:
         fig = line_chart(
@@ -53,7 +53,7 @@ def render():
             title="Evolución de accesos",
             color_map=TV_COLOR_MAP,
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with tab3:
         fig = bar_chart(
@@ -63,7 +63,7 @@ def render():
             barmode="stack",
             color_map=TV_COLOR_MAP,
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     st.divider()
 
@@ -90,4 +90,4 @@ def render():
         margin={"t": 40, "b": 40, "l": 40, "r": 20},
     )
 
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")

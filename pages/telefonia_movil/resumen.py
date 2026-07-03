@@ -51,7 +51,7 @@ def render():
             "total",
             title="Líneas operativas",
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with col2:
         fig = chart_fn(
@@ -60,7 +60,7 @@ def render():
             "ingresos",
             title="Ingresos (miles $)",
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     col3, col4 = st.columns(2)
 
@@ -75,7 +75,7 @@ def render():
             title="Minutos de voz — modalidades",
             color_map=MODALIDAD_COLOR_MAP,
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     with col4:
         fig = line_chart(
@@ -85,4 +85,4 @@ def render():
             title="Penetración (c/100 hab.)",
             markers=False,
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
