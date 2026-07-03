@@ -11,14 +11,10 @@ from services.transformers import last_period_delta
 
 from services.kpi_helpers import build_max_kpi
 
-from pages.portabilidad.utils import (
-    load_dataset,
-    
-)
-from services.portabilidad_helpers import (
-    mensual_a_trimestral,
-    mensual_a_anual,
-)
+from pages.portabilidad.utils import load_dataset
+
+from services.aggregation_helpers import mensual_a_trimestral, mensual_a_anual
+
 
 def render():
 
