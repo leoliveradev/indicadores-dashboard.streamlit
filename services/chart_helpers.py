@@ -171,3 +171,69 @@ def participation_chart(
     )
 
     return fig
+
+
+def seasonality_chart(
+    df,
+    value_col,
+    month_col,
+    month_labels,
+    title=None,
+):
+    """
+    Genera gráfico de estacionalidad
+    mostrando el promedio histórico mensual.
+    """
+
+    df_estac = (
+        df.groupby(month_col)[value_col]
+        .mean()
+        .reset_index()
+        .sort_values(month_col)
+    )
+
+    df_estac["mes_label"] = (
+        df_estac[month_col]
+        .map(month_labels)
+    )
+
+    promedio_global = (
+        df_estac[value_col]
+        .mean()
+    )
+
+    fig = go.Figure()
+
+    fig.add_trace(
+        go.Bar(
+            x=df_estac["mes_label"],
+            y=df_estac[value_col],
+            marker_color=[
+                "#00B5E5"
+                if v >= promedio_global
+                else "#BCE4F4"
+                for v in df_estac[value_col]
+            ],
+            text=df_estac[value_col].apply(
+                lambda v: f"{v:,.0f}"
+            ),
+            textposition="outside",
+        )
+    )
+
+    fig.add_hline(
+        y=promedio_global,
+        line_dash="dot",
+        line_color="#C6C6C6",
+        line_width=1,
+        annotation_text=f"Promedio: {promedio_global:,.0f}",
+        annotation_position="top right",
+    )
+
+    fig.update_layout(
+        title=title,
+        yaxis={"tickformat": ",.0f"},
+        showlegend=False,
+    )
+
+    return fig
