@@ -72,3 +72,31 @@ RESUMEN_KPIS = [
         "format": "{:,.0f}",
     },
 ]
+
+FACTURACION_KPIS = [
+    {
+        "label": "Postales ($)",
+        "column": "postales",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Telegráficos ($)",
+        "column": "telegraficas",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Monetarios ($)",
+        "column": "monetarios",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Total ($)",
+        "type": "sum",
+        "columns": [
+            "postales",
+            "telegraficas",
+            "monetarios",
+        ],
+        "format": "{:,.0f}",
+    },
+]
