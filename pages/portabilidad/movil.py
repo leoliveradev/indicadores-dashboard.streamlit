@@ -6,11 +6,8 @@ from components.filters import render_range_filter
 
 from services.transformers import last_period_delta
 from services.kpi_helpers import build_max_kpi
-from services.portabilidad_helpers import (
-  mensual_a_trimestral, 
-  mensual_a_anual, 
-  add_mes_col
-)
+from services.aggregation_helpers import mensual_a_trimestral, mensual_a_anual
+from services.portabilidad_helpers import add_mes_col
 from services.chart_helpers import seasonality_chart
 
 from pages.portabilidad.utils import (
