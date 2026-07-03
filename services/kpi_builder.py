@@ -5,12 +5,24 @@ def apply_operation(df, cfg):
     df = df.copy()
 
     if cfg.get("type") == "sum":
-        df["_metric"] = sum(df[col] for col in cfg["columns"])
+
+        df["_metric"] = (
+            df[cfg["columns"]]
+            .sum(axis=1)
+        )
 
     elif cfg.get("type") == "ratio":
-        total = sum(df[col] for col in cfg["den"])
-        df["_metric"] = (df[cfg["num"]] / total) * 100
 
+        total = (
+            df[cfg["den"]]
+            .sum(axis=1)
+        )
+
+        df["_metric"] = (
+            df[cfg["num"]]
+            / total
+            * 100
+        )
     else:
         df["_metric"] = df[cfg["column"]]
 
