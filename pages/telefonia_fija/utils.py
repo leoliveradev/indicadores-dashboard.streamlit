@@ -3,13 +3,11 @@ from services.data_manager import DataManager
 from services.data_validator import DataValidator
 from services.transformers import (
   add_periodo_col, 
-  sort_by_periodo,  
-  melt_tecnologias
+  sort_by_periodo, 
 )
+
 from pages.telefonia_fija.config import DATASETS
 
-
-@st.cache_data
 def load_dataset(dataset_key):
     if dataset_key not in DATASETS:
         raise ValueError(f"Dataset '{dataset_key}' no definido")
