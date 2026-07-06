@@ -128,3 +128,18 @@ PRODUCCION_KPIS = [
         "format": "{:,.0f}",
     },
 ]
+
+PROVINCIA_KPIS = [
+    {
+        "label": "Facturación total ($)",
+        "column": "pesos",
+        "agg": "sum",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Producción total (unid.)",
+        "column": "unidades",
+        "agg": "sum",
+        "format": "{:,.0f}",
+    },
+]

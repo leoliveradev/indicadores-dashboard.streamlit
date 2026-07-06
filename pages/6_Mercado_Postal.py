@@ -7,6 +7,7 @@ from pages.mercado_postal import (
     resumen,
     facturacion,
     produccion,
+    provincia,
 )
 
 st.set_page_config(
