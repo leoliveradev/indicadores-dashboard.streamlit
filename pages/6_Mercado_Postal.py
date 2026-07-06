@@ -8,6 +8,7 @@ from pages.mercado_postal import (
     facturacion,
     produccion,
     provincia,
+    personal_ocupado,
 )
 
 st.set_page_config(

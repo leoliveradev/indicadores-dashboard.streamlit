@@ -143,3 +143,11 @@ PROVINCIA_KPIS = [
         "format": "{:,.0f}",
     },
 ]
+
+PERSONAL_KPIS = [
+    {
+        "label": "Personal actual",
+        "column": "personal_ocupado",
+        "format": "{:,.0f}",
+    },
+]
