@@ -44,6 +44,15 @@ DATASETS = {
             "mbps",
         ],
     },
+    "velocidad_media_provincia": {
+        "endpoint": InternetEndpoints.VELOCIDAD_MEDIA_PROVINCIA,
+        "cols": [
+            "anio",
+            "trimestre",
+            "provincia",
+            "mbps",
+        ],
+    },
     "velocidad_rangos": {
         "endpoint": InternetEndpoints.VELOCIDAD_RANGOS,
         "cols": [
