@@ -8,6 +8,7 @@ from components.charts import (
     bar_chart,
 )
 
+from services.chart_helpers import composition_pie_chart
 from services.kpi_builder import build_kpis
 
 from services.transformers import (
@@ -66,6 +67,40 @@ def render():
 
     df_long["Tecnología"] = df_long["Tecnología"].map(TECNOLOGIAS_LABELS)
 
+    
+
+    st.subheader(f"Composición — {anio} T{trimestre}")
+
+    periodo_actual = filter_by_period(
+        df,
+        anio,
+        trimestre,
+    )
+
+    ultimo = (
+        periodo_actual[TECNOLOGIAS_COLS].sum().rename(TECNOLOGIAS_LABELS).reset_index()
+    )
+
+    ultimo.columns = [
+        "Tecnología",
+        "Accesos",
+    ]
+
+    fig_pie = composition_pie_chart(
+        periodo_actual,
+        columns=TECNOLOGIAS_COLS,
+        labels=TECNOLOGIAS_LABELS,
+        title=f"Composición — {anio} T{trimestre}",
+    )
+
+    st.plotly_chart(
+        fig_pie,
+        width="stretch",
+    )
+
+    
+    st.divider()
+
     st.subheader("📊 Evolución tecnológica")
 
     chart_type = st.radio(
@@ -111,38 +146,6 @@ def render():
         width="stretch",
     )
 
-    st.divider()
-
-    st.subheader(f"Composición — {anio} T{trimestre}")
-
-    periodo_actual = filter_by_period(
-        df,
-        anio,
-        trimestre,
-    )
-
-    ultimo = (
-        periodo_actual[TECNOLOGIAS_COLS].sum().rename(TECNOLOGIAS_LABELS).reset_index()
-    )
-
-    ultimo.columns = [
-        "Tecnología",
-        "Accesos",
-    ]
-
-    import plotly.express as px
-
-    fig_pie = px.pie(
-        ultimo,
-        names="Tecnología",
-        values="Accesos",
-        hole=0.45,
-    )
-
-    st.plotly_chart(
-        fig_pie,
-        width="stretch",
-    )
 
     with st.expander("Ver datos completos"):
 
