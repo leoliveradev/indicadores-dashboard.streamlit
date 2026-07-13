@@ -66,28 +66,11 @@ def render():
     )
 
     df_long["Tecnología"] = df_long["Tecnología"].map(TECNOLOGIAS_LABELS)
-
-    
-
+   
     st.subheader(f"Composición — {anio} T{trimestre}")
 
-    periodo_actual = filter_by_period(
-        df,
-        anio,
-        trimestre,
-    )
-
-    ultimo = (
-        periodo_actual[TECNOLOGIAS_COLS].sum().rename(TECNOLOGIAS_LABELS).reset_index()
-    )
-
-    ultimo.columns = [
-        "Tecnología",
-        "Accesos",
-    ]
-
     fig_pie = composition_pie_chart(
-        periodo_actual,
+        df_periodo,
         columns=TECNOLOGIAS_COLS,
         labels=TECNOLOGIAS_LABELS,
         title=f"Composición — {anio} T{trimestre}",
