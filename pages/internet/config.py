@@ -17,6 +17,16 @@ DATASETS = {
         ]
         + TECNOLOGIAS_COLS,
     },
+    "tecnologias_provincia": {
+        "endpoint": InternetEndpoints.TECNOLOGIAS_PROVINCIA,
+        "cols": [
+            "anio",
+            "trimestre",
+            "provincia",
+            "total",
+        ]
+        + TECNOLOGIAS_COLS,
+    },
     "penetracion": {
         "endpoint": InternetEndpoints.PENETRACION,
         "cols": [
@@ -116,6 +126,33 @@ TECNOLOGIA_KPIS = [
     {
         "label": "ADSL",
         "column": "adsl",
+        "format": "{:,.0f}",
+    },
+]
+
+TECNOLOGIA_PROVINCIA_KPIS = [
+    {
+        "label": "Total nacional",
+        "column": "total",
+        "agg": "sum",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Fibra óptica",
+        "column": "fibra_optica",
+        "agg": "sum",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "Cablemodem",
+        "column": "cablemodem",
+        "agg": "sum",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "ADSL",
+        "column": "adsl",
+        "agg": "sum",
         "format": "{:,.0f}",
     },
 ]

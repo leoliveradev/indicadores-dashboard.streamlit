@@ -285,3 +285,47 @@ def composition_pie_chart(
     )
 
     return fig
+
+def province_ranking_chart(
+    df,
+    value_col,
+    title,
+    color="#00B5E5",
+    height=650,
+    tickformat=",.0f",
+):
+    from components.charts import bar_chart
+
+    df_rank = (
+        df[
+            ["provincia", value_col]
+        ]
+        .sort_values(
+            value_col,
+            ascending=True,
+        )
+    )
+
+    fig = bar_chart(
+        df_rank,
+        x=value_col,
+        y="provincia",
+        title=title,
+    )
+
+    fig.update_layout(
+        height=height,
+        yaxis={
+            "categoryorder": "total ascending",
+        },
+        xaxis={
+            "tickformat": tickformat,
+        },
+    )
+
+    fig.update_traces(
+        marker_color=color,
+        orientation="h",
+    )
+
+    return fig

@@ -6,7 +6,7 @@ from components.sidebar import render_sidebar
 from pages.internet import (
     resumen,
     tecnologia,
-    # tecnologia_provincia,
+    tecnologia_provincia,
     velocidad_media,
     # velocidad_media_provincia,
     rangos_velocidad,
