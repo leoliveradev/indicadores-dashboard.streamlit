@@ -1,4 +1,6 @@
 import plotly.graph_objects as go
+import plotly.express as px
+
 from services.transformers import add_periodo_col, sort_by_periodo
 
 def dual_axis_chart(config, df, x="periodo"):
@@ -234,6 +236,52 @@ def seasonality_chart(
         title=title,
         yaxis={"tickformat": ",.0f"},
         showlegend=False,
+    )
+
+    return fig
+
+def composition_pie_chart(
+    df,
+    columns,
+    labels=None,
+    title=None,
+    hole=0.45,
+    color_map=None,
+):
+
+    serie = df[columns].iloc[-1]
+
+    if labels:
+        serie = serie.rename(labels)
+
+    df_pie = serie.reset_index()
+
+    df_pie.columns = [
+        "Categoria",
+        "Valor",
+    ]
+
+    df_pie = df_pie[
+        df_pie["Valor"] > 0
+    ]
+
+    fig = px.pie(
+        df_pie,
+        names="Categoria",
+        values="Valor",
+        hole=hole,
+        title=title,
+        color="Categoria",
+        color_discrete_map=color_map,
+    )
+
+    fig.update_layout(
+        margin={
+            "t": 50,
+            "b": 0,
+            "l": 0,
+            "r": 0,
+        }
     )
 
     return fig
