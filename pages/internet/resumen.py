@@ -10,7 +10,10 @@ from services.transformers import (
     last_period_delta,
     aggregate_by_periodo,
     melt_tecnologias,
-    filter_by_period,
+)
+
+from services.chart_helpers import (
+    composition_pie_chart,
 )
 
 from pages.internet.utils import load_dataset
@@ -39,6 +42,7 @@ def render():
     datasets = {
         "tecnologias": df_tec,
         "penetracion": df_pen,
+        "vmd": df_vel,
     }
 
     # ── KPIs base ─────────────────────────────────────────
@@ -46,22 +50,6 @@ def render():
     kpis = build_kpis(
         RESUMEN_KPIS,
         datasets,
-    )
-
-    # KPI ingresos
-
-    val_ing, delta_ing = last_period_delta(
-        df_ing,
-        "ingresos",
-    )
-
-    kpis.append(
-        {
-            "label": "Ingresos (miles $)",
-            "value": val_ing,
-            "delta": delta_ing,
-            "format": "{:,.0f}",
-        }
     )
 
     # KPI participación fibra
@@ -94,6 +82,22 @@ def render():
         }
     )
 
+    # KPI ingresos
+
+    val_ing, delta_ing = last_period_delta(
+        df_ing,
+        "ingresos",
+    )
+
+    kpis.append(
+        {
+            "label": "Ingresos (miles $)",
+            "value": val_ing,
+            "delta": delta_ing,
+            "format": "{:,.0f}",
+        }
+    )
+
     # mismo layout que tenías
 
     show_kpis(kpis[:3])
@@ -109,23 +113,10 @@ def render():
 
         periodo_tec = df_tec["periodo"].iloc[-1]
 
-        df_pie = (
-            df_tec[TECNOLOGIAS_COLS]
-            .iloc[-1]
-            .rename(TECNOLOGIAS_LABELS)
-            .reset_index()
-        )
-
-        df_pie.columns = [
-            "Tecnología",
-            "Accesos",
-        ]
-
-        fig_pie = px.pie(
-            df_pie,
-            names="Tecnología",
-            values="Accesos",
-            hole=0.45,
+        fig_pie = composition_pie_chart(
+            df_tec,
+            columns=TECNOLOGIAS_COLS,
+            labels=TECNOLOGIAS_LABELS,
             title=f"Composición por tecnología — {periodo_tec}",
         )
 
@@ -135,29 +126,20 @@ def render():
         )
 
     with col2:
+        # ── Rangos de velocidad ───────────────────────────────
 
-        vel_actual, _ = last_period_delta(
-            df_vel,
-            "mbps",
-        )
-
-        st.metric(
-            "Velocidad media nacional",
-            f"{vel_actual:.1f} Mbps",
-        )
-
-        fig = line_chart(
-            df_vel,
-            "periodo",
-            "mbps",
-            title="Velocidad media de descarga",
-            markers=True,
+        fig_rango = composition_pie_chart(
+            df_rang,
+            columns=VELOCIDAD_RANGOS_COLS,
+            labels=VELOCIDAD_RANGOS_LABELS,
+            title=f"Composición por rango — {df_rang['periodo'].iloc[-1]}",
         )
 
         st.plotly_chart(
-            fig,
+            fig_rango,
             width="stretch",
         )
+
 
     st.divider()
 
@@ -207,39 +189,4 @@ def render():
 
     st.divider()
 
-    # ── Rangos de velocidad ───────────────────────────────
 
-    periodo_rango = df_rang["periodo"].iloc[-1]
-
-    ultimo_rango = (
-        df_rang[VELOCIDAD_RANGOS_COLS]
-        .iloc[-1]
-        .rename(VELOCIDAD_RANGOS_LABELS)
-    )
-
-    df_rango_pie = (
-        ultimo_rango
-        .reset_index()
-    )
-
-    df_rango_pie.columns = [
-        "Rango",
-        "Accesos",
-    ]
-
-    df_rango_pie = df_rango_pie[
-        df_rango_pie["Accesos"] > 0
-    ]
-
-    fig_rango = px.pie(
-        df_rango_pie,
-        names="Rango",
-        values="Accesos",
-        hole=0.45,
-        title=f"Rangos de velocidad — {periodo_rango}",
-    )
-
-    st.plotly_chart(
-        fig_rango,
-        width="stretch",
-    )
