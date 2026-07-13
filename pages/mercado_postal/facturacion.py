@@ -9,6 +9,7 @@ from components.charts import (
     bar_chart,
 )
 
+from services.chart_helpers import composition_pie_chart
 from services.kpi_builder import build_kpis
 from services.aggregation_helpers import mensual_a_trimestral
 
@@ -20,6 +21,7 @@ from pages.mercado_postal.utils import (
 from pages.mercado_postal.config import (
     FACTURACION_KPIS,
     SERVICIOS_COLS,
+    SERVICIOS_LABELS,
 )
 
 
@@ -122,20 +124,11 @@ def render():
         "Facturación",
     ]
 
-    fig_pie = px.pie(
-        ultimo,
-        names="Servicio",
-        values="Facturación",
-        hole=0.45,
-    )
-
-    fig_pie.update_layout(
-        margin={
-            "t": 20,
-            "b": 0,
-            "l": 0,
-            "r": 0,
-        }
+    fig_pie = composition_pie_chart(
+        df_range,
+        columns=SERVICIOS_COLS,
+        labels=SERVICIOS_LABELS,
+        title=f"Composición — {df_range['periodo'].iloc[-1]}",
     )
 
     st.plotly_chart(
