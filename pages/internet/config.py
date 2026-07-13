@@ -157,3 +157,33 @@ PENETRACION_KPIS = [
         "format": "{:.2f}",
     },
 ]
+
+RANGOS_KPIS = [
+    {
+        "label": "Total accesos",
+        "type": "sum",
+        "columns": VELOCIDAD_RANGOS_COLS,
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "+30 Mbps",
+        "column": "mayor_30mbps",
+        "format": "{:,.0f}",
+    },
+    {
+        "label": "% +30 Mbps",
+        "type": "ratio",
+        "num": "mayor_30mbps",
+        "den": VELOCIDAD_RANGOS_COLS,
+        "format": "{:.2f}%",
+    },
+    {
+        "label": "Hasta 1 Mbps",
+        "type": "sum",
+        "columns": [
+            "hasta_512_kbps",
+            "entre_512_1mbps",
+        ],
+        "format": "{:,.0f}",
+    },
+]

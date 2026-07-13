@@ -9,7 +9,7 @@ from pages.internet import (
     # tecnologia_provincia,
     velocidad_media,
     # velocidad_media_provincia,
-    # rangos_velocidad,
+    rangos_velocidad,
     # rangos_velocidad_provincia,
     banda_ancha,
     # banda_ancha_provincia,
