@@ -144,3 +144,16 @@ BAF_KPIS = [
         "format": "{:.2f}%",
     },
 ]
+
+PENETRACION_KPIS = [
+    {
+        "label": "Accesos c/100 hogares",
+        "column": "accesos_cada_100_hogares",
+        "format": "{:.2f}",
+    },
+    {
+        "label": "Accesos c/100 habitantes",
+        "column": "accesos_cada_100_habitantes",
+        "format": "{:.2f}",
+    },
+]

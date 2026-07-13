@@ -13,7 +13,7 @@ from pages.internet import (
     # rangos_velocidad_provincia,
     banda_ancha,
     # banda_ancha_provincia,
-    # penetracion,
+    penetracion,
     # penetracion_provincia,
     ingresos,
 )
