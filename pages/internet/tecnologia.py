@@ -150,6 +150,6 @@ def render():
     with st.expander("Ver datos completos"):
 
         st.dataframe(
-            periodo_actual,
+            df,
             width="stretch",
         )
