@@ -14,7 +14,7 @@ from pages.internet import (
     banda_ancha,
     banda_ancha_provincia,
     penetracion,
-    # penetracion_provincia,
+    penetracion_provincia,
     ingresos,
 )
 

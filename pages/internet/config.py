@@ -36,6 +36,16 @@ DATASETS = {
             "accesos_cada_100_habitantes",
         ],
     },
+    "penetracion_provincia": {
+        "endpoint": InternetEndpoints.PENETRACION_PROVINCIA,
+        "cols": [
+            "anio",
+            "trimestre",
+            "provincia",
+            "accesos_cada_100_hogares",
+            "accesos_cada_100_habitantes",
+        ],
+    },
     "velocidad_media": {
         "endpoint": InternetEndpoints.VELOCIDAD_MEDIA,
         "cols": [
