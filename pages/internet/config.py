@@ -78,6 +78,17 @@ DATASETS = {
             "total",
         ],
     },
+    "baf_provincia": {
+        "endpoint": InternetEndpoints.BAF_PROVINCIA,
+        "cols": [
+            "anio",
+            "trimestre",
+            "provincia",
+            "banda_ancha_fija",
+            "dial_up",
+            "total",
+        ],
+    },
 }
 
 
