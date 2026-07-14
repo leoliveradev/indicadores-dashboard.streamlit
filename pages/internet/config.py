@@ -61,6 +61,16 @@ DATASETS = {
         ]
         + VELOCIDAD_RANGOS_COLS,
     },
+    "velocidad_rangos_provincia": {
+        "endpoint": InternetEndpoints.VELOCIDAD_RANGOS_PROVINCIA,
+        "cols": [
+            "anio",
+            "trimestre",
+            "provincia",
+            "total",
+        ]
+        + VELOCIDAD_RANGOS_COLS,
+    },
     "ingresos": {
         "endpoint": InternetEndpoints.INGRESOS,
         "cols": [
