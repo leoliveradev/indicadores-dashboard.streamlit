@@ -100,6 +100,7 @@ def render():
     st.plotly_chart(
         fig,
         width="stretch",
+        key=f"postal_facturacion_{chart_type}",
     )
 
     st.divider()
@@ -107,22 +108,6 @@ def render():
     st.subheader(
         f"Composición — {df_range['periodo'].iloc[-1]}"
     )
-
-    ultimo = (
-        df_range[SERVICIOS_COLS]
-        .iloc[-1]
-        .rename({
-            "postales": "Servicios postales",
-            "telegraficas": "Servicios telegráficos",
-            "monetarios": "Servicios monetarios",
-        })
-        .reset_index()
-    )
-
-    ultimo.columns = [
-        "Servicio",
-        "Facturación",
-    ]
 
     fig_pie = composition_pie_chart(
         df_range,
@@ -134,6 +119,7 @@ def render():
     st.plotly_chart(
         fig_pie,
         width="stretch",
+        key="postal_facturacion_pie",
     )
 
     with st.expander("Ver datos completos"):

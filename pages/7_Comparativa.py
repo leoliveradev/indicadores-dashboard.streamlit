@@ -9,7 +9,7 @@ from config.theme import ENACOM
 from services.data_manager import DataManager, DataLoadError
 from services.transformers import add_periodo_col, sort_by_periodo, last_period_delta
 from components.page_setup import setup_page
-from components.sidebar import render_sidebar
+# from components.sidebar import render_sidebar
 from components.kpi_cards import show_kpis
 from components.charts import line_chart, bar_chart
 
@@ -33,7 +33,7 @@ COLOR_SERVICIO = {
     "Mercado postal": ENACOM["navy"],
 }
 
-categoria = render_sidebar(CATEGORIES, key="comp_categoria")
+# categoria = render_sidebar(CATEGORIES, key="comp_categoria")
 st.title("📊 Comparativa entre servicios")
 
 

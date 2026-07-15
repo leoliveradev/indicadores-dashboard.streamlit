@@ -1,7 +1,6 @@
 import streamlit as st
 
 from components.page_setup import setup_page
-from components.sidebar import render_sidebar
 
 from pages.internet import (
     resumen,
@@ -18,6 +17,9 @@ from pages.internet import (
     ingresos,
 )
 
+# ============================================================
+# CONFIGURACIÓN
+# ============================================================
 
 st.set_page_config(
     page_title="Internet · ENACOM",
@@ -25,63 +27,136 @@ st.set_page_config(
     layout="wide",
 )
 
-setup_page()
-
-CATEGORIES = [
-    "Resumen general",
-    "Tecnología",
-    "Tecnología - provincia",
-    "Velocidad media",
-    "Velocidad media - provincia",
-    "Rangos de velocidad",
-    "Rangos de velocidad - provincia",
-    "Banda ancha vs Dial-up",
-    "Banda ancha - provincia",
-    "Penetración",
-    "Penetración - provincia",
-    "Ingresos",
-]
-
-categoria = render_sidebar(
-    CATEGORIES,
-    key="internet_categoria",
-)
+setup_page("Internet")
+# ============================================================
+# HEADER
+# ============================================================
 
 st.title("🌐 Internet fijo")
 
+# st.caption(
+#     "Indicadores de accesos, velocidad, tecnología, penetración e ingresos del servicio de internet fijo."
+# )
 
-if categoria == "Resumen general":
+# ============================================================
+# TABS PRINCIPALES
+# ============================================================
+
+tabs = st.tabs(
+    [
+        "Resumen",
+        "Velocidad",
+        "Tecnología",
+        "Accesos",
+        "Penetración",
+        "Ingresos",
+    ]
+)
+
+# ============================================================
+# RESUMEN
+# ============================================================
+
+with tabs[0]:
     resumen.render()
 
-elif categoria == "Tecnología":
-    tecnologia.render()
+# ============================================================
+# VELOCIDAD
+# ============================================================
 
-elif categoria == "Tecnología - provincia":
-    tecnologia_provincia.render()
+with tabs[1]:
 
-elif categoria == "Velocidad media":
-    velocidad_media.render()
+    vista_velocidad = st.pills(
+        "",
+        [
+            "Velocidad media",
+            "Velocidad media - provincia",
+            "Rangos de velocidad",
+            "Rangos - provincia",
+        ],
+        selection_mode="single",
+        default="Velocidad media",
+        key="internet_velocidad",
+    )
 
-elif categoria == "Velocidad media - provincia":
-    velocidad_media_provincia.render()
+    if vista_velocidad == "Velocidad media":
+        velocidad_media.render()
 
-elif categoria == "Rangos de velocidad":
-    rangos_velocidad.render()
+    elif vista_velocidad == "Velocidad media - provincia":
+        velocidad_media_provincia.render()
 
-elif categoria == "Rangos de velocidad - provincia":
-    rangos_velocidad_provincia.render()
+    elif vista_velocidad == "Rangos de velocidad":
+        rangos_velocidad.render()
 
-elif categoria == "Banda ancha vs Dial-up":
-    banda_ancha.render()
+    else:
+        rangos_velocidad_provincia.render()
 
-elif categoria == "Banda ancha - provincia":
-    banda_ancha_provincia.render()
+# ============================================================
+# TECNOLOGÍA
+# ============================================================
 
-elif categoria == "Penetración":
-    penetracion.render()
+with tabs[2]:
+    vista_tecnologia = st.radio(
+        "",
+        [
+            "Nacional",
+            "Provincia",
+        ],
+        horizontal=True,
+        key="internet_tecnologia",
+    )
 
-elif categoria == "Penetración - provincia":
-    penetracion_provincia.render()
+    if vista_tecnologia == "Nacional":
+        tecnologia.render()
 
-elif categoria == "Ingresos":
+    else:
+        tecnologia_provincia.render()
+
+# ============================================================
+# ACCESOS
+# ============================================================
+
+with tabs[3]:
+    vista_accesos = st.radio(
+        "",
+        [
+            "Banda ancha vs Dial-Up",
+            "Provincia",
+        ],
+        horizontal=True,
+        key="internet_accesos",
+    )
+
+    if vista_accesos == "Banda ancha vs Dial-Up":
+        banda_ancha.render()
+
+    else:
+        banda_ancha_provincia.render()
+
+# ============================================================
+# PENETRACIÓN
+# ============================================================
+
+with tabs[4]:
+    vista_penetracion = st.radio(
+        "",
+        [
+            "Nacional",
+            "Provincia",
+        ],
+        horizontal=True,
+        key="internet_penetracion",
+    )
+
+    if vista_penetracion == "Nacional":
+        penetracion.render()
+
+    else:
+        penetracion_provincia.render()
+
+# ============================================================
+# INGRESOS
+# ============================================================
+
+with tabs[5]:
     ingresos.render()

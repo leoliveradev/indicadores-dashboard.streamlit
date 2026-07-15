@@ -22,7 +22,10 @@ def render():
 
     df = load_dataset("movil")
 
-    df_t = mensual_a_trimestral(df)
+    df_t = mensual_a_trimestral(
+        df,
+        "total",
+    )
 
     df_a = mensual_a_anual(df)
 

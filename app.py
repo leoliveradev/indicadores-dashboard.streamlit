@@ -1,4 +1,5 @@
 import streamlit as st
+from components.page_setup import setup_page
 from config.settings import APP_TITLE, APP_ICON, APP_LAYOUT
 from config.theme import CARD_CSS, STREAMLIT_CSS, ENACOM
 
@@ -6,7 +7,10 @@ st.set_page_config(
     page_title=APP_TITLE,
     page_icon=APP_ICON,
     layout=APP_LAYOUT,
+    initial_sidebar_state="collapsed",
 )
+
+setup_page("Inicio")
 
 def service_card(icon, title, desc, page):
     st.markdown(f"""
