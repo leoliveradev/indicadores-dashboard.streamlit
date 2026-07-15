@@ -1,7 +1,6 @@
 import streamlit as st
 
 from components.page_setup import setup_page
-from components.sidebar import render_sidebar
 
 from pages.telefonia_movil import (
     resumen,
@@ -10,48 +9,86 @@ from pages.telefonia_movil import (
     minutos,
     sms,
     penetracion,
-    ingresos
+    ingresos,
 )
+
+from pages.portabilidad import movil as portabilidad
 
 st.set_page_config(
     page_title="Móvil · ENACOM",
     page_icon="📱",
-    layout="wide"
+    layout="wide",
 )
 
-setup_page()
-
-CATEGORIES = [
-    "Resumen general",
-    "Accesos",
-    "Llamadas",
-    "Minutos de voz",
-    "SMS",
-    "Penetración",
-    "Ingresos",
-]
-
-categoria = render_sidebar(CATEGORIES, key="movil_categoria")
+setup_page("Telefonía móvil")
 
 st.title("📱 Comunicaciones móviles")
 
-if categoria == "Resumen general":
+tabs = st.tabs(
+    [
+        "Resumen",
+        "Accesos",
+        "Llamadas",
+        "Minutos",
+        "SMS",
+        "Penetración",
+        "Ingresos",
+        "Portabilidad",
+    ]
+)
+
+# ============================================================
+# RESUMEN
+# ============================================================
+
+with tabs[0]:
     resumen.render()
 
-elif categoria == "Accesos":
-    accesos.render()
+# ============================================================
+# ACCESOS
+# ============================================================
 
-elif categoria == "Llamadas":
+with tabs[1]:
+    accesos.render
+
+# ============================================================
+# LLAMADAS
+# ============================================================
+
+with tabs[2]:
     llamadas.render()
 
-elif categoria == "Minutos de voz":
+# ============================================================
+# MINUTOS
+# ============================================================
+
+with tabs[3]:
     minutos.render()
 
-elif categoria == "SMS":
+# ============================================================
+# SMS
+# ============================================================
+
+with tabs[4]:
     sms.render()
 
-elif categoria == "Penetración":
+# ============================================================
+# PENETRACIÓN
+# ============================================================
+
+with tabs[5]:
     penetracion.render()
 
-elif categoria == "Ingresos":
+# ============================================================
+# INGRESOS
+# ============================================================
+
+with tabs[6]:
     ingresos.render()
+
+# ============================================================
+# PORTABILIDAD
+# ============================================================
+
+with tabs[7]:
+    portabilidad.render()

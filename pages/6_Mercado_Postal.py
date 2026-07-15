@@ -1,7 +1,6 @@
 import streamlit as st
 
 from components.page_setup import setup_page
-from components.sidebar import render_sidebar
 
 from pages.mercado_postal import (
     resumen,
@@ -17,34 +16,54 @@ st.set_page_config(
     layout="wide",
 )
 
-setup_page()
-
-CATEGORIES = [
-    "Resumen general",
-    "Facturación",
-    "Producción",
-    "Facturación y producción - provincia",
-    "Personal ocupado",
-]
-
-categoria = render_sidebar(
-    CATEGORIES,
-    key="postal_categoria",
-)
+setup_page("Postal")
 
 st.title("📦 Mercado postal")
 
-if categoria == "Resumen general":
+tabs = st.tabs(
+    [
+        "Resumen",
+        "Actividad",
+        "Personal ocupado",
+    ]
+)
+
+# ============================================================
+# RESUMEN
+# ============================================================
+
+with tabs[0]:
     resumen.render()
 
-elif categoria == "Facturación":
-    facturacion.render()
+# ============================================================
+# ACTIVIDAD
+# ============================================================
 
-elif categoria == "Producción":
-    produccion.render()
+with tabs[1]:
+    vista_actividad = st.pills(
+        "",
+        [
+            "Facturación",
+            "Producción",
+            "Provincia",
+        ],
+        selection_mode="single",
+        default="Facturación",
+        key="postal_actividad",
+    )
 
-elif categoria == "Facturación y producción - provincia":
-    provincia.render()
+    if vista_actividad == "Facturación":
+        facturacion.render()
 
-elif categoria == "Personal ocupado":
+    elif vista_actividad == "Producción":
+        produccion.render()
+
+    else:
+        provincia.render()
+
+# ============================================================
+# PERSONAL OCUPADO
+# ============================================================
+
+with tabs[2]:
     personal_ocupado.render()

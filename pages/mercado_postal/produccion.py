@@ -99,6 +99,7 @@ def render():
     st.plotly_chart(
         fig,
         width="stretch",
+        key=f"postal_produccion_{chart_type}",
     )
 
     st.divider()
@@ -190,6 +191,8 @@ def render():
     st.plotly_chart(
         fig,
         width="stretch",
+        key=f"produccion_vs_facturacion",
+
     )
 
     with st.expander("Ver datos completos"):

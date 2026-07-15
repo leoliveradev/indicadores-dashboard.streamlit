@@ -3,44 +3,40 @@
 
 ENACOM = {
     # Principal
-    "primary":      "#0B1742",   # Azul marino oscuro — fondo, headers
-    "white":        "#FFFFFF",
-    "light_gray":   "#C6C6C6",
-
+    "primary": "#0B1742",  # Azul marino oscuro — fondo, headers
+    "white": "#FFFFFF",
+    "light_gray": "#C6C6C6",
     # Acentos
-    "yellow":       "#EEAE42",   # Llamadas a la acción, alertas
-    "red":          "#E74242",   # Caídas, variaciones negativas
-    "green":        "#ACAE22",   # Crecimiento, variaciones positivas
-
+    "yellow": "#EEAE42",  # Llamadas a la acción, alertas
+    "red": "#E74242",  # Caídas, variaciones negativas
+    "green": "#ACAE22",  # Crecimiento, variaciones positivas
     # Secundarios
-    "light_yellow": "#FFF3D8",   # Fondos suaves de advertencia
-    "light_blue":   "#BCE4F4",   # Fondos suaves informativos
-    "cyan":         "#00B5E5",   # Highlights, links, series principales
-    "blue":         "#0074A6",   # Series secundarias
-    "deep_blue":    "#005297",   # Series terciarias
-    "navy":         "#003667",   # Series cuaternarias / bordes
+    "light_yellow": "#FFF3D8",  # Fondos suaves de advertencia
+    "light_blue": "#BCE4F4",  # Fondos suaves informativos
+    "cyan": "#00B5E5",  # Highlights, links, series principales
+    "blue": "#0074A6",  # Series secundarias
+    "deep_blue": "#005297",  # Series terciarias
+    "navy": "#003667",  # Series cuaternarias / bordes
 }
 
 # ── Mapeo de tecnologías de internet ─────────────────────────────────────────
 COLORS = {
     # Tecnologías — del más al menos relevante por adopción actual
-    "fibra_optica": ENACOM["cyan"],       # protagonista
-    "cablemodem":   ENACOM["blue"],
-    "wireless":     ENACOM["deep_blue"],
-    "adsl":         ENACOM["light_gray"], # en declive
-    "otros":        ENACOM["navy"],
-    "total":        ENACOM["primary"],
-
+    "fibra_optica": ENACOM["cyan"],  # protagonista
+    "cablemodem": ENACOM["blue"],
+    "wireless": ENACOM["deep_blue"],
+    "adsl": ENACOM["light_gray"],  # en declive
+    "otros": ENACOM["navy"],
+    "total": ENACOM["primary"],
     # Modalidades móviles
-    "prepago":      ENACOM["yellow"],
-    "pospago":      ENACOM["cyan"],
-
+    "prepago": ENACOM["yellow"],
+    "pospago": ENACOM["cyan"],
     # Semánticos — usados en KPIs y deltas
-    "positive":     ENACOM["green"],
-    "negative":     ENACOM["red"],
-    "neutral":      ENACOM["light_gray"],
-    "primary":      ENACOM["primary"],
-    "secondary":    ENACOM["blue"],
+    "positive": ENACOM["green"],
+    "negative": ENACOM["red"],
+    "neutral": ENACOM["light_gray"],
+    "primary": ENACOM["primary"],
+    "secondary": ENACOM["blue"],
 }
 
 # Secuencia por defecto para gráficos multi-serie sin mapeo explícito
@@ -59,37 +55,37 @@ COLOR_SEQUENCE = [
 PLOTLY_BASE_LAYOUT = {
     "font": {
         "family": "Inter, Arial, sans-serif",
-        "size":   13,
-        "color":  ENACOM["primary"],
+        "size": 13,
+        "color": ENACOM["primary"],
     },
-    "plot_bgcolor":  "rgba(0,0,0,0)",
+    "plot_bgcolor": "rgba(0,0,0,0)",
     "paper_bgcolor": "rgba(0,0,0,0)",
     "margin": {"t": 48, "b": 80, "l": 48, "r": 20},
     "colorway": COLOR_SEQUENCE,
     "xaxis": {
-        "showgrid":    True,
-        "gridcolor":   "#E8E8E8",
-        "linecolor":   ENACOM["light_gray"],
-        "tickfont":    {"color": ENACOM["primary"]},
-        "title_font":  {"color": ENACOM["primary"]},
+        "showgrid": True,
+        "gridcolor": "#E8E8E8",
+        "linecolor": ENACOM["light_gray"],
+        "tickfont": {"color": ENACOM["primary"]},
+        "title_font": {"color": ENACOM["primary"]},
     },
     "yaxis": {
-        "showgrid":            True,
-        "gridcolor":           "#E8E8E8",
-        "linecolor":           ENACOM["light_gray"],
-        "tickformat":          ",.0f",
-        "separatethousands":   True,
-        "tickfont":            {"color": ENACOM["primary"]},
-        "title_font":          {"color": ENACOM["primary"]},
+        "showgrid": True,
+        "gridcolor": "#E8E8E8",
+        "linecolor": ENACOM["light_gray"],
+        "tickformat": ",.0f",
+        "separatethousands": True,
+        "tickfont": {"color": ENACOM["primary"]},
+        "title_font": {"color": ENACOM["primary"]},
     },
     "legend": {
         "orientation": "h",
-        "yanchor":     "top",
-        "y":           -0.30,
-        "xanchor":     "left",
-        "x":           0,
-        "font":        {"color": ENACOM["primary"]},
-        "bgcolor":     "rgba(0,0,0,0)",
+        "yanchor": "top",
+        "y": -0.30,
+        "xanchor": "left",
+        "x": 0,
+        "font": {"color": ENACOM["primary"]},
+        "bgcolor": "rgba(0,0,0,0)",
     },
     "title": {
         "font": {"color": ENACOM["primary"], "size": 15},
@@ -99,7 +95,7 @@ PLOTLY_BASE_LAYOUT = {
     },
     "hovermode": "x unified",
     "hoverlabel": {
-        "bgcolor":    ENACOM["primary"],
+        "bgcolor": ENACOM["primary"],
         "font_color": ENACOM["white"],
         "bordercolor": ENACOM["navy"],
     },
@@ -111,6 +107,18 @@ PLOTLY_BASE_LAYOUT = {
 
 STREAMLIT_CSS = f"""
 <style>
+    /* Ocultar sidebar y su botón */
+    section[data-testid="stSidebar"] {{
+        display: none;
+    }}
+
+    button[data-testid="stSidebarCollapseButton"] {{
+        display: none !important;
+    }}
+
+    button[data-testid="stBaseButton-headerNoPadding"] {{
+        display: none !important;
+    }}
     /* Sidebar — fondo general */
     [data-testid="stSidebar"] {{
         background-color: {ENACOM['primary']};

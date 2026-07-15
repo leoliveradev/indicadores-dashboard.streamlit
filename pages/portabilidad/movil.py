@@ -32,7 +32,10 @@ def render():
         & (df["anio"] <= anio_hasta)
     ].copy()
 
-    df_t = mensual_a_trimestral(df_range)
+    df_t = mensual_a_trimestral(
+        df,
+        "total",
+    )
     df_a = mensual_a_anual(df_range)
 
     # KPIs

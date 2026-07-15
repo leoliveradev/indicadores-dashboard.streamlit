@@ -19,7 +19,7 @@ from pages.internet.utils import (
 
 def render():
 
-    st.header("Velocidad media de descarga")
+    # st.header("Velocidad media de descarga")
 
     df = load_dataset("velocidad_media")
 
