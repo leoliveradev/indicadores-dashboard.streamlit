@@ -21,7 +21,8 @@ from pages.internet.config import (
 
 def render():
 
-    st.header("Penetración")
+    # st.header("Penetración")
+    st.caption("Evolución de la penetración de Internet.")
 
     # ── Dataset ──────────────────────────────────────────
 

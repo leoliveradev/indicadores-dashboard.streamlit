@@ -24,7 +24,10 @@ from pages.internet.config import (
 
 def render():
 
-    st.header("Banda ancha vs Dial-up")
+    # st.header("Banda ancha vs Dial-up")
+    st.caption(
+        "Evolución de los accesos a Internet por banda ancha fija y Dial-up."
+    )
 
     df = load_dataset("baf")
 

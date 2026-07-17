@@ -22,7 +22,10 @@ from pages.internet.utils import (
 
 def render():
 
-    st.header("Penetración — por provincia")
+    # st.header("Penetración — por provincia")
+    st.caption(
+        "Evolución de la penetración de Internet — por provincia."
+    )
 
     # ── Dataset ──────────────────────────────────────────
 

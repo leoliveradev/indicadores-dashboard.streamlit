@@ -29,8 +29,11 @@ from pages.internet.config import (
 
 def render():
 
-    st.header(
-        "Rangos de velocidad — por provincia"
+    # st.header(
+    #     "Rangos de velocidad — por provincia"
+    # )
+    st.caption(
+        "Distribución de los accesos a Internet por rangos de velocidad — por provincia."
     )
 
     # ── Dataset ──────────────────────────────────────────

@@ -18,7 +18,10 @@ from pages.internet.utils import (
 
 def render():
 
-    st.header("Ingresos del sector")
+    # st.header("Ingresos del sector")
+    st.caption(
+        "Evolución de los ingresos del sector de telecomunicaciones."
+    )
 
     df = load_dataset("ingresos")
 

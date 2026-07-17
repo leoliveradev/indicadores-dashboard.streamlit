@@ -29,7 +29,10 @@ from pages.internet.config import (
 
 def render():
 
-    st.header("Accesos por tecnología — por provincia")
+    # st.header("Accesos por tecnología — por provincia")
+    st.caption(
+        "Accesos a Internet por tecnología — por provincia."
+    )
 
     df = load_dataset(
         "tecnologias_provincia"

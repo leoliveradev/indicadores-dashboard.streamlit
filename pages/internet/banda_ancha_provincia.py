@@ -22,8 +22,11 @@ from pages.internet.utils import (
 
 def render():
 
-    st.header(
-        "Banda ancha fija vs Dial-up — por provincia"
+    # st.header(
+    #     "Banda ancha fija vs Dial-up — por provincia"
+    # )
+    st.caption(
+        "Banda ancha fija vs Dial-up — por provincia."
     )
 
     # ── Dataset ──────────────────────────────────────────

@@ -97,13 +97,14 @@ with tabs[1]:
 # ============================================================
 
 with tabs[2]:
-    vista_tecnologia = st.radio(
+    vista_tecnologia = st.pills(
         "vista_tecnologia",
         [
             "Nacional",
             "Provincia",
         ],
-        horizontal=True,
+        selection_mode="single",
+        default="Nacional",
         label_visibility="collapsed",
         key="internet_tecnologia",
     )
@@ -119,13 +120,14 @@ with tabs[2]:
 # ============================================================
 
 with tabs[3]:
-    vista_accesos = st.radio(
+    vista_accesos = st.pills(
         "vista_accesos",
         [
             "Banda ancha vs Dial-Up",
             "Provincia",
         ],
-        horizontal=True,
+        selection_mode="single",
+        default="Banda ancha vs Dial-Up",
         label_visibility="collapsed",
         key="internet_accesos",
     )
@@ -141,13 +143,14 @@ with tabs[3]:
 # ============================================================
 
 with tabs[4]:
-    vista_penetracion = st.radio(
+    vista_penetracion = st.pills(
         "vista_penetracion",
         [
             "Nacional",
             "Provincia",
         ],
-        horizontal=True,
+        selection_mode="single",
+        default="Nacional",
         label_visibility="collapsed",
         key="internet_penetracion",
     )

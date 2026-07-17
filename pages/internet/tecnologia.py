@@ -30,7 +30,10 @@ from pages.internet.config import (
 
 def render():
 
-    st.header("Accesos por tecnología")
+    # st.header("Accesos por tecnología")
+    st.caption(
+        "Accesos a Internet por tecnología (fibra óptica, cable, ADSL, satelital y otras tecnologías)."
+    )
 
     df = load_dataset("tecnologias")
 

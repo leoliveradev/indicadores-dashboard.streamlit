@@ -21,8 +21,11 @@ from pages.internet.utils import (
 
 def render():
 
-    st.header(
-        "Velocidad media de descarga — por provincia"
+    # st.header(
+    #     "Velocidad media de descarga — por provincia"
+    # )
+    st.caption(
+        "Velocidad media de descarga de Internet — por provincia."
     )
 
     # ── Dataset ──────────────────────────────────────────

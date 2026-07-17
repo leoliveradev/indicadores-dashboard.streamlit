@@ -107,55 +107,6 @@ PLOTLY_BASE_LAYOUT = {
 
 STREAMLIT_CSS = f"""
 <style>
-    /* Ocultar sidebar y su botón */
-    section[data-testid="stSidebar"] {{
-        display: none;
-    }}
-
-    button[data-testid="stSidebarCollapseButton"] {{
-        display: none !important;
-    }}
-
-    button[data-testid="stBaseButton-headerNoPadding"] {{
-        display: none !important;
-    }}
-    /* Sidebar — fondo general */
-    [data-testid="stSidebar"] {{
-        background-color: {ENACOM['primary']};
-    }}
-    [data-testid="stSidebar"] * {{
-        color: {ENACOM['white']} !important;
-    }}
-    [data-testid="stSidebar"] hr {{
-        border-color: {ENACOM['navy']} !important;
-    }}
-
-    /* Selectbox dentro del sidebar — fondo del campo */
-    [data-testid="stSidebar"] [data-baseweb="select"] > div:first-child {{
-        background-color: {ENACOM['navy']} !important;
-        border-color: {ENACOM['deep_blue']} !important;
-        border-radius: 6px !important;
-    }}
-    /* Texto del valor seleccionado */
-    [data-testid="stSidebar"] [data-baseweb="select"] [data-testid="stMarkdownContainer"] p,
-    [data-testid="stSidebar"] [data-baseweb="select"] span,
-    [data-testid="stSidebar"] [data-baseweb="select"] div {{
-        color: {ENACOM['white']} !important;
-    }}
-    /* Ícono de flecha del desplegable */
-    [data-testid="stSidebar"] [data-baseweb="select"] svg {{
-        fill: {ENACOM['light_gray']} !important;
-    }}
-    /* Hover sobre el campo */
-    [data-testid="stSidebar"] [data-baseweb="select"] > div:first-child:hover {{
-        border-color: {ENACOM['cyan']} !important;
-    }}
-    /* Lista desplegable (el popover sale fuera del sidebar) */
-    [data-baseweb="popover"] [data-baseweb="menu"] {{
-        background-color: {ENACOM['navy']} !important;
-        border: 1px solid {ENACOM['deep_blue']} !important;
-        border-radius: 6px !important;
-    }}
     [data-baseweb="popover"] [role="option"] {{
         background-color: {ENACOM['navy']} !important;
         color: {ENACOM['white']} !important;
@@ -189,10 +140,14 @@ STREAMLIT_CSS = f"""
     }}
 
     /* Tabs */
+    [data-testid="stTabs"] [role="tab"] {{
+        font-weight: 500;
+    }}
+
     [data-testid="stTabs"] [role="tab"][aria-selected="true"] {{
         color: {ENACOM['cyan']} !important;
         border-bottom-color: {ENACOM['cyan']} !important;
-        font-weight: 600;
+        font-weight: 700;
     }}
 
     /* Divider */
@@ -202,6 +157,13 @@ STREAMLIT_CSS = f"""
     }}
 
     /* Títulos */
+    h1 {{
+        font-weight: 700;
+    }}
+
+    h2 {{
+        font-weight: 600;
+    }}
     h1, h2, h3 {{
         color: {ENACOM['primary']} !important;
     }}
@@ -209,6 +171,20 @@ STREAMLIT_CSS = f"""
     /* Info / warning boxes */
     [data-testid="stAlert"] {{
         border-radius: 6px;
+    }}
+    
+    /* Pills */
+    [data-testid="stButtonGroup"] button {{
+        min-height: 42px;
+        padding: 0.5rem 1rem;
+        font-size: 0.95rem;
+        font-weight: 600;
+    }}
+
+    [data-testid="stButtonGroup"] button[aria-pressed="true"] {{
+        background-color: {ENACOM['cyan']} !important;
+        color: {ENACOM['white']} !important;
+        border-color: {ENACOM['cyan']} !important;
     }}
 </style>
 """
@@ -245,5 +221,6 @@ CARD_CSS = """
     font-size: 14px;
     color: #666;
 }
+
 </style>
 """

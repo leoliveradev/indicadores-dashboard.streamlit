@@ -20,6 +20,7 @@ from pages.internet.utils import (
 def render():
 
     # st.header("Velocidad media de descarga")
+    st.caption("Evolución de la velocidad media de descarga de Internet.")
 
     df = load_dataset("velocidad_media")
 

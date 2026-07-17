@@ -32,7 +32,8 @@ from pages.internet.config import (
 
 def render():
 
-    st.header("Rangos de velocidad")
+    # st.header("Rangos de velocidad")
+    st.caption("Evolución de los rangos de velocidad de Internet.")
 
     df = load_dataset("velocidad_rangos")
 

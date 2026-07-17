@@ -29,8 +29,8 @@ from pages.internet.config import (
 
 def render():
 
-    st.header("Resumen general")
-
+    # st.header("Resumen general")
+    st.caption("Resumen de los principales indicadores del sector de telecomunicaciones.")
     # ── Datasets ──────────────────────────────────────────
 
     df_tec = load_dataset("tecnologias")
