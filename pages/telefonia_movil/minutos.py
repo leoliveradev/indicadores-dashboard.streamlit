@@ -20,7 +20,10 @@ from pages.telefonia_movil.config import (
 
 
 def render():
-    st.header("Minutos de voz cursados")
+    # st.header("Minutos de voz cursados")
+    st.caption(
+        "Minutos cursados por modalidad de línea móvil (prepago y pospago)."
+    )
 
     df = load_dataset("minutos")
 

@@ -1,5 +1,5 @@
 import streamlit as st
-import plotly.graph_objects as go
+# import plotly.graph_objects as go
 
 from components.kpi_cards import show_kpis
 from components.filters import render_range_filter
