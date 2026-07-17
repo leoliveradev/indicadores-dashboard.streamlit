@@ -219,6 +219,7 @@ def render():
             "Barras",
         ],
         horizontal=True,
+        label_visibility="collapsed",
         key="rangos_prov_chart",
     )
 

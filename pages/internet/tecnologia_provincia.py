@@ -171,6 +171,7 @@ def render():
             "Área",
         ],
         horizontal=True,
+        label_visibility="collapsed",
         key="internet_tec_prov_chart",
     )
 

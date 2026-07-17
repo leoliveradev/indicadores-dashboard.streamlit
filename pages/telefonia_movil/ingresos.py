@@ -80,6 +80,7 @@ def render():
         "Tipo de gráfico",
         ["Barras", "Líneas", "Área"],
         horizontal=True,
+        label_visibility="collapsed",
         key="mov_ing_chart",
     )
 

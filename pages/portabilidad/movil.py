@@ -80,6 +80,7 @@ def render():
         "Granularidad",
         ["Mensual", "Trimestral", "Anual"],
         horizontal=True,
+        label_visibility="collapsed",
         key="port_gran",
     )
 

@@ -41,7 +41,7 @@ with tabs[0]:
 
 with tabs[1]:
     vista_actividad = st.pills(
-        "",
+        "vista_actividad",
         [
             "Facturación",
             "Producción",
@@ -49,6 +49,7 @@ with tabs[1]:
         ],
         selection_mode="single",
         default="Facturación",
+        label_visibility="collapsed",
         key="postal_actividad",
     )
 

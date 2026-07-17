@@ -260,6 +260,7 @@ elif categoria == "Accesos por servicio":
         "Escala",
         ["Valores absolutos", "Índice base 100"],
         horizontal=True, key="comp_acc_modo",
+        label_visibility="collapsed",
         help="Base 100 normaliza todas las series al mismo punto de partida "
              "para comparar tasas de crecimiento independientemente del volumen.",
     )

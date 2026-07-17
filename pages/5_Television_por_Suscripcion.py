@@ -43,13 +43,14 @@ with tabs[0]:
 
 with tabs[1]:
     vista_accesos = st.pills(
-        "",
+        "vista_accesos",
         [
             "General",
             "Provincia",
         ],
         selection_mode="single",
         default="General",
+        label_visibility="collapsed",
         key="tv_accesos",
     )
 
@@ -64,13 +65,14 @@ with tabs[1]:
 
 with tabs[2]:
     vista_penetracion = st.pills(
-        "",
+        "vista_penetracion",
         [
             "General",
             "Provincia",
         ],
         selection_mode="single",
         default="General",
+        label_visibility="collapsed",
         key="tv_penetracion",
     )
 

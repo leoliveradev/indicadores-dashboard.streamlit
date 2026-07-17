@@ -120,6 +120,7 @@ def render():
         "Tipo de gráfico",
         ["Área", "Barras", "Líneas"],
         horizontal=True,
+        label_visibility="collapsed",
         key="rangos_chart_type",
     )
 

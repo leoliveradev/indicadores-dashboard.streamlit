@@ -57,6 +57,7 @@ def render():
         "Tipo de gráfico",
         ["Área", "Líneas", "Barras"],
         horizontal=True,
+        label_visibility="collapsed",
         key="tel_acc_chart",
     )
 

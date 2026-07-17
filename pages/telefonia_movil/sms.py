@@ -46,6 +46,7 @@ def render():
         "Tipo de gráfico",
         ["Líneas", "Barras", "Área"],
         horizontal=True,
+        label_visibility="collapsed",
         key="mov_sms_chart",
     )
 

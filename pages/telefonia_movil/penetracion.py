@@ -103,6 +103,7 @@ def render():
         "Tipo de gráfico",
         ["Líneas", "Área", "Barras"],
         horizontal=True,
+        label_visibility="collapsed",
         key="mov_pen_chart",
     )
 

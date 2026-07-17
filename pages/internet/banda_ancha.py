@@ -78,6 +78,7 @@ def render():
             "Barras",
         ],
         horizontal=True,
+        label_visibility="collapsed",
         key="baf_chart_type",
     )
 

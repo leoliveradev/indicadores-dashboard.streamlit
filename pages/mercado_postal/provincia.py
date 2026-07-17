@@ -189,6 +189,7 @@ def render():
             "Producción (unidades)",
         ],
         horizontal=True,
+        label_visibility="collapsed",
         key="postal_metric",
     )
 

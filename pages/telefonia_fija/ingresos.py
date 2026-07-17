@@ -68,6 +68,7 @@ def render():
         "Tipo de gráfico",
         ["Barras", "Líneas", "Área"],
         horizontal=True,
+        label_visibility="collapsed",
         key="tel_ing_chart",
     )
 

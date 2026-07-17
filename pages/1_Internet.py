@@ -67,7 +67,7 @@ with tabs[0]:
 with tabs[1]:
 
     vista_velocidad = st.pills(
-        "",
+        "vista_velocidad",
         [
             "Velocidad media",
             "Velocidad media - provincia",
@@ -77,6 +77,7 @@ with tabs[1]:
         selection_mode="single",
         default="Velocidad media",
         key="internet_velocidad",
+        label_visibility="collapsed",
     )
 
     if vista_velocidad == "Velocidad media":
@@ -97,12 +98,13 @@ with tabs[1]:
 
 with tabs[2]:
     vista_tecnologia = st.radio(
-        "",
+        "vista_tecnologia",
         [
             "Nacional",
             "Provincia",
         ],
         horizontal=True,
+        label_visibility="collapsed",
         key="internet_tecnologia",
     )
 
@@ -118,12 +120,13 @@ with tabs[2]:
 
 with tabs[3]:
     vista_accesos = st.radio(
-        "",
+        "vista_accesos",
         [
             "Banda ancha vs Dial-Up",
             "Provincia",
         ],
         horizontal=True,
+        label_visibility="collapsed",
         key="internet_accesos",
     )
 
@@ -139,12 +142,13 @@ with tabs[3]:
 
 with tabs[4]:
     vista_penetracion = st.radio(
-        "",
+        "vista_penetracion",
         [
             "Nacional",
             "Provincia",
         ],
         horizontal=True,
+        label_visibility="collapsed",
         key="internet_penetracion",
     )
 
