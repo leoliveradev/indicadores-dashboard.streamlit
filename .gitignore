@@ -31,7 +31,6 @@ env.bak/
 venv.bak/
 
 # --- Streamlit ---
-.streamlit/config.toml
 .streamlit/secrets.toml
 
 # --- Datos y Notebooks ---
