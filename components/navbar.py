@@ -9,6 +9,7 @@ PAGES = {
     "Telefonía fija": "pages/3_Telefonia_Fija.py",
     "TV": "pages/5_Television_por_Suscripcion.py",
     "Postal": "pages/6_Mercado_Postal.py",
+    "Comparativa": "pages/7_Comparativa.py",
 }
 
 
@@ -24,6 +25,7 @@ def render_navbar(current_page: str | None = None):
             "telephone",
             "tv",
             "box",
+            "bar-chart",
         ],
         orientation="horizontal",
         default_index=(
